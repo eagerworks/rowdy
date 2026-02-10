@@ -1,0 +1,24 @@
+<div data-controller="rowdy-dropzone"
+     data-rowdy-dropzone-url-value="<%= dropzone_url %>"
+     <%= tag.attributes(@html_options) %>>
+
+  <div class="rowdy-dropzone-area"
+       data-rowdy-dropzone-target="dropzone"
+       data-action="
+         dragover->rowdy-dropzone#handleDragOver
+         dragleave->rowdy-dropzone#handleDragLeave
+         drop->rowdy-dropzone#handleDrop
+         click->rowdy-dropzone#openFilePicker">
+    <%= label_text %>
+  </div>
+
+  <input type="file"
+         data-rowdy-dropzone-target="fileInput"
+         data-action="change->rowdy-dropzone#handleFileSelect"
+         accept="<%= @accept %>"
+         <%= 'multiple' if @multiple %>
+         style="display: none;">
+
+  <div class="rowdy-file-list" data-rowdy-dropzone-target="fileList"></div>
+  <div class="rowdy-upload-progress hidden" data-rowdy-dropzone-target="uploadProgress"></div>
+</div>

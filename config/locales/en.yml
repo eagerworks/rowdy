@@ -1,0 +1,16 @@
+en:
+  rowdy:
+    dropzone:
+      label: "Drag XLSX files here"
+      or_click: "or click to browse"
+    upload_item:
+      download: "Download"
+      processing: "Processing"
+      pending: "Pending"
+      completed: "Completed"
+      failed: "Failed"
+    status:
+      pending: "Pending"
+      processing: "Processing"
+      completed: "Completed"
+      failed: "Failed"

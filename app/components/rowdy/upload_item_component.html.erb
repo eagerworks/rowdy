@@ -1,0 +1,28 @@
+<div class="rowdy-upload-item"
+     id="upload-<%= @upload.id %>"
+     data-upload-id="<%= @upload.id %>"
+     data-upload-status="<%= @upload.status %>">
+  <div class="rowdy-upload-info">
+    <span class="rowdy-upload-filename"><%= @upload.filename %></span>
+    <span class="rowdy-upload-status"><%= I18n.t("rowdy.status.#{@upload.status}") %></span>
+  </div>
+
+  <% if @upload.processing? %>
+    <div class="rowdy-upload-progress-bar">
+      <progress value="<%= @upload.progress %>" max="100"></progress>
+      <span class="rowdy-upload-progress-text"><%= @upload.progress %>%</span>
+    </div>
+  <% end %>
+
+  <% if @upload.completed? %>
+    <div class="rowdy-upload-actions">
+      <%= link_to I18n.t("rowdy.upload_item.download"), download_path, class: "rowdy-download-button" %>
+    </div>
+  <% end %>
+
+  <% if @upload.failed? %>
+    <div class="rowdy-upload-error">
+      <span class="rowdy-error-message"><%= @upload.error_message %></span>
+    </div>
+  <% end %>
+</div>
