@@ -5,7 +5,7 @@ module Rowdy
     end
 
     def download_path
-      Rowdy::Engine.routes.url_helpers.download_upload_path(@upload)
+      Rowdy::Engine.routes.url_helpers.upload_path(@upload)
     end
   end
 end

@@ -148,7 +148,7 @@ module Rowdy
       upload = rowdy_uploads(:completed_upload)
       component = UploadItemComponent.new(upload: upload)
 
-      expected_path = Rowdy::Engine.routes.url_helpers.download_upload_path(upload)
+      expected_path = Rowdy::Engine.routes.url_helpers.upload_path(upload)
       assert_equal expected_path, component.download_path
     end
 

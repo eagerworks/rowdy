@@ -20,21 +20,6 @@ module Rowdy
 
     def show
       upload = Upload.find(params[:id])
-      render json: {
-        id: upload.id,
-        filename: upload.filename,
-        status: upload.status,
-        progress: upload.progress,
-        error_message: upload.error_message,
-        created_at: upload.created_at,
-        updated_at: upload.updated_at
-      }
-    rescue ActiveRecord::RecordNotFound => e
-      render json: { error: e.message }, status: :not_found
-    end
-
-    def download
-      upload = Upload.find(params[:id])
 
       unless upload.completed?
         render json: { error: "Upload is not completed yet" }, status: :unprocessable_entity
