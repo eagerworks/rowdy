@@ -138,7 +138,7 @@ module Rowdy
     test "should allow progress updates from 0 to 100" do
       upload = rowdy_uploads(:processing_upload)
 
-      [0, 25, 50, 75, 100].each do |progress_value|
+      [ 0, 25, 50, 75, 100 ].each do |progress_value|
         upload.update!(progress: progress_value)
         assert_equal progress_value, upload.progress
       end

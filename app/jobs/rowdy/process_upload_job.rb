@@ -36,7 +36,7 @@ module Rowdy
     def download_to_tempfile(attachment)
       return nil unless attachment.attached?
 
-      tempfile = Tempfile.new([attachment.filename.base, attachment.filename.extension_with_delimiter])
+      tempfile = Tempfile.new([ attachment.filename.base, attachment.filename.extension_with_delimiter ])
       tempfile.binmode
       attachment.download { |chunk| tempfile.write(chunk) }
       tempfile.rewind

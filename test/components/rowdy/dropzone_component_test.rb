@@ -105,7 +105,7 @@ module Rowdy
     test "renders with rowdy-dropzone-area class" do
       render_inline(DropzoneComponent.new)
 
-      assert_selector '.rowdy-dropzone-area'
+      assert_selector ".rowdy-dropzone-area"
     end
 
     test "renders file list target" do
@@ -134,13 +134,13 @@ module Rowdy
       # Outer container with Stimulus controller
       assert_selector 'div[data-controller="rowdy-dropzone"]' do
         # Dropzone area inside
-        assert_selector '.rowdy-dropzone-area'
+        assert_selector ".rowdy-dropzone-area"
         # File input inside
         assert_selector 'input[type="file"]', visible: :hidden
         # File list container
-        assert_selector '.rowdy-file-list'
+        assert_selector ".rowdy-file-list"
         # Progress container
-        assert_selector '.rowdy-upload-progress'
+        assert_selector ".rowdy-upload-progress"
       end
     end
   end

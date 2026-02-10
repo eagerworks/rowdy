@@ -16,15 +16,15 @@ module Rowdy
       upload = rowdy_uploads(:pending_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_no_selector '.rowdy-upload-progress-bar'
-      assert_no_selector 'progress'
+      assert_no_selector ".rowdy-upload-progress-bar"
+      assert_no_selector "progress"
     end
 
     test "pending upload does not show download button" do
       upload = rowdy_uploads(:pending_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_no_selector '.rowdy-download-button'
+      assert_no_selector ".rowdy-download-button"
     end
 
     # Test: Processing upload rendering
@@ -40,7 +40,7 @@ module Rowdy
       upload = rowdy_uploads(:processing_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector '.rowdy-upload-progress-bar'
+      assert_selector ".rowdy-upload-progress-bar"
       assert_selector 'progress[value="45"][max="100"]'
       assert_text "45%"
     end
@@ -49,7 +49,7 @@ module Rowdy
       upload = rowdy_uploads(:processing_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_no_selector '.rowdy-download-button'
+      assert_no_selector ".rowdy-download-button"
     end
 
     # Test: Completed upload rendering
@@ -65,14 +65,14 @@ module Rowdy
       upload = rowdy_uploads(:completed_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_no_selector '.rowdy-upload-progress-bar'
+      assert_no_selector ".rowdy-upload-progress-bar"
     end
 
     test "completed upload shows download button" do
       upload = rowdy_uploads(:completed_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector 'a.rowdy-download-button'
+      assert_selector "a.rowdy-download-button"
       assert_link I18n.t("rowdy.upload_item.download")
     end
 
@@ -89,8 +89,8 @@ module Rowdy
       upload = rowdy_uploads(:failed_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector '.rowdy-upload-error'
-      assert_selector '.rowdy-error-message'
+      assert_selector ".rowdy-upload-error"
+      assert_selector ".rowdy-error-message"
       assert_text upload.error_message
     end
 
@@ -98,7 +98,7 @@ module Rowdy
       upload = rowdy_uploads(:failed_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_no_selector '.rowdy-download-button'
+      assert_no_selector ".rowdy-download-button"
     end
 
     # Test: Status labels with I18n
@@ -107,7 +107,7 @@ module Rowdy
       upload = rowdy_uploads(:pending_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector '.rowdy-upload-status', text: "Pending"
+      assert_selector ".rowdy-upload-status", text: "Pending"
     end
 
     test "renders status label in Spanish" do
@@ -115,7 +115,7 @@ module Rowdy
         upload = rowdy_uploads(:pending_upload)
         render_inline(UploadItemComponent.new(upload: upload))
 
-        assert_selector '.rowdy-upload-status', text: "Pendiente"
+        assert_selector ".rowdy-upload-status", text: "Pendiente"
       end
     end
 
@@ -124,7 +124,7 @@ module Rowdy
       upload = rowdy_uploads(:processing_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector '.rowdy-upload-status', text: "Processing"
+      assert_selector ".rowdy-upload-status", text: "Processing"
     end
 
     test "renders completed status label in English" do
@@ -132,7 +132,7 @@ module Rowdy
       upload = rowdy_uploads(:completed_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector '.rowdy-upload-status', text: "Completed"
+      assert_selector ".rowdy-upload-status", text: "Completed"
     end
 
     test "renders failed status label in English" do
@@ -140,7 +140,7 @@ module Rowdy
       upload = rowdy_uploads(:failed_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector '.rowdy-upload-status', text: "Failed"
+      assert_selector ".rowdy-upload-status", text: "Failed"
     end
 
     # Test: Download link
@@ -157,14 +157,14 @@ module Rowdy
       upload = rowdy_uploads(:processing_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector '.rowdy-upload-item' do
-        assert_selector '.rowdy-upload-info' do
-          assert_selector '.rowdy-upload-filename'
-          assert_selector '.rowdy-upload-status'
+      assert_selector ".rowdy-upload-item" do
+        assert_selector ".rowdy-upload-info" do
+          assert_selector ".rowdy-upload-filename"
+          assert_selector ".rowdy-upload-status"
         end
-        assert_selector '.rowdy-upload-progress-bar' do
-          assert_selector 'progress'
-          assert_selector '.rowdy-upload-progress-text'
+        assert_selector ".rowdy-upload-progress-bar" do
+          assert_selector "progress"
+          assert_selector ".rowdy-upload-progress-text"
         end
       end
     end
@@ -189,7 +189,7 @@ module Rowdy
       upload = rowdy_uploads(:pending_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector '.rowdy-upload-item'
+      assert_selector ".rowdy-upload-item"
     end
 
     test "has unique ID for each upload" do
@@ -223,7 +223,7 @@ module Rowdy
       upload.update!(error_message: nil)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_no_selector '.rowdy-upload-error'
+      assert_no_selector ".rowdy-upload-error"
     end
   end
 end
