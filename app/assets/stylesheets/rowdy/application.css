@@ -4,37 +4,54 @@
  *
  * Usage in host app:
  * @import "rowdy/application";
+ *
+ * Override any color by redefining the CSS variables:
+ * :root { --rowdy-color-primary: #8b5cf6; }
  */
+
+:root {
+  --rowdy-color-primary: #3b82f6;
+  --rowdy-border-color: #e5e7eb;
+  --rowdy-bg: white;
+  --rowdy-shadow: rgba(0, 0, 0, 0.05);
+  --rowdy-button-text: white;
+  --rowdy-dropzone-border: #cbd5e1;
+  --rowdy-dropzone-active-bg: #eff6ff;
+  --rowdy-status-pending: #fbbf24;
+  --rowdy-status-processing: var(--rowdy-color-primary);
+  --rowdy-status-completed: #10b981;
+  --rowdy-status-failed: #ef4444;
+}
 
 /* Upload Item Base Styles */
 .rowdy-upload-item {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--rowdy-border-color);
   border-radius: 6px;
   padding: 1rem;
   margin: 0.75rem 0;
-  background: white;
+  background: var(--rowdy-bg);
   transition: all 0.2s;
 }
 
 .rowdy-upload-item:hover {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px var(--rowdy-shadow);
 }
 
 /* Upload Status Colors - Left Border */
 .rowdy-upload-item[data-upload-status="pending"] {
-  border-left: 4px solid #fbbf24;
+  border-left: 4px solid var(--rowdy-status-pending);
 }
 
 .rowdy-upload-item[data-upload-status="processing"] {
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid var(--rowdy-status-processing);
 }
 
 .rowdy-upload-item[data-upload-status="completed"] {
-  border-left: 4px solid #10b981;
+  border-left: 4px solid var(--rowdy-status-completed);
 }
 
 .rowdy-upload-item[data-upload-status="failed"] {
-  border-left: 4px solid #ef4444;
+  border-left: 4px solid var(--rowdy-status-failed);
 }
 
 /* Progress Bar */
@@ -48,8 +65,8 @@
 .rowdy-download-button {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background-color: #3b82f6;
-  color: white;
+  background-color: var(--rowdy-color-primary);
+  color: var(--rowdy-button-text);
   text-decoration: none;
   border-radius: 4px;
   transition: background-color 0.2s;
@@ -57,7 +74,7 @@
 
 /* Dropzone Styles */
 .rowdy-dropzone-area {
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed var(--rowdy-dropzone-border);
   border-radius: 8px;
   padding: 3rem;
   text-align: center;
@@ -67,6 +84,6 @@
 
 .rowdy-dropzone-area:hover,
 .rowdy-dropzone-area.dragover {
-  border-color: #3b82f6;
-  background-color: #eff6ff;
+  border-color: var(--rowdy-color-primary);
+  background-color: var(--rowdy-dropzone-active-bg);
 }
