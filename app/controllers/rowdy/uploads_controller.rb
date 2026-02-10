@@ -9,7 +9,7 @@ module Rowdy
           size: file.size,
           input_file: file
         )
-        ProcessUploadJob.perform_later(upload.id)
+        ProcessUploadJob.perform_now(upload.id)
         upload_ids << upload.id
       end
 

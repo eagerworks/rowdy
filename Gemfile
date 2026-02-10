@@ -19,3 +19,4 @@ gem "rubocop-rails-omakase", require: false
 
 gem "redis"
 gem "sidekiq"
+gem "light-service"
