@@ -1,0 +1,28 @@
+pending_upload:
+  filename: "test_pending.xlsx"
+  size: 1024000
+  status: 0  # pending
+  progress: 0
+  metadata: "{}"
+
+processing_upload:
+  filename: "test_processing.xlsx"
+  size: 2048000
+  status: 1  # processing
+  progress: 45
+  metadata: "{}"
+
+completed_upload:
+  filename: "test_completed.xlsx"
+  size: 1536000
+  status: 2  # completed
+  progress: 100
+  metadata: "{}"
+
+failed_upload:
+  filename: "test_failed.xlsx"
+  size: 512000
+  status: 3  # failed
+  progress: 30
+  error_message: "Invalid file format"
+  metadata: "{}"

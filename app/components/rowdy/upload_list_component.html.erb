@@ -1,0 +1,5 @@
+<div id="rowdy-uploads-list">
+  <% @uploads.each do |upload| %>
+    <%= render Rowdy::UploadItemComponent.new(upload: upload) %>
+  <% end %>
+</div>

@@ -1,6 +1,6 @@
 require "rowdy/version"
 require "rowdy/engine"
+require "rowdy/configuration"
 
 module Rowdy
-  # Your code goes here...
 end

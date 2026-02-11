@@ -1,0 +1,60 @@
+# =========================
+# Rails / Ruby
+# =========================
+.bundle
+log/*
+tmp/*
+!log/.keep
+!tmp/.keep
+
+# =========================
+# Dummy app (engine)
+# =========================
+test/dummy/log/*
+test/dummy/tmp/*
+test/dummy/storage/*
+!test/dummy/log/.keep
+!test/dummy/tmp/.keep
+
+# =========================
+# ActiveStorage
+# =========================
+storage/*
+!storage/.keep
+
+# =========================
+# Assets (Propshaft / build)
+# =========================
+public/assets
+public/packs
+app/assets/builds/*
+!app/assets/builds/.keep
+
+# =========================
+# Node / JS tooling (si aplica)
+# =========================
+node_modules
+yarn-error.log
+npm-debug.log*
+pnpm-debug.log*
+
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+.idea
+.vscode
+*.swp
+*.swo
+
+# =========================
+# Environment
+# =========================
+.env
+.env.*
+
+
+# =========================
+# Development / Test
+# =========================
+.claude/*
