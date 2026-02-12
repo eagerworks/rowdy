@@ -1,7 +1,7 @@
 module Rowdy
   class AssembleChunks
     def self.call(upload)
-      tempfile = Tempfile.new([upload.filename, File.extname(upload.filename)])
+      tempfile = Tempfile.new([ upload.filename, File.extname(upload.filename) ])
       tempfile.binmode
 
       ChunkStorage.assemble(upload.chunks_dir, upload.total_chunks, tempfile.path)
