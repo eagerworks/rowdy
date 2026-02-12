@@ -3,14 +3,20 @@ es:
     dropzone:
       label: "Arrastrá archivos XLSX aquí"
       or_click: "o hacé click para buscar"
+      resume_file: "Seleccionar archivo para reanudar"
+      resume_progress: "%{percent}% subido"
+      resume_dismiss: "Descartar"
+      resume_mismatch: "El archivo no coincide con la subida interrumpida"
     upload_item:
       download: "Descargar"
       processing: "Procesando"
       pending: "Pendiente"
       completed: "Completado"
       failed: "Error"
+      uploading: "Subiendo"
     status:
       pending: "Pendiente"
       processing: "Procesando"
       completed: "Completado"
       failed: "Error"
+      uploading: "Subiendo"

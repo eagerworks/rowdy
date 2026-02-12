@@ -1,6 +1,15 @@
 <div data-controller="rowdy-dropzone"
      data-rowdy-dropzone-url-value="<%= dropzone_url %>"
+     <% if chunked? %>
+     data-rowdy-dropzone-chunked-url-value="<%= chunked_upload_url %>"
+     data-rowdy-dropzone-worker-url-value="<%= worker_url %>"
+     data-rowdy-dropzone-chunk-size-value="<%= chunk_size_value %>"
+     <% end %>
      <%= tag.attributes(@html_options) %>>
+
+  <% if chunked? %>
+  <div class="rowdy-resume-banner hidden" data-rowdy-dropzone-target="resume"></div>
+  <% end %>
 
   <div class="rowdy-dropzone-area"
        data-rowdy-dropzone-target="dropzone"
