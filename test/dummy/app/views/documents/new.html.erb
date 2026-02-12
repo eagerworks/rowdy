@@ -141,19 +141,6 @@
       font-size: 0.875rem;
       margin-top: 0.5rem;
     }
-    .refresh-button {
-      padding: 0.5rem 1rem;
-      background-color: #f3f4f6;
-      color: #374151;
-      border: 1px solid #d1d5db;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-    .refresh-button:hover {
-      background-color: #e5e7eb;
-    }
     .no-uploads {
       text-align: center;
       color: #9ca3af;
@@ -174,18 +161,8 @@
     </div>
 
     <div class="uploads-section">
-      <h2>
-        <span>Recent Uploads</span>
-        <% if @uploads.any? %>
-          <%= button_to "Refresh", documents_path, method: :get, class: "refresh-button" %>
-        <% end %>
-      </h2>
-
-      <% if @uploads.any? %>
-        <%= render Rowdy::UploadListComponent.new(uploads: @uploads) %>
-      <% else %>
-        <p class="no-uploads">No uploads yet. Drag and drop XLSX files above to get started.</p>
-      <% end %>
+      <h2>Recent Uploads</h2>
+      <%= render Rowdy::UploadListComponent.new(uploads: @uploads) %>
     </div>
   </div>
 </body>

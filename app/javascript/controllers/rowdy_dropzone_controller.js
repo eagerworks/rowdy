@@ -1,14 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 
-const STORAGE_KEY = "rowdy_pending_uploads"
-
 export default class extends Controller {
-  static targets = ["dropzone", "fileInput", "fileList", "uploadProgress", "resume"]
+  static targets = ["dropzone", "fileInput", "fileList", "uploadProgress", "resumeBanner", "resumeFileInput"]
   static values = {
     url: String,
     chunkedUrl: String,
     workerUrl: String,
-    chunkSize: { type: Number, default: 5 * 1024 * 1024 }
+    chunkSize: { type: Number, default: 5 * 1024 * 1024 },
+    pendingUploads: { type: Array, default: [] }
   }
 
   connect() {
@@ -16,11 +15,8 @@ export default class extends Controller {
     this.activeUploads = new Map()
     this.resumingToken = null
 
-    if (this.isChunkedMode && this.hasResumeTarget) {
-      const pending = this.loadPendingUploads()
-      if (Object.keys(pending).length > 0) {
-        this.showResumeBanner(pending)
-      }
+    if (this.pendingUploadsValue.length > 0) {
+      this.showResumeBanner()
     }
   }
 
@@ -61,12 +57,6 @@ export default class extends Controller {
 
   handleFileSelect(e) {
     const files = Array.from(e.target.files)
-
-    if (this.resumingToken) {
-      this.handleResumeFileSelect(files)
-      return
-    }
-
     this.uploadFiles(files)
   }
 
@@ -147,22 +137,11 @@ export default class extends Controller {
 
     switch (message.type) {
       case "initiated":
-        if (entry) {
-          entry.uploadToken = message.data.upload_token
-          this.savePendingUpload(
-            message.data.upload_token,
-            fileName,
-            entry.file.size,
-            this.chunkSizeValue
-          )
-        }
+        if (entry) entry.uploadToken = message.data.upload_token
         break
 
       case "chunk_uploaded":
-        if (entry) {
-          entry.lastProgress = message.progressPercent
-          this.updatePendingProgress(entry.uploadToken, message.progressPercent)
-        }
+        if (entry) entry.lastProgress = message.progressPercent
         this.updateFileProgress(fileName, message.progressPercent, "uploading")
         break
 
@@ -170,13 +149,7 @@ export default class extends Controller {
         break
 
       case "complete":
-        console.log("Upload complete - entry:", entry, "uploadToken:", entry?.uploadToken)
-        if (entry?.uploadToken) {
-          this.removePendingUpload(entry.uploadToken)
-        } else {
-          console.warn("No uploadToken found to remove from pending")
-        }
-        this.updateFileProgress(fileName, 100, "completed")
+        this.clearFileList()
         this.cleanupWorker(fileName)
         this.dispatch("uploaded", { detail: message.data })
         break
@@ -190,7 +163,6 @@ export default class extends Controller {
         break
 
       case "error":
-        if (entry) this.removePendingUpload(entry.uploadToken)
         this.updateFileProgress(fileName, 0, "failed")
         this.cleanupWorker(fileName)
         this.dispatch("upload-error", { detail: { fileName, error: message.error } })
@@ -210,131 +182,92 @@ export default class extends Controller {
     }
   }
 
-  // --- Cross-session resume (localStorage) ---
+  // --- Resume interrupted uploads ---
 
-  savePendingUpload(uploadToken, fileName, fileSize, chunkSize) {
-    const pending = this.loadPendingUploads()
-    pending[uploadToken] = { uploadToken, fileName, fileSize, chunkSize, progressPercent: 0 }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(pending))
-  }
-
-  updatePendingProgress(uploadToken, progressPercent) {
-    if (!uploadToken) return
-    const pending = this.loadPendingUploads()
-    if (pending[uploadToken]) {
-      pending[uploadToken].progressPercent = progressPercent
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(pending))
-    }
-  }
-
-  removePendingUpload(uploadToken) {
-    if (!uploadToken) return
-    const pending = this.loadPendingUploads()
-    delete pending[uploadToken]
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(pending))
-  }
-
-  loadPendingUploads() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}
-    } catch {
-      return {}
-    }
-  }
-
-  showResumeBanner(pendingUploads) {
-    const entries = Object.values(pendingUploads)
-    if (entries.length === 0) {
-      this.resumeTarget.classList.add("hidden")
-      return
-    }
-
-    this.resumeTarget.classList.remove("hidden")
-    this.resumeTarget.innerHTML = entries.map(entry => `
-      <div class="rowdy-resume-item" data-upload-token="${entry.uploadToken}">
+  showResumeBanner() {
+    const items = this.pendingUploadsValue.map(upload => `
+      <div class="rowdy-resume-item" data-upload-token="${upload.token}" data-upload-size="${upload.size}">
         <div class="rowdy-resume-info">
-          <span class="rowdy-resume-filename">${entry.fileName}</span>
-          <span class="rowdy-resume-progress">${entry.progressPercent}% uploaded</span>
+          <span class="rowdy-resume-filename">${upload.filename}</span>
+          <span class="rowdy-resume-progress">${upload.progress}% uploaded</span>
         </div>
         <div class="rowdy-resume-actions">
-          <button type="button" class="rowdy-resume-btn" data-action="click->rowdy-dropzone#startResume" data-token="${entry.uploadToken}">
+          <button type="button" class="rowdy-resume-btn"
+                  data-upload-token="${upload.token}"
+                  data-action="rowdy-dropzone#startResume">
             Select file to resume
           </button>
-          <button type="button" class="rowdy-resume-dismiss-btn" data-action="click->rowdy-dropzone#dismissResume" data-token="${entry.uploadToken}">
+          <button type="button" class="rowdy-resume-dismiss-btn"
+                  data-upload-token="${upload.token}"
+                  data-action="rowdy-dropzone#dismissResume">
             Dismiss
           </button>
         </div>
       </div>
     `).join("")
+
+    this.resumeBannerTarget.innerHTML = items
+    this.resumeBannerTarget.classList.remove("hidden")
   }
 
   startResume(event) {
-    const token = event.currentTarget.dataset.token
-    this.resumingToken = token
-    this.fileInputTarget.setAttribute("multiple", false)
-    this.fileInputTarget.click()
+    this.resumingToken = event.currentTarget.dataset.uploadToken
+    this.resumeFileInputTarget.click()
   }
 
-  handleResumeFileSelect(files) {
-    const token = this.resumingToken
-    this.resumingToken = null
-    this.fileInputTarget.setAttribute("multiple", true)
-    this.fileInputTarget.value = ""
+  handleResumeFileSelect(event) {
+    const file = event.target.files[0]
+    if (!file) return
 
-    if (!token || files.length === 0) return
+    event.target.value = ""
 
-    const pending = this.loadPendingUploads()
-    const entry = pending[token]
-    if (!entry) return
+    const pendingUpload = this.pendingUploadsValue.find(u => u.token === this.resumingToken)
+    if (!pendingUpload) return
 
-    const file = files[0]
-
-    if (file.name !== entry.fileName || file.size !== entry.fileSize) {
+    if (file.size !== pendingUpload.size) {
       this.dispatch("validation-error", {
         detail: { message: "File does not match the interrupted upload" }
       })
+      this.resumingToken = null
       return
     }
 
-    this.hideResumeBannerItem(token)
-    this.displayFileList([file])
+    this.hideResumeBannerItem(this.resumingToken)
+
+    const uploadToken = this.resumingToken
+    this.resumingToken = null
 
     const worker = new Worker(this.workerUrlValue)
-    this.activeUploads.set(file.name, {
-      worker,
-      file,
-      uploadToken: token,
-      lastProgress: entry.progressPercent
-    })
+    this.activeUploads.set(file.name, { worker, file, uploadToken, lastProgress: pendingUpload.progress })
 
     worker.onmessage = (event) => this.handleWorkerMessage(file.name, event.data)
+
+    this.displayFileList([file])
+    this.updateFileProgress(file.name, pendingUpload.progress, "uploading")
 
     worker.postMessage({
       command: "resume",
       payload: {
         file,
         chunkedUrl: this.chunkedUrlValue,
-        uploadToken: token,
+        uploadToken,
         csrfToken: this.csrfToken,
-        chunkSize: entry.chunkSize
+        chunkSize: this.chunkSizeValue
       }
     })
-
-    this.updateFileProgress(file.name, entry.progressPercent, "uploading")
   }
 
   dismissResume(event) {
-    const token = event.currentTarget.dataset.token
-    this.removePendingUpload(token)
+    const token = event.currentTarget.dataset.uploadToken
     this.hideResumeBannerItem(token)
   }
 
   hideResumeBannerItem(token) {
-    const item = this.resumeTarget.querySelector(`[data-upload-token="${token}"]`)
+    const item = this.resumeBannerTarget.querySelector(`[data-upload-token="${token}"]`)
     if (item) item.remove()
 
-    if (this.resumeTarget.children.length === 0) {
-      this.resumeTarget.classList.add("hidden")
+    if (this.resumeBannerTarget.children.length === 0) {
+      this.resumeBannerTarget.classList.add("hidden")
     }
   }
 
