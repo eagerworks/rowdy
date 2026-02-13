@@ -22,8 +22,8 @@ module Rowdy
     before_create :initialize_received_chunks
     before_create :generate_upload_token
 
-    after_create_commit :broadcast_new_upload, unless: :uploading?
-    after_update_commit :broadcast_upload_update, if: :status_or_progress_changed?
+    after_create_commit :broadcast_new_upload
+    after_update_commit :broadcast_upload_update, if: :status_changed?
 
     def all_chunks_received?
       return false if received_chunks.blank? || total_chunks.blank?
@@ -64,19 +64,15 @@ module Rowdy
     end
 
     def broadcast_upload_update
-      if saved_change_to_status? && status_before_last_save == "uploading"
-        broadcast_new_upload
-      else
-        Turbo::StreamsChannel.broadcast_replace_to(
-          "rowdy_uploads",
-          target: dom_id,
-          html: render_component
-        )
-      end
+      Turbo::StreamsChannel.broadcast_replace_to(
+        "rowdy_uploads",
+        target: dom_id,
+        html: render_component
+      )
     end
 
-    def status_or_progress_changed?
-      saved_change_to_status? || saved_change_to_progress?
+    def status_changed?
+      saved_change_to_status?
     end
 
     def dom_id
