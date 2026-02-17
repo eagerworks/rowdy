@@ -15,6 +15,7 @@
   --rowdy-bg: white;
   --rowdy-shadow: rgba(0, 0, 0, 0.05);
   --rowdy-button-text: white;
+  --rowdy-text-muted: #6b7280;
   --rowdy-dropzone-border: #cbd5e1;
   --rowdy-dropzone-active-bg: #eff6ff;
   --rowdy-status-pending: #fbbf24;
@@ -123,7 +124,7 @@
 
 .rowdy-resume-progress {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--rowdy-text-muted);
 }
 
 .rowdy-resume-actions {
@@ -149,7 +150,7 @@
   border-radius: 0.25rem;
   font-size: 0.8125rem;
   cursor: pointer;
-  color: #6b7280;
+  color: var(--rowdy-text-muted);
 }
 
 /* File Progress Bar */
