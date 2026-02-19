@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_06_151159) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_11_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -40,15 +40,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_06_151159) do
   end
 
   create_table "rowdy_uploads", force: :cascade do |t|
+    t.integer "chunk_size"
+    t.string "chunks_dir"
     t.datetime "created_at", null: false
     t.text "error_message"
     t.string "filename", null: false
     t.text "metadata"
     t.integer "progress", default: 0
+    t.text "received_chunks"
     t.bigint "size", null: false
     t.integer "status", default: 0, null: false
+    t.integer "total_chunks"
     t.datetime "updated_at", null: false
+    t.string "upload_token"
     t.index [ "status" ], name: "index_rowdy_uploads_on_status"
+    t.index [ "upload_token" ], name: "index_rowdy_uploads_on_upload_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

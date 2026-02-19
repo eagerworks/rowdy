@@ -15,6 +15,7 @@
   --rowdy-bg: white;
   --rowdy-shadow: rgba(0, 0, 0, 0.05);
   --rowdy-button-text: white;
+  --rowdy-text-muted: #6b7280;
   --rowdy-dropzone-border: #cbd5e1;
   --rowdy-dropzone-active-bg: #eff6ff;
   --rowdy-status-pending: #fbbf24;
@@ -86,4 +87,89 @@
 .rowdy-dropzone-area.dragover {
   border-color: var(--rowdy-color-primary);
   background-color: var(--rowdy-dropzone-active-bg);
+}
+
+/* Resume Banner */
+.rowdy-resume-banner {
+  margin-bottom: 0.75rem;
+}
+
+.rowdy-resume-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border: 0.0625rem solid var(--rowdy-status-pending);
+  border-left: 0.25rem solid var(--rowdy-status-pending);
+  border-radius: 0.375rem;
+  background: var(--rowdy-bg);
+  margin-bottom: 0.5rem;
+}
+
+.rowdy-resume-item:last-child {
+  margin-bottom: 0;
+}
+
+.rowdy-resume-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.rowdy-resume-filename {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.rowdy-resume-progress {
+  font-size: 0.75rem;
+  color: var(--rowdy-text-muted);
+}
+
+.rowdy-resume-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.rowdy-resume-btn {
+  padding: 0.375rem 0.75rem;
+  background-color: var(--rowdy-color-primary);
+  color: var(--rowdy-button-text);
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.rowdy-resume-dismiss-btn {
+  padding: 0.375rem 0.75rem;
+  background: none;
+  border: 0.0625rem solid var(--rowdy-border-color);
+  border-radius: 0.25rem;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  color: var(--rowdy-text-muted);
+}
+
+/* File Progress Bar */
+.rowdy-file-progress-bar {
+  height: 0.25rem;
+  background: var(--rowdy-border-color);
+  border-radius: 0.125rem;
+  margin-top: 0.375rem;
+  overflow: hidden;
+}
+
+.rowdy-file-progress-fill {
+  height: 100%;
+  background: var(--rowdy-color-primary);
+  border-radius: 0.125rem;
+  transition: width 0.3s;
+}
+
+/* Hidden utility */
+.hidden {
+  display: none !important;
 }

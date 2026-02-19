@@ -5,7 +5,9 @@ module Rowdy
     def perform(upload_id)
       result = ProcessUpload.call(upload_id: upload_id)
 
-      raise result.message if result.failure?
+      if result.failure?
+        Upload.find_by(id: upload_id)&.update!(status: :failed)
+      end
     end
   end
 end
