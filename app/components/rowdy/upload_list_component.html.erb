@@ -1,6 +1,6 @@
-<%= helpers.turbo_stream_from :rowdy_uploads %>
+<%= helpers.turbo_stream_from stream_channel %>
 
-<div id="rowdy-uploads-list">
+<div id="<%= list_id %>">
   <% @uploads.each do |upload| %>
     <%= render Rowdy::UploadItemComponent.new(upload: upload) %>
   <% end %>

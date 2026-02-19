@@ -7,7 +7,8 @@ export default class extends Controller {
     chunkedUrl: String,
     workerUrl: String,
     chunkSize: { type: Number, default: 5 * 1024 * 1024 },
-    pendingUploads: { type: Array, default: [] }
+    pendingUploads: { type: Array, default: [] },
+    schemaName: { type: String, default: "" }
   }
 
   connect() {
@@ -93,7 +94,8 @@ export default class extends Controller {
         file,
         chunkedUrl: this.chunkedUrlValue,
         chunkSize: this.chunkSizeValue,
-        csrfToken: this.csrfToken
+        csrfToken: this.csrfToken,
+        schemaName: this.schemaNameValue
       }
     })
 

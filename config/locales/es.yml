@@ -9,6 +9,7 @@ es:
       resume_mismatch: "El archivo no coincide con la subida interrumpida"
     upload_item:
       download: "Descargar"
+      start_import: "Iniciar Importación"
       processing: "Procesando"
       pending: "Pendiente"
       completed: "Completado"
@@ -20,3 +21,30 @@ es:
       completed: "Completado"
       failed: "Error"
       uploading: "Subiendo"
+    import:
+      steps:
+        column_mapping: "Mapeo de Columnas"
+        validation: "Validación"
+        import: "Importación"
+      missing_required_columns: "Faltan columnas requeridas: %{columns}"
+      mapping:
+        uploaded_column: "Columna Subida"
+        sample_data: "Datos de Ejemplo"
+        template_column: "Columna del Template"
+        ignore: "-- Ignorar --"
+        submit: "Validar"
+      validation:
+        in_progress: "Validando filas..."
+        summary: "%{total} filas totales — %{valid} válidas, %{invalid} inválidas"
+        row_number: "Fila"
+        column: "Columna"
+        error: "Error"
+        previous: "Anterior"
+        next: "Siguiente"
+        page_info: "Página %{page} de %{total}"
+        back_to_mapping: "Volver al Mapeo"
+        import_valid_rows: "Importar %{count} Filas Válidas"
+        download_report: "Descargar Reporte de Errores"
+      result:
+        placeholder: "Funcionalidad de importación próximamente."
+        import_button: "Importar"

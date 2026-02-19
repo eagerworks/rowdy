@@ -1,0 +1,14 @@
+<div class="rowdy-schemas">
+  <% @schemas.each do |schema| %>
+    <div class="rowdy-schema-section" id="rowdy-schema-<%= schema.schema_name %>">
+      <h2 class="rowdy-schema-title"><%= schema.schema_label %></h2>
+
+      <%= render Rowdy::DropzoneComponent.new(schema_name: schema.schema_name) %>
+
+      <%= render Rowdy::UploadListComponent.new(
+        uploads: uploads_for(schema),
+        schema_name: schema.schema_name
+      ) %>
+    </div>
+  <% end %>
+</div>

@@ -17,6 +17,9 @@
   <% if @upload.completed? %>
     <div class="rowdy-upload-actions">
       <%= link_to I18n.t("rowdy.upload_item.download"), download_path, class: "rowdy-download-button" %>
+      <% if importable? %>
+        <%= button_to I18n.t("rowdy.upload_item.start_import"), create_import_path, method: :post, class: "rowdy-btn rowdy-btn--primary" %>
+      <% end %>
     </div>
   <% end %>
 

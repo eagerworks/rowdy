@@ -7,4 +7,14 @@ Rowdy::Engine.routes.draw do
     put    "/:token/:index",   to: "chunked_uploads#receive_chunk",  as: :chunked_upload_chunk
     post   "/:token/complete", to: "chunked_uploads#complete",       as: :chunked_upload_complete
   end
+
+  resources :imports, only: [ :create, :show ] do
+    member do
+      get    :mapping
+      patch  :save_mapping
+      post   :validate
+      get    :validation
+      get    :error_report
+    end
+  end
 end
