@@ -12,17 +12,17 @@ module Rowdy
 
         next ctx if import.invalid_rows_count.zero?
 
-        tempfile = Tempfile.new(["error_report", ".csv"])
+        tempfile = Tempfile.new([ "error_report", ".csv" ])
         tempfile.binmode
 
         CSV.open(tempfile.path, "wb") do |csv|
-          csv << ["Row", "Column", "Error", "Value"]
+          csv << [ "Row", "Column", "Error", "Value" ]
 
           import.import_errors.find_each(batch_size: 1000) do |error|
             row_data = error.row_data || {}
             (error.column_errors || {}).each do |column, messages|
               messages.each do |message|
-                csv << [error.row_number, column, message, row_data[column]]
+                csv << [ error.row_number, column, message, row_data[column] ]
               end
             end
           end

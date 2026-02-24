@@ -102,6 +102,5 @@ module Rowdy
 
       (import.invalid_rows_count.to_f / per_page).ceil
     end
-
   end
 end
