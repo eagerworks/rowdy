@@ -1,6 +1,6 @@
 <div class="rowdy-validation-result">
   <% if validating? %>
-    <div class="rowdy-validation-progress">
+    <div id="rowdy-import-progress-<%= @import.id %>" class="rowdy-validation-progress">
       <p class="rowdy-validation-status"><%= I18n.t("rowdy.import.validation.in_progress") %></p>
       <div class="rowdy-upload-progress-bar">
         <progress value="<%= @import.progress %>" max="100"></progress>
@@ -30,7 +30,7 @@
         </thead>
         <tbody>
           <% @errors.each do |import_error| %>
-            <% (import_error.errors || {}).each do |column, messages| %>
+            <% (import_error.column_errors || {}).each do |column, messages| %>
               <% messages.each do |message| %>
                 <tr>
                   <td><%= import_error.row_number %></td>
@@ -48,7 +48,7 @@
           <%= link_to I18n.t("rowdy.import.validation.previous"),
             validation_path(page: @page - 1),
             class: "rowdy-btn",
-            data: { turbo_frame: "rowdy-import-step-content-#{@import.id}" } %>
+            data: { turbo_frame: "rowdy-template-steps-#{@import.schema_name}" } %>
         <% end %>
 
         <span class="rowdy-validation-page-info">
@@ -59,7 +59,7 @@
           <%= link_to I18n.t("rowdy.import.validation.next"),
             validation_path(page: @page + 1),
             class: "rowdy-btn",
-            data: { turbo_frame: "rowdy-import-step-content-#{@import.id}" } %>
+            data: { turbo_frame: "rowdy-template-steps-#{@import.schema_name}" } %>
         <% end %>
       </div>
 
@@ -76,7 +76,7 @@
       <%= link_to I18n.t("rowdy.import.validation.back_to_mapping"),
         mapping_path,
         class: "rowdy-btn",
-        data: { turbo_frame: "rowdy-import-step-content-#{@import.id}" } %>
+        data: { turbo_frame: "rowdy-template-steps-#{@import.schema_name}" } %>
 
       <% if has_valid_rows? %>
         <button type="button" class="rowdy-btn rowdy-btn--primary" disabled>

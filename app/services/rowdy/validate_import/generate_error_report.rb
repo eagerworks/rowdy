@@ -20,7 +20,7 @@ module Rowdy
 
           import.import_errors.find_each(batch_size: 1000) do |error|
             row_data = error.row_data || {}
-            (error.errors || {}).each do |column, messages|
+            (error.column_errors || {}).each do |column, messages|
               messages.each do |message|
                 csv << [error.row_number, column, message, row_data[column]]
               end

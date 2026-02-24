@@ -1,0 +1,14 @@
+<div id="rowdy-import-step-indicator-<%= import.id %>" class="rowdy-step-indicator">
+  <% Rowdy::StepsComponent::STEPS.each do |step| %>
+    <% current = import.current_step %>
+    <% klass = if step[:step_number] == current
+         "rowdy-step--active"
+       elsif step[:step_number] < current
+         "rowdy-step--completed"
+       end %>
+    <div class="rowdy-step <%= klass %>">
+      <span class="rowdy-step-number"><%= step[:step_number] %></span>
+      <span class="rowdy-step-label"><%= I18n.t("rowdy.import.steps.#{step[:key]}") %></span>
+    </div>
+  <% end %>
+</div>

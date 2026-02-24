@@ -6,6 +6,8 @@ module Rowdy
 
     serialize :metadata, coder: JSON
     serialize :received_chunks, coder: JSON
+    serialize :detected_columns, coder: JSON
+    serialize :sample_rows, coder: JSON
 
     enum :status, {
       pending: 0,

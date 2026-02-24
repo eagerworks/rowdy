@@ -8,7 +8,6 @@ es:
       resume_dismiss: "Descartar"
       resume_mismatch: "El archivo no coincide con la subida interrumpida"
     upload_item:
-      download: "Descargar"
       start_import: "Iniciar Importación"
       processing: "Procesando"
       pending: "Pendiente"

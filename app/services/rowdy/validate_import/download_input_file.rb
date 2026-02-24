@@ -4,7 +4,7 @@ module Rowdy
       extend LightService::Action
 
       expects :upload
-      promises :input_path
+      promises :input_path, :tempfile
 
       executed do |ctx|
         attachment = ctx.upload.input_file
@@ -19,6 +19,7 @@ module Rowdy
         attachment.download { |chunk| tempfile.write(chunk) }
         tempfile.rewind
 
+        ctx.tempfile = tempfile
         ctx.input_path = tempfile.path
       end
     end

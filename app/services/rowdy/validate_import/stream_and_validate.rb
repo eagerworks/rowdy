@@ -44,8 +44,8 @@ module Rowdy
             error_buffer << {
               import_id: import.id,
               row_number: total_rows + 1,
-              row_data: mapped_row.to_json,
-              errors: row_errors.to_json,
+              row_data: mapped_row,
+              column_errors: row_errors,
               created_at: Time.current,
               updated_at: Time.current
             }
@@ -66,6 +66,7 @@ module Rowdy
 
         book.close
       rescue => e
+        Rails.logger.error("Import validation failed for Import ID #{import.id}: #{e.message}")
         ctx.fail!("Validation failed: #{e.message}")
       end
 

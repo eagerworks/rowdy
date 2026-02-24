@@ -21,14 +21,9 @@ module Rowdy
     end
 
     def mapping
-      detected = detect_columns_for(@import)
-
-      render Rowdy::StepsComponent.new(import: @import), content: Rowdy::ColumnMappingComponent.new(
-        import: @import,
-        detected_columns: detected[:headers],
-        sample_rows: detected[:sample_rows],
-        schema_columns: @import.schema.columns
-      ), layout: layout_for_turbo_frame
+      @detected_columns = @import.upload.detected_columns || []
+      @sample_rows = @import.upload.sample_rows || []
+      @schema_columns = @import.schema.columns
     end
 
     def save_mapping
@@ -38,41 +33,32 @@ module Rowdy
       missing = check_required_columns(column_mapping)
 
       if missing.any?
-        detected = detect_columns_for(@import)
-
-        render Rowdy::ColumnMappingComponent.new(
-          import: @import,
-          detected_columns: detected[:headers],
-          sample_rows: detected[:sample_rows],
-          schema_columns: @import.schema.columns,
-          mapping: column_mapping,
-          errors: [I18n.t("rowdy.import.missing_required_columns", columns: missing.join(", "))]
-        ), layout: false, status: :unprocessable_entity
+        @detected_columns = @import.upload.detected_columns || []
+        @sample_rows = @import.upload.sample_rows || []
+        @schema_columns = @import.schema.columns
+        @column_mapping = column_mapping
+        @mapping_errors = [ I18n.t("rowdy.import.missing_required_columns", columns: missing.join(", ")) ]
+        render :mapping, status: :unprocessable_entity
         return
       end
 
-      @import.update!(column_mapping: column_mapping)
+      @import.update!(column_mapping: column_mapping, status: :validating, progress: 0)
+      ValidateImportJob.perform_now(@import.id)
 
       redirect_to import_validation_path(@import)
     end
 
     def validate
       @import.update!(status: :validating, progress: 0)
-      ValidateImportJob.perform_later(@import.id)
+      ValidateImportJob.perform_now(@import.id)
 
       redirect_to import_validation_path(@import)
     end
 
     def validation
-      page = (params[:page] || 1).to_i
-      errors = @import.import_errors.order(:row_number).offset((page - 1) * per_page).limit(per_page)
-
-      render Rowdy::StepsComponent.new(import: @import), content: Rowdy::ValidationResultComponent.new(
-        import: @import,
-        errors: errors,
-        page: page,
-        total_pages: total_pages_for(@import)
-      ), layout: layout_for_turbo_frame
+      @page = (params[:page] || 1).to_i
+      @errors = @import.import_errors.order(:row_number).offset((@page - 1) * per_page).limit(per_page)
+      @total_pages = total_pages_for(@import)
     end
 
     def error_report
@@ -88,22 +74,6 @@ module Rowdy
 
     def set_import
       @import = Import.find(params[:id])
-    end
-
-    def detect_columns_for(import)
-      tempfile = download_input_file(import.upload)
-      DetectColumns.call(tempfile.path)
-    ensure
-      tempfile&.close
-      tempfile&.unlink
-    end
-
-    def download_input_file(upload)
-      tempfile = Tempfile.new(["detect", File.extname(upload.filename)])
-      tempfile.binmode
-      tempfile.write(upload.input_file.download)
-      tempfile.rewind
-      tempfile
     end
 
     def check_required_columns(column_mapping)
@@ -133,8 +103,5 @@ module Rowdy
       (import.invalid_rows_count.to_f / per_page).ceil
     end
 
-    def layout_for_turbo_frame
-      request.headers["Turbo-Frame"].present? ? false : "rowdy/application"
-    end
   end
 end

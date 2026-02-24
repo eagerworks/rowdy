@@ -1,5 +1,5 @@
 Rowdy::Engine.routes.draw do
-  resources :uploads, only: [ :create, :show ]
+  resources :uploads, only: [ :create ]
 
   scope :chunked_uploads do
     post   "/",                to: "chunked_uploads#initiate",       as: :chunked_uploads

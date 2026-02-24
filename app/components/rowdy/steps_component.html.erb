@@ -1,7 +1,7 @@
 <div class="rowdy-steps" id="rowdy-import-<%= @import.id %>">
   <%= helpers.turbo_stream_from :"rowdy_import_#{@import.id}" %>
 
-  <div class="rowdy-step-indicator">
+  <div id="rowdy-import-step-indicator-<%= @import.id %>" class="rowdy-step-indicator">
     <% steps.each do |step| %>
       <div class="rowdy-step <%= step_class(step[:step_number]) %>">
         <span class="rowdy-step-number"><%= step[:step_number] %></span>
@@ -10,7 +10,5 @@
     <% end %>
   </div>
 
-  <turbo-frame id="rowdy-import-step-content-<%= @import.id %>">
-    <%= content %>
-  </turbo-frame>
+  <%= content %>
 </div>

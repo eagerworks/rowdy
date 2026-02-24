@@ -8,7 +8,6 @@ en:
       resume_dismiss: "Dismiss"
       resume_mismatch: "File does not match the interrupted upload"
     upload_item:
-      download: "Download"
       start_import: "Start Import"
       processing: "Processing"
       pending: "Pending"

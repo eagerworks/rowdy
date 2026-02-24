@@ -48,15 +48,30 @@ module Rowdy
     def broadcast_import_update
       Turbo::StreamsChannel.broadcast_replace_to(
         "rowdy_import_#{id}",
-        target: "rowdy-import-#{id}",
-        html: render_component
+        target: "rowdy-import-step-indicator-#{id}",
+        html: render_step_indicator
+      )
+
+      if validating?
+        Turbo::StreamsChannel.broadcast_replace_to(
+          "rowdy_import_#{id}",
+          target: "rowdy-import-progress-#{id}",
+          html: render_validation_progress
+        )
+      end
+    end
+
+    def render_step_indicator
+      Rowdy::ApplicationController.render(
+        partial: "rowdy/imports/step_indicator",
+        locals: { import: self }
       )
     end
 
-    def render_component
+    def render_validation_progress
       Rowdy::ApplicationController.render(
-        Rowdy::StepsComponent.new(import: self),
-        layout: false
+        partial: "rowdy/imports/validation_progress",
+        locals: { import: self }
       )
     end
   end

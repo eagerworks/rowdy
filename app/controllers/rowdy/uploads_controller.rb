@@ -18,22 +18,5 @@ module Rowdy
       render json: { error: e.message }, status: :unprocessable_entity
     end
 
-    def show
-      upload = Upload.find(params[:id])
-
-      unless upload.completed?
-        render json: { error: "Upload is not completed yet" }, status: :unprocessable_entity
-        return
-      end
-
-      unless upload.output_file.attached?
-        render json: { error: "Output file not found" }, status: :not_found
-        return
-      end
-
-      redirect_to rails_blob_path(upload.output_file, disposition: "attachment")
-    rescue ActiveRecord::RecordNotFound => e
-      render json: { error: e.message }, status: :not_found
-    end
   end
 end
