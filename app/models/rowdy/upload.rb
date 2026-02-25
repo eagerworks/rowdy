@@ -43,7 +43,7 @@ module Rowdy
     def avg_bytes_per_row
       return nil if sample_rows.blank?
 
-      total_bytes = sample_rows.sum { |row| row.to_s.bytesize }
+      total_bytes = sample_rows.sum { |row| row.to_json.bytesize }
       (total_bytes.to_f / sample_rows.size).round
     end
 
