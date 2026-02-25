@@ -7,6 +7,7 @@ module Rowdy
     def self.call(file_path)
       book = Creek::Book.new(file_path)
       sheet = book.sheets.first
+      sheet_dimension = sheet_bytesize(file_path)
 
       headers = []
       sample_rows = []
@@ -22,7 +23,7 @@ module Rowdy
         end
       end
 
-      { headers: headers, sample_rows: sample_rows }
+      { headers: headers, sample_rows: sample_rows, sheet_dimension: sheet_dimension }
     ensure
       book&.close
     end
@@ -39,6 +40,13 @@ module Rowdy
       end
     end
 
-    private_class_method :normalize_headers
+    def self.sheet_bytesize(xlsx_path)
+      Zip::File.open(xlsx_path) do |zip|
+        entry = zip.glob("xl/worksheets/sheet1.xml").first
+        return entry.size if entry
+      end
+    end
+
+    private_class_method :normalize_headers, :sheet_bytesize
   end
 end
