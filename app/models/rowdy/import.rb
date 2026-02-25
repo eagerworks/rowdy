@@ -12,7 +12,8 @@ module Rowdy
       validated: 2,
       importing: 3,
       imported: 4,
-      failed: 5
+      failed: 5,
+      preparing: 6
     }, default: :mapping
 
     validates :schema_name, presence: true
@@ -26,7 +27,7 @@ module Rowdy
     def current_step
       case status.to_sym
       when :mapping then 1
-      when :validating, :validated then 2
+      when :preparing, :validating, :validated then 2
       when :importing, :imported then 3
       when :failed then current_step_on_failure
       end
@@ -52,11 +53,19 @@ module Rowdy
         html: render_step_indicator
       )
 
-      if validating?
+      if preparing? || validating?
         Turbo::StreamsChannel.broadcast_replace_to(
           "rowdy_import_#{id}",
           target: "rowdy-import-progress-#{id}",
           html: render_validation_progress
+        )
+      end
+
+      if validated? && saved_change_to_status?
+        Turbo::StreamsChannel.broadcast_replace_to(
+          "rowdy_import_#{id}",
+          target: "rowdy-template-steps-#{schema_name}",
+          html: "<turbo-frame id=\"rowdy-template-steps-#{schema_name}\" src=\"#{validation_import_path}\"></turbo-frame>"
         )
       end
     end
@@ -73,6 +82,10 @@ module Rowdy
         partial: "rowdy/imports/validation_progress",
         locals: { import: self }
       )
+    end
+
+    def validation_import_path
+      Rowdy::Engine.routes.url_helpers.validation_import_path(self)
     end
   end
 end

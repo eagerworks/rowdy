@@ -7,8 +7,16 @@ module Rowdy
       @total_pages = total_pages
     end
 
+    def preparing?
+      @import.preparing?
+    end
+
     def validating?
       @import.validating?
+    end
+
+    def in_progress?
+      preparing? || validating?
     end
 
     def validated?
@@ -33,6 +41,10 @@ module Rowdy
 
     def error_report_path
       Rowdy::Engine.routes.url_helpers.error_report_import_path(@import)
+    end
+
+    def start_validation_path
+      Rowdy::Engine.routes.url_helpers.validate_import_path(@import)
     end
 
     def previous_page?

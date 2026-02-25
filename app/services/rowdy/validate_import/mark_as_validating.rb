@@ -6,9 +6,7 @@ module Rowdy
       expects :import
 
       executed do |ctx|
-        ctx.import.import_errors.delete_all
-        ctx.import.update!(status: :validating, progress: 0, total_rows: 0,
-                           valid_rows_count: 0, invalid_rows_count: 0)
+        ctx.import.update!(status: :validating)
       end
     end
   end

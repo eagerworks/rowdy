@@ -16,13 +16,16 @@ module Rowdy
 
         book = Creek::Book.new(ctx.input_path)
         sheet = book.sheets.first
+        total_rows = sheet.rows.count - 1 # Exclude header row
         unique_tracker = UniqueTracker.new
 
         headers = nil
-        total_rows = 0
+        total_mapped_rows = 0
         valid_count = 0
         invalid_count = 0
         error_buffer = []
+
+        import.update!(status: :validating)
 
         sheet.rows.each_with_index do |row, index|
           if index.zero?
@@ -30,7 +33,7 @@ module Rowdy
             next
           end
 
-          total_rows += 1
+          total_mapped_rows += 1
           raw_values = row.values
 
           mapped_row = map_row(headers, raw_values, column_mapping)
@@ -43,7 +46,7 @@ module Rowdy
             invalid_count += 1
             error_buffer << {
               import_id: import.id,
-              row_number: total_rows + 1,
+              row_number: total_mapped_rows + 1,
               row_data: mapped_row,
               column_errors: row_errors,
               created_at: Time.current,
@@ -56,7 +59,7 @@ module Rowdy
             end
           end
 
-          if (total_rows % broadcast_interval).zero?
+          if (total_mapped_rows % broadcast_interval).zero?
             update_progress(import, total_rows, valid_count, invalid_count)
           end
         end

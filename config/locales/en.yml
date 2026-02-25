@@ -33,6 +33,7 @@ en:
         ignore: "-- Ignore --"
         submit: "Validate"
       validation:
+        preparing: "Preparing file..."
         in_progress: "Validating rows..."
         summary: "%{total} total rows — %{valid} valid, %{invalid} invalid"
         row_number: "Row"

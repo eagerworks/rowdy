@@ -42,17 +42,15 @@ module Rowdy
         return
       end
 
-      @import.update!(column_mapping: column_mapping, status: :validating, progress: 0)
-      ValidateImportJob.perform_now(@import.id)
+      @import.update!(column_mapping: column_mapping, status: :preparing, progress: 0)
 
       redirect_to import_validation_path(@import)
     end
 
     def validate
-      @import.update!(status: :validating, progress: 0)
       ValidateImportJob.perform_now(@import.id)
 
-      redirect_to import_validation_path(@import)
+      head :no_content
     end
 
     def validation
