@@ -20,3 +20,9 @@ gem "rubocop-rails-omakase", require: false
 gem "redis"
 gem "sidekiq"
 gem "light-service"
+
+group :test do
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "caxlsx"
+end

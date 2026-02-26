@@ -18,7 +18,6 @@ if ActiveSupport::TestCase.respond_to?(:fixture_paths=)
   ActiveSupport::TestCase.fixtures :all
 end
 
-# Include ViewComponent test helpers in all tests
 class ActiveSupport::TestCase
   include ViewComponent::TestHelpers
 end
