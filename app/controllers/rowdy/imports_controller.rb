@@ -48,7 +48,9 @@ module Rowdy
     end
 
     def validate
-      ValidateImportJob.perform_now(@import.id)
+      ValidateImport::MarkAsPreparing.call(@import.id)
+
+      ValidateImportJob.perform_later(@import.id)
 
       head :no_content
     end

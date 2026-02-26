@@ -1,6 +1,6 @@
 module Rowdy
   class ValidateImportJob < ApplicationJob
-    queue_as :rowdy_imports
+    queue_as { Rowdy.configuration.import_queue }
 
     def perform(import_id)
       ValidateImport.call(import_id: import_id)
