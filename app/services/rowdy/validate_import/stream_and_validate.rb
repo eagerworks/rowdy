@@ -13,10 +13,10 @@ module Rowdy
         column_mapping = import.column_mapping || {}
         batch_size = Rowdy.configuration.import_batch_size
         broadcast_interval = Rowdy.configuration.progress_broadcast_interval
+        estimated_total = [ (import.upload.sheet_dimension.to_f / import.upload.avg_bytes_per_row).round, 1 ].max
 
         book = Creek::Book.new(ctx.input_path)
         sheet = book.sheets.first
-        total_rows = sheet.rows.count - 1 # Exclude header row
         unique_tracker = UniqueTracker.new
 
         headers = nil
@@ -60,12 +60,12 @@ module Rowdy
           end
 
           if (total_mapped_rows % broadcast_interval).zero?
-            update_progress(import, total_rows, valid_count, invalid_count)
+            update_progress(import, estimated_total, valid_count, invalid_count, cap: 99)
           end
         end
 
         flush_errors(error_buffer) if error_buffer.any?
-        update_progress(import, total_rows, valid_count, invalid_count)
+        update_progress(import, total_mapped_rows, valid_count, invalid_count)
 
         book.close
       rescue => e
@@ -92,12 +92,15 @@ module Rowdy
         ImportError.insert_all(buffer)
       end
 
-      def self.update_progress(import, total_rows, valid_count, invalid_count)
+      def self.update_progress(import, total_rows, valid_count, invalid_count, cap: nil)
+        progress = total_rows.positive? ? ((valid_count + invalid_count).to_f / total_rows * 100).round : 0
+        progress = [ progress, cap ].min if cap
+
         import.update!(
           total_rows: total_rows,
           valid_rows_count: valid_count,
           invalid_rows_count: invalid_count,
-          progress: total_rows.positive? ? ((valid_count + invalid_count).to_f / total_rows * 100).round : 0
+          progress: progress
         )
       end
 

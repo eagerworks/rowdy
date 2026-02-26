@@ -40,6 +40,13 @@ module Rowdy
       ((received_chunks&.size.to_f / total_chunks) * 100).round
     end
 
+    def avg_bytes_per_row
+      return nil if sample_rows.blank?
+
+      total_bytes = sample_rows.sum { |row| row.to_json.bytesize }
+      (total_bytes.to_f / sample_rows.size).round
+    end
+
     private
 
     def initialize_metadata
