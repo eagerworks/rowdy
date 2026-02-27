@@ -12,8 +12,7 @@ module Rowdy
       )
     end
 
-    before { ProcessUploadJob.define_singleton_method(:perform_now) { |*| } }
-    after  { ProcessUploadJob.singleton_class.remove_method(:perform_now) }
+    before { allow(ProcessUploadJob).to receive(:perform_now) }
 
     describe "POST /rowdy/uploads" do
       it "returns 201 with upload_ids for a single file" do

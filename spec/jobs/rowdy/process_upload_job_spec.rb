@@ -6,27 +6,36 @@ module Rowdy
       expect(described_class.new.queue_name).to eq("rowdy_processing")
     end
 
-    it "marks upload as failed when ProcessUpload returns a failure context" do
-      upload = create(:rowdy_upload, :completed)
-      original_call = ProcessUpload.method(:call)
-      failure_ctx = LightService::Context.make.tap(&:fail!)
+    describe "#perform" do
+      context "when processing succeeds" do
+        it "does not mark the upload as failed" do
+          upload = create(:rowdy_upload)
+          allow(ProcessUpload).to receive(:call).and_return(LightService::Context.make)
 
-      ProcessUpload.define_singleton_method(:call) { |**| failure_ctx }
-      described_class.perform_now(upload.id)
+          described_class.perform_now(upload.id)
 
-      expect(upload.reload).to be_failed
-    ensure
-      ProcessUpload.define_singleton_method(:call, original_call)
-    end
+          expect(upload.reload).not_to be_failed
+        end
+      end
 
-    it "does not raise if upload no longer exists when processing fails" do
-      original_call = ProcessUpload.method(:call)
-      failure_ctx = LightService::Context.make.tap(&:fail!)
+      context "when processing fails" do
+        it "marks the upload as failed" do
+          upload = create(:rowdy_upload, :completed)
+          failure_ctx = LightService::Context.make.tap(&:fail!)
+          allow(ProcessUpload).to receive(:call).and_return(failure_ctx)
 
-      ProcessUpload.define_singleton_method(:call) { |**| failure_ctx }
-      expect { described_class.perform_now(0) }.not_to raise_error
-    ensure
-      ProcessUpload.define_singleton_method(:call, original_call)
+          described_class.perform_now(upload.id)
+
+          expect(upload.reload).to be_failed
+        end
+
+        it "does not raise when the upload no longer exists" do
+          failure_ctx = LightService::Context.make.tap(&:fail!)
+          allow(ProcessUpload).to receive(:call).and_return(failure_ctx)
+
+          expect { described_class.perform_now(0) }.not_to raise_error
+        end
+      end
     end
   end
 end

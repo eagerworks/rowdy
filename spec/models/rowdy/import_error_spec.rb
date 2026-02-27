@@ -16,7 +16,7 @@ module Rowdy
 
     describe "associations" do
       it "belongs to an import" do
-        expect(create(:rowdy_import_error).import).to be_a(Rowdy::Import)
+        expect(build(:rowdy_import_error).import).to be_a(Rowdy::Import)
       end
     end
 

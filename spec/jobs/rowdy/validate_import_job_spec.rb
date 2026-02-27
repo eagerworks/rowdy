@@ -6,27 +6,36 @@ module Rowdy
       expect(described_class.new.queue_name).to eq("rowdy_imports")
     end
 
-    it "marks import as failed with error message when an exception is raised" do
-      import = create(:rowdy_import)
-      original_call = ValidateImport.method(:call)
+    describe "#perform" do
+      context "when validation succeeds" do
+        it "does not mark the import as failed" do
+          import = create(:rowdy_import)
+          allow(ValidateImport).to receive(:call)
 
-      ValidateImport.define_singleton_method(:call) { |**| raise "something went wrong" }
-      described_class.perform_now(import.id)
+          described_class.perform_now(import.id)
 
-      import.reload
-      expect(import).to be_failed
-      expect(import.error_message).to eq("something went wrong")
-    ensure
-      ValidateImport.define_singleton_method(:call, original_call)
-    end
+          expect(import.reload).not_to be_failed
+        end
+      end
 
-    it "does not raise if import no longer exists when an exception is raised" do
-      original_call = ValidateImport.method(:call)
+      context "when an exception is raised" do
+        it "marks the import as failed with the error message" do
+          import = create(:rowdy_import)
+          allow(ValidateImport).to receive(:call).and_raise("something went wrong")
 
-      ValidateImport.define_singleton_method(:call) { |**| raise "error" }
-      expect { described_class.perform_now(0) }.not_to raise_error
-    ensure
-      ValidateImport.define_singleton_method(:call, original_call)
+          described_class.perform_now(import.id)
+
+          import.reload
+          expect(import).to be_failed
+          expect(import.error_message).to eq("something went wrong")
+        end
+
+        it "does not raise when the import no longer exists" do
+          allow(ValidateImport).to receive(:call).and_raise("error")
+
+          expect { described_class.perform_now(0) }.not_to raise_error
+        end
+      end
     end
   end
 end

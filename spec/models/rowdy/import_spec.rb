@@ -15,14 +15,49 @@ module Rowdy
     end
 
     describe "enums" do
-      it "default status is mapping" do
-        expect(create(:rowdy_import)).to be_mapping
+      it "defaults to mapping status" do
+        expect(build(:rowdy_import)).to be_mapping
       end
 
-      it "supports all defined statuses" do
-        %i[mapping validating validated importing imported failed preparing].each do |status|
-          import = create(:rowdy_import, status: status)
-          expect(import.public_send(:"#{status}?")).to be(true)
+      context "when status is mapping" do
+        it "responds to mapping?" do
+          expect(build(:rowdy_import, status: :mapping)).to be_mapping
+        end
+      end
+
+      context "when status is validating" do
+        it "responds to validating?" do
+          expect(build(:rowdy_import, status: :validating)).to be_validating
+        end
+      end
+
+      context "when status is validated" do
+        it "responds to validated?" do
+          expect(build(:rowdy_import, status: :validated)).to be_validated
+        end
+      end
+
+      context "when status is importing" do
+        it "responds to importing?" do
+          expect(build(:rowdy_import, status: :importing)).to be_importing
+        end
+      end
+
+      context "when status is imported" do
+        it "responds to imported?" do
+          expect(build(:rowdy_import, status: :imported)).to be_imported
+        end
+      end
+
+      context "when status is failed" do
+        it "responds to failed?" do
+          expect(build(:rowdy_import, status: :failed)).to be_failed
+        end
+      end
+
+      context "when status is preparing" do
+        it "responds to preparing?" do
+          expect(build(:rowdy_import, status: :preparing)).to be_preparing
         end
       end
     end
@@ -40,44 +75,62 @@ module Rowdy
     end
 
     describe "#current_step" do
-      it "is 1 when mapping" do
-        expect(build(:rowdy_import, status: :mapping).current_step).to eq(1)
+      context "when status is mapping" do
+        it "returns step 1" do
+          expect(build(:rowdy_import, status: :mapping).current_step).to eq(1)
+        end
       end
 
-      it "is 2 when validating" do
-        expect(build(:rowdy_import, status: :validating).current_step).to eq(2)
+      context "when status is validating" do
+        it "returns step 2" do
+          expect(build(:rowdy_import, status: :validating).current_step).to eq(2)
+        end
       end
 
-      it "is 2 when validated" do
-        expect(build(:rowdy_import, status: :validated).current_step).to eq(2)
+      context "when status is validated" do
+        it "returns step 2" do
+          expect(build(:rowdy_import, status: :validated).current_step).to eq(2)
+        end
       end
 
-      it "is 2 when preparing" do
-        expect(build(:rowdy_import, status: :preparing).current_step).to eq(2)
+      context "when status is preparing" do
+        it "returns step 2" do
+          expect(build(:rowdy_import, status: :preparing).current_step).to eq(2)
+        end
       end
 
-      it "is 3 when importing" do
-        expect(build(:rowdy_import, status: :importing).current_step).to eq(3)
+      context "when status is importing" do
+        it "returns step 3" do
+          expect(build(:rowdy_import, status: :importing).current_step).to eq(3)
+        end
       end
 
-      it "is 3 when imported" do
-        expect(build(:rowdy_import, status: :imported).current_step).to eq(3)
+      context "when status is imported" do
+        it "returns step 3" do
+          expect(build(:rowdy_import, status: :imported).current_step).to eq(3)
+        end
       end
 
-      context "when failed" do
-        it "is 1 with no column_mapping" do
-          import = build(:rowdy_import, status: :failed, column_mapping: nil)
-          expect(import.current_step).to eq(1)
+      context "when status is failed" do
+        context "when column_mapping is nil" do
+          it "returns step 1" do
+            import = build(:rowdy_import, status: :failed, column_mapping: nil)
+            expect(import.current_step).to eq(1)
+          end
         end
 
-        it "is 2 with mapping but zero total_rows" do
-          import = build(:rowdy_import, status: :failed, column_mapping: { "name" => "name" }, total_rows: 0)
-          expect(import.current_step).to eq(2)
+        context "when column_mapping is present but total_rows is zero" do
+          it "returns step 2" do
+            import = build(:rowdy_import, status: :failed, column_mapping: { "name" => "name" }, total_rows: 0)
+            expect(import.current_step).to eq(2)
+          end
         end
 
-        it "is 3 with mapping and rows processed" do
-          import = build(:rowdy_import, status: :failed, column_mapping: { "name" => "name" }, total_rows: 5)
-          expect(import.current_step).to eq(3)
+        context "when column_mapping is present and total_rows is positive" do
+          it "returns step 3" do
+            import = build(:rowdy_import, status: :failed, column_mapping: { "name" => "name" }, total_rows: 5)
+            expect(import.current_step).to eq(3)
+          end
         end
       end
     end

@@ -16,7 +16,7 @@ module Rowdy
     end
 
     describe "GET /rowdy/imports/:id/mapping" do
-      it "renders successfully" do
+      it "returns 200 with the mapping page" do
         upload = create(:rowdy_upload, :completed, :with_schema, :with_columns)
         import = create(:rowdy_import, upload: upload)
 
@@ -27,47 +27,50 @@ module Rowdy
     end
 
     describe "PATCH /rowdy/imports/:id/save_mapping" do
-      it "redirects to validation with a valid mapping" do
-        upload = create(:rowdy_upload, :completed, :with_schema, :with_columns,
-          detected_columns: %w[name sku price])
-        import = create(:rowdy_import, upload: upload)
+      context "with a valid mapping" do
+        it "redirects to the validation page and transitions to preparing" do
+          upload = create(:rowdy_upload, :completed, :with_schema, :with_columns,
+            detected_columns: %w[name sku price])
+          import = create(:rowdy_import, upload: upload)
 
-        patch "/rowdy/imports/#{import.id}/save_mapping", params: {
-          column_mapping: { "name" => "name", "sku" => "sku", "price" => "price" }
-        }
+          patch "/rowdy/imports/#{import.id}/save_mapping", params: {
+            column_mapping: { "name" => "name", "sku" => "sku", "price" => "price" }
+          }
 
-        expect(response).to be_redirect
-        expect(import.reload).to be_preparing
-        expect(response).to redirect_to(/validation/)
+          expect(response).to be_redirect
+          expect(import.reload).to be_preparing
+          expect(response).to redirect_to(/validation/)
+        end
       end
 
-      it "returns 422 when required column is missing from mapping" do
-        upload = create(:rowdy_upload, :completed, :with_schema, :with_columns,
-          detected_columns: %w[name sku price])
-        import = create(:rowdy_import, upload: upload)
+      context "when a required column is missing from the mapping" do
+        it "returns 422" do
+          upload = create(:rowdy_upload, :completed, :with_schema, :with_columns,
+            detected_columns: %w[name sku price])
+          import = create(:rowdy_import, upload: upload)
 
-        patch "/rowdy/imports/#{import.id}/save_mapping", params: {
-          column_mapping: { "name" => "name" }
-        }
+          patch "/rowdy/imports/#{import.id}/save_mapping", params: {
+            column_mapping: { "name" => "name" }
+          }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
       end
     end
 
     describe "POST /rowdy/imports/:id/validate" do
       it "returns 204 and triggers the validation job" do
         import = create(:rowdy_import, :with_mapping)
+        allow(ValidateImportJob).to receive(:perform_now)
 
-        ValidateImportJob.define_singleton_method(:perform_now) { |*| }
         post "/rowdy/imports/#{import.id}/validate"
-        ValidateImportJob.singleton_class.remove_method(:perform_now)
 
         expect(response).to have_http_status(:no_content)
       end
     end
 
     describe "GET /rowdy/imports/:id/validation" do
-      it "renders successfully" do
+      it "returns 200 with the validation page" do
         import = create(:rowdy_import, :validated)
 
         get "/rowdy/imports/#{import.id}/validation"

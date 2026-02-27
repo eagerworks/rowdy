@@ -18,54 +18,66 @@ module Rowdy
       )
     end
 
-    it "marks old uploading uploads as failed" do
-      old_upload = create(:rowdy_upload)
-      attach_dummy_file(old_upload)
-      old_upload.update_columns(
-        status: Upload.statuses[:uploading],
-        updated_at: (Rowdy.configuration.orphan_cleanup_hours + 1).hours.ago
-      )
+    context "when uploads are old" do
+      it "marks uploads as failed" do
+        freeze_time do
+          old_upload = create(:rowdy_upload)
+          attach_dummy_file(old_upload)
+          old_upload.update_columns(
+            status: Upload.statuses[:uploading],
+            updated_at: (Rowdy.configuration.orphan_cleanup_hours + 1).hours.ago
+          )
 
-      described_class.perform_now
+          described_class.perform_now
 
-      expect(old_upload.reload).to be_failed
+          expect(old_upload.reload).to be_failed
+        end
+      end
     end
 
-    it "does not touch recent uploading uploads" do
-      recent_upload = create(:rowdy_upload)
-      recent_upload.update_column(:updated_at, 1.hour.ago)
+    context "when uploads are recent" do
+      it "does not touch recent uploading uploads" do
+        freeze_time do
+          recent_upload = create(:rowdy_upload)
+          recent_upload.update_column(:updated_at, 1.hour.ago)
 
-      described_class.perform_now
+          described_class.perform_now
 
-      expect(recent_upload.reload).to be_uploading
+          expect(recent_upload.reload).to be_uploading
+        end
+      end
     end
 
     it "cleans up chunks_dir for orphaned uploads" do
-      chunks_dir = File.join(tmp_dir, "orphan_chunks")
-      FileUtils.mkdir_p(chunks_dir)
+      freeze_time do
+        chunks_dir = File.join(tmp_dir, "orphan_chunks")
+        FileUtils.mkdir_p(chunks_dir)
 
-      old_upload = create(:rowdy_upload, chunks_dir: chunks_dir)
-      attach_dummy_file(old_upload)
-      old_upload.update_columns(
-        status: Upload.statuses[:uploading],
-        updated_at: (Rowdy.configuration.orphan_cleanup_hours + 1).hours.ago
-      )
+        old_upload = create(:rowdy_upload, chunks_dir: chunks_dir)
+        attach_dummy_file(old_upload)
+        old_upload.update_columns(
+          status: Upload.statuses[:uploading],
+          updated_at: (Rowdy.configuration.orphan_cleanup_hours + 1).hours.ago
+        )
 
-      described_class.perform_now
+        described_class.perform_now
 
-      expect(Dir.exist?(chunks_dir)).to be(false)
+        expect(Dir.exist?(chunks_dir)).to be(false)
+      end
     end
 
     it "does not process non-uploading uploads" do
-      completed_upload = create(:rowdy_upload, :completed)
-      completed_upload.update_column(
-        :updated_at,
-        (Rowdy.configuration.orphan_cleanup_hours + 1).hours.ago
-      )
+      freeze_time do
+        completed_upload = create(:rowdy_upload, :completed)
+        completed_upload.update_column(
+          :updated_at,
+          (Rowdy.configuration.orphan_cleanup_hours + 1).hours.ago
+        )
 
-      described_class.perform_now
+        described_class.perform_now
 
-      expect(completed_upload.reload).to be_completed
+        expect(completed_upload.reload).to be_completed
+      end
     end
   end
 end
