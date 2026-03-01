@@ -1,0 +1,11 @@
+<div id="rowdy-import-progress-<%= import.id %>" class="rowdy-validation-progress">
+  <% if import.preparing? %>
+    <p class="rowdy-validation-status"><%= I18n.t("rowdy.import.validation.preparing") %></p>
+  <% else %>
+    <p class="rowdy-validation-status"><%= I18n.t("rowdy.import.validation.in_progress") %></p>
+    <div class="rowdy-upload-progress-bar">
+      <progress value="<%= import.progress %>" max="100"></progress>
+      <span class="rowdy-upload-progress-text"><%= import.progress %>%</span>
+    </div>
+  <% end %>
+</div>

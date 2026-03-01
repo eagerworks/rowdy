@@ -7,6 +7,7 @@ module Rowdy
         LoadUpload,
         MarkAsProcessing,
         DownloadInputFile,
+        DetectAndStoreColumns,
         ProcessFile,
         AttachOutputFile,
         MarkAsCompleted,

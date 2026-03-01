@@ -8,7 +8,7 @@ en:
       resume_dismiss: "Dismiss"
       resume_mismatch: "File does not match the interrupted upload"
     upload_item:
-      download: "Download"
+      start_import: "Start Import"
       processing: "Processing"
       pending: "Pending"
       completed: "Completed"
@@ -20,3 +20,31 @@ en:
       completed: "Completed"
       failed: "Failed"
       uploading: "Uploading"
+    import:
+      steps:
+        column_mapping: "Column Mapping"
+        validation: "Validation"
+        import: "Import"
+      missing_required_columns: "Missing required columns: %{columns}"
+      mapping:
+        uploaded_column: "Uploaded Column"
+        sample_data: "Sample Data"
+        template_column: "Template Column"
+        ignore: "-- Ignore --"
+        submit: "Validate"
+      validation:
+        preparing: "Preparing file..."
+        in_progress: "Validating rows..."
+        summary: "%{total} total rows — %{valid} valid, %{invalid} invalid"
+        row_number: "Row"
+        column: "Column"
+        error: "Error"
+        previous: "Previous"
+        next: "Next"
+        page_info: "Page %{page} of %{total}"
+        back_to_mapping: "Back to Mapping"
+        import_valid_rows: "Import %{count} Valid Rows"
+        download_report: "Download Error Report"
+      result:
+        placeholder: "Import functionality coming soon."
+        import_button: "Import"

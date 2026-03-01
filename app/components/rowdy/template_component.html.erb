@@ -1,0 +1,13 @@
+
+<div class="rowdy-template" id="rowdy-template-<%= @schema.schema_name %>">
+  <h2 class="rowdy-template-title"><%= @schema.schema_label %></h2>
+
+  <%= render Rowdy::DropzoneComponent.new(schema_name: @schema.schema_name) %>
+
+  <%= render Rowdy::UploadListComponent.new(
+    uploads: @uploads,
+    schema_name: @schema.schema_name
+  ) %>
+
+  <turbo-frame id="<%= steps_frame_id %>"></turbo-frame>
+</div>

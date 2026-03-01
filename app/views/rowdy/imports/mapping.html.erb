@@ -1,0 +1,12 @@
+<turbo-frame id="rowdy-template-steps-<%= @import.schema_name %>">
+  <%= render Rowdy::StepsComponent.new(import: @import) do %>
+    <%= render Rowdy::ColumnMappingComponent.new(
+      import: @import,
+      detected_columns: @detected_columns,
+      sample_rows: @sample_rows,
+      schema_columns: @schema_columns,
+      mapping: @column_mapping,
+      errors: @mapping_errors || []
+    ) %>
+  <% end %>
+</turbo-frame>

@@ -169,6 +169,242 @@
   transition: width 0.3s;
 }
 
+/* Buttons */
+.rowdy-btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 0.0625rem solid var(--rowdy-border-color);
+  border-radius: 0.25rem;
+  background: var(--rowdy-bg);
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+}
+
+.rowdy-btn:hover {
+  box-shadow: 0 0.0625rem 0.125rem var(--rowdy-shadow);
+}
+
+.rowdy-btn--primary {
+  background-color: var(--rowdy-color-primary);
+  color: var(--rowdy-button-text);
+  border-color: var(--rowdy-color-primary);
+}
+
+.rowdy-btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Schema Sections */
+.rowdy-schema-section {
+  margin-bottom: 2rem;
+}
+
+.rowdy-schema-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Steps Indicator */
+.rowdy-step-indicator {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 0.0625rem solid var(--rowdy-border-color);
+}
+
+.rowdy-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--rowdy-text-muted);
+}
+
+.rowdy-step--active {
+  color: var(--rowdy-color-primary);
+  font-weight: 600;
+}
+
+.rowdy-step--completed {
+  color: var(--rowdy-status-completed);
+}
+
+.rowdy-step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  border: 0.125rem solid currentColor;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.rowdy-step-label {
+  font-size: 0.875rem;
+}
+
+/* Column Mapping */
+.rowdy-mapping-errors {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #fef2f2;
+  border: 0.0625rem solid var(--rowdy-status-failed);
+  border-radius: 0.375rem;
+}
+
+.rowdy-mapping-error {
+  color: var(--rowdy-status-failed);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.rowdy-mapping-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.rowdy-mapping-table th {
+  text-align: left;
+  padding: 0.75rem;
+  border-bottom: 0.125rem solid var(--rowdy-border-color);
+  font-size: 0.8125rem;
+  color: var(--rowdy-text-muted);
+  font-weight: 600;
+}
+
+.rowdy-mapping-table td {
+  padding: 0.75rem;
+  border-bottom: 0.0625rem solid var(--rowdy-border-color);
+  font-size: 0.875rem;
+}
+
+.rowdy-mapping-uploaded-col {
+  font-weight: 500;
+}
+
+.rowdy-mapping-sample-value {
+  display: inline-block;
+  padding: 0.125rem 0.375rem;
+  background: #f3f4f6;
+  border-radius: 0.1875rem;
+  font-size: 0.75rem;
+  margin-right: 0.25rem;
+  color: var(--rowdy-text-muted);
+}
+
+.rowdy-mapping-select {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  border: 0.0625rem solid var(--rowdy-border-color);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  background: var(--rowdy-bg);
+}
+
+.rowdy-mapping-remove-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--rowdy-text-muted);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}
+
+.rowdy-mapping-remove-btn:hover {
+  color: var(--rowdy-status-failed);
+}
+
+.rowdy-mapping-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Validation Result */
+.rowdy-validation-progress {
+  text-align: center;
+  padding: 2rem;
+}
+
+.rowdy-validation-status {
+  font-size: 0.875rem;
+  color: var(--rowdy-text-muted);
+  margin-bottom: 1rem;
+}
+
+.rowdy-validation-summary {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 0.375rem;
+}
+
+.rowdy-validation-total {
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.rowdy-validation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.rowdy-validation-table th {
+  text-align: left;
+  padding: 0.75rem;
+  border-bottom: 0.125rem solid var(--rowdy-border-color);
+  font-size: 0.8125rem;
+  color: var(--rowdy-text-muted);
+  font-weight: 600;
+}
+
+.rowdy-validation-table td {
+  padding: 0.75rem;
+  border-bottom: 0.0625rem solid var(--rowdy-border-color);
+  font-size: 0.875rem;
+}
+
+.rowdy-validation-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rowdy-validation-page-info {
+  font-size: 0.8125rem;
+  color: var(--rowdy-text-muted);
+}
+
+.rowdy-validation-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Import Result */
+.rowdy-import-result {
+  text-align: center;
+  padding: 2rem;
+}
+
+.rowdy-import-result-placeholder {
+  color: var(--rowdy-text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
 /* Hidden utility */
 .hidden {
   display: none !important;

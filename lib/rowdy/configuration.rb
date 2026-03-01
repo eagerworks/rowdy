@@ -1,7 +1,9 @@
 module Rowdy
   class Configuration
     attr_accessor :processor, :default_chunk_size, :chunks_storage_path,
-                  :max_file_size, :orphan_cleanup_hours
+                  :max_file_size, :orphan_cleanup_hours,
+                  :schemas, :import_batch_size, :progress_broadcast_interval,
+                  :import_queue
 
     def initialize
       @processor = default_processor
@@ -9,6 +11,10 @@ module Rowdy
       @chunks_storage_path = nil                    # defaults to Rails.root.join("tmp/rowdy_chunks")
       @max_file_size = 500 * 1024 * 1024           # 500 MB
       @orphan_cleanup_hours = 24
+      @schemas = []
+      @import_batch_size = 1000
+      @progress_broadcast_interval = 5000
+      @import_queue = "rowdy_imports"
     end
 
     def default_processor

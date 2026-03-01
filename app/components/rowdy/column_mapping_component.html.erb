@@ -1,0 +1,54 @@
+<div class="rowdy-column-mapping">
+  <% if @errors.any? %>
+    <div class="rowdy-mapping-errors">
+      <% @errors.each do |error| %>
+        <p class="rowdy-mapping-error"><%= error %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= form_with url: save_mapping_path, method: :patch, data: { turbo_frame: "rowdy-import-step-content-#{@import.id}" } do |f| %>
+    <table class="rowdy-mapping-table">
+      <thead>
+        <tr>
+          <th><%= I18n.t("rowdy.import.mapping.uploaded_column") %></th>
+          <th><%= I18n.t("rowdy.import.mapping.sample_data") %></th>
+          <th><%= I18n.t("rowdy.import.mapping.template_column") %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @detected_columns.each_with_index do |column, index| %>
+          <tr class="rowdy-mapping-row" data-column="<%= column %>">
+            <td class="rowdy-mapping-uploaded-col"><%= column %></td>
+            <td class="rowdy-mapping-sample">
+              <% sample_values_for(index).each do |val| %>
+                <span class="rowdy-mapping-sample-value"><%= val %></span>
+              <% end %>
+            </td>
+            <td>
+              <select name="column_mapping[<%= column %>]" class="rowdy-mapping-select">
+                <option value=""><%= I18n.t("rowdy.import.mapping.ignore") %></option>
+                <% schema_options.each do |label, value| %>
+                  <option value="<%= value %>" <%= "selected" if selected_mapping_for(column) == value %>>
+                    <%= label %>
+                  </option>
+                <% end %>
+              </select>
+            </td>
+            <td>
+              <button type="button" class="rowdy-mapping-remove-btn"
+                      onclick="this.closest('tr').remove()">
+                &times;
+              </button>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="rowdy-mapping-actions">
+      <%= f.submit I18n.t("rowdy.import.mapping.submit"), class: "rowdy-btn rowdy-btn--primary" %>
+    </div>
+  <% end %>
+</div>

@@ -18,7 +18,7 @@ let currentUpload = null
 let abortController = null
 
 async function handleStart(payload) {
-  const { file, chunkedUrl, chunkSize, csrfToken } = payload
+  const { file, chunkedUrl, chunkSize, csrfToken, schemaName } = payload
 
   currentUpload = {
     file,
@@ -42,7 +42,8 @@ async function handleStart(payload) {
       body: JSON.stringify({
         filename: file.name,
         size: file.size,
-        chunk_size: chunkSize
+        chunk_size: chunkSize,
+        schema_name: schemaName || undefined
       }),
       signal: abortController.signal
     })

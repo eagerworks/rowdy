@@ -1,0 +1,5 @@
+<div class="rowdy-schemas">
+  <% @schemas.each do |schema| %>
+    <%= render Rowdy::TemplateComponent.new(schema: schema) %>
+  <% end %>
+</div>

@@ -14,9 +14,11 @@
     </div>
   <% end %>
 
-  <% if @upload.completed? %>
+  <% if @upload.completed? && importable? %>
     <div class="rowdy-upload-actions">
-      <%= link_to I18n.t("rowdy.upload_item.download"), download_path, class: "rowdy-download-button" %>
+      <%= button_to I18n.t("rowdy.upload_item.start_import"), create_import_path, method: :post,
+            class: "rowdy-btn rowdy-btn--primary",
+            data: { turbo_frame: "rowdy-template-steps-#{@upload.schema_name}" } %>
     </div>
   <% end %>
 

@@ -7,6 +7,7 @@ module Rowdy
       multiple: true,
       chunked: true,
       chunk_size: nil,
+      schema_name: nil,
       **html_options
     )
       @url = url
@@ -15,6 +16,7 @@ module Rowdy
       @multiple = multiple
       @chunked = chunked
       @chunk_size = chunk_size
+      @schema_name = schema_name
       @html_options = html_options
     end
 

@@ -2,9 +2,12 @@ module Rowdy
   class Upload < ApplicationRecord
     has_one_attached :input_file
     has_one_attached :output_file
+    has_many :imports, class_name: "Rowdy::Import", dependent: :destroy
 
     serialize :metadata, coder: JSON
     serialize :received_chunks, coder: JSON
+    serialize :detected_columns, coder: JSON
+    serialize :sample_rows, coder: JSON
 
     enum :status, {
       pending: 0,
@@ -37,6 +40,13 @@ module Rowdy
       ((received_chunks&.size.to_f / total_chunks) * 100).round
     end
 
+    def avg_bytes_per_row
+      return nil if sample_rows.blank?
+
+      total_bytes = sample_rows.sum { |row| row.to_json.bytesize }
+      (total_bytes.to_f / sample_rows.size).round
+    end
+
     private
 
     def initialize_metadata
@@ -57,18 +67,26 @@ module Rowdy
 
     def broadcast_new_upload
       Turbo::StreamsChannel.broadcast_append_to(
-        "rowdy_uploads",
-        target: "rowdy-uploads-list",
+        broadcast_channel,
+        target: broadcast_list_target,
         html: render_component
       )
     end
 
     def broadcast_upload_update
       Turbo::StreamsChannel.broadcast_replace_to(
-        "rowdy_uploads",
+        broadcast_channel,
         target: dom_id,
         html: render_component
       )
+    end
+
+    def broadcast_channel
+      schema_name.present? ? "rowdy_uploads_#{schema_name}" : "rowdy_uploads"
+    end
+
+    def broadcast_list_target
+      schema_name.present? ? "rowdy-uploads-list-#{schema_name}" : "rowdy-uploads-list"
     end
 
     def status_changed?

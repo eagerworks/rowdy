@@ -10,7 +10,8 @@ module Rowdy
       upload = InitiateUpload.call(
         filename: params[:filename],
         file_size: params[:size].to_i,
-        chunk_size: params[:chunk_size]
+        chunk_size: params[:chunk_size],
+        schema_name: params[:schema_name]
       )
 
       render json: {
