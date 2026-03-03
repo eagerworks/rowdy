@@ -14,6 +14,7 @@ Rowdy::Engine.routes.draw do
       patch  :save_mapping
       post   :validate
       get    :validation
+      patch  :correct_errors
       get    :error_report
     end
   end

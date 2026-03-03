@@ -47,6 +47,10 @@ module Rowdy
       Rowdy::Engine.routes.url_helpers.validate_import_path(@import)
     end
 
+    def correct_errors_path
+      Rowdy::Engine.routes.url_helpers.correct_errors_import_path(@import)
+    end
+
     def previous_page?
       @page > 1
     end

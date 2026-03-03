@@ -30,5 +30,11 @@ module Rowdy
         app.config.importmap.cache_sweepers << root.join("app/javascript")
       end
     end
+
+    initializer :append_migrations do |app|
+      unless app.root.to_s == root.to_s
+        app.config.paths["db/migrate"].concat(config.paths["db/migrate"].existent)
+      end
+    end
   end
 end

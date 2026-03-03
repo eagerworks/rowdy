@@ -26,69 +26,97 @@
     </div>
 
     <% if has_errors? %>
-      <table class="rowdy-validation-table">
-        <thead>
-          <tr>
-            <th><%= I18n.t("rowdy.import.validation.row_number") %></th>
-            <th><%= I18n.t("rowdy.import.validation.column") %></th>
-            <th><%= I18n.t("rowdy.import.validation.error") %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @errors.each do |import_error| %>
-            <% (import_error.column_errors || {}).each do |column, messages| %>
-              <% messages.each do |message| %>
-                <tr>
-                  <td><%= import_error.row_number %></td>
-                  <td><%= column %></td>
-                  <td><%= message %></td>
-                </tr>
+      <%= form_with url: correct_errors_path,
+                    method: :patch,
+                    data: {
+                      turbo_frame: "rowdy-template-steps-#{@import.schema_name}",
+                      controller: "rowdy-dirty-form",
+                      rowdy_dirty_form_confirm_value: I18n.t("rowdy.import.validation.unsaved_warning")
+                    } do |f| %>
+        <%= f.hidden_field :page, value: @page %>
+
+        <table class="rowdy-validation-table">
+          <thead>
+            <tr>
+              <th><%= I18n.t("rowdy.import.validation.row_number") %></th>
+              <th><%= I18n.t("rowdy.import.validation.column") %></th>
+              <th><%= I18n.t("rowdy.import.validation.error") %></th>
+              <th><%= I18n.t("rowdy.import.validation.value") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @errors.each do |import_error| %>
+              <% (import_error.column_errors || {}).each do |column, messages| %>
+                <%= render Rowdy::InvalidRowComponent.new(import_error: import_error, column: column, messages: messages) %>
               <% end %>
             <% end %>
+          </tbody>
+        </table>
+
+        <div class="rowdy-validation-pagination">
+          <% if previous_page? %>
+            <%= link_to I18n.t("rowdy.import.validation.previous"),
+              validation_path(page: @page - 1),
+              class: "rowdy-btn",
+              data: {
+                turbo_frame: "rowdy-template-steps-#{@import.schema_name}",
+                action: "click->rowdy-dirty-form#confirmNavigation"
+              } %>
           <% end %>
-        </tbody>
-      </table>
 
-      <div class="rowdy-validation-pagination">
-        <% if previous_page? %>
-          <%= link_to I18n.t("rowdy.import.validation.previous"),
-            validation_path(page: @page - 1),
-            class: "rowdy-btn",
-            data: { turbo_frame: "rowdy-template-steps-#{@import.schema_name}" } %>
+          <span class="rowdy-validation-page-info">
+            <%= I18n.t("rowdy.import.validation.page_info", page: @page, total: @total_pages) %>
+          </span>
+
+          <% if next_page? %>
+            <%= link_to I18n.t("rowdy.import.validation.next"),
+              validation_path(page: @page + 1),
+              class: "rowdy-btn",
+              data: {
+                turbo_frame: "rowdy-template-steps-#{@import.schema_name}",
+                action: "click->rowdy-dirty-form#confirmNavigation"
+              } %>
+          <% end %>
+        </div>
+
+        <% if @import.error_report.attached? %>
+          <div class="rowdy-validation-report">
+            <%= link_to I18n.t("rowdy.import.validation.download_report"),
+              error_report_path,
+              class: "rowdy-btn" %>
+          </div>
         <% end %>
 
-        <span class="rowdy-validation-page-info">
-          <%= I18n.t("rowdy.import.validation.page_info", page: @page, total: @total_pages) %>
-        </span>
-
-        <% if next_page? %>
-          <%= link_to I18n.t("rowdy.import.validation.next"),
-            validation_path(page: @page + 1),
+        <div class="rowdy-validation-actions">
+          <%= link_to I18n.t("rowdy.import.validation.back_to_mapping"),
+            mapping_path,
             class: "rowdy-btn",
             data: { turbo_frame: "rowdy-template-steps-#{@import.schema_name}" } %>
-        <% end %>
-      </div>
 
-      <% if @import.error_report.attached? %>
-        <div class="rowdy-validation-report">
-          <%= link_to I18n.t("rowdy.import.validation.download_report"),
-            error_report_path,
-            class: "rowdy-btn" %>
+          <div class="rowdy-validation-actions-right">
+            <%= f.submit I18n.t("rowdy.import.validation.save_corrections"), class: "rowdy-btn" %>
+
+            <% if has_valid_rows? %>
+              <button type="button" class="rowdy-btn rowdy-btn--primary" disabled>
+                <%= I18n.t("rowdy.import.validation.import_valid_rows", count: @import.valid_rows_count) %>
+              </button>
+            <% end %>
+          </div>
         </div>
       <% end %>
+    <% else %>
+      <div class="rowdy-validation-actions">
+        <%= link_to I18n.t("rowdy.import.validation.back_to_mapping"),
+          mapping_path,
+          class: "rowdy-btn",
+          data: { turbo_frame: "rowdy-template-steps-#{@import.schema_name}" } %>
+
+        <% if has_valid_rows? %>
+          <button type="button" class="rowdy-btn rowdy-btn--primary" disabled>
+            <%= I18n.t("rowdy.import.validation.import_valid_rows", count: @import.valid_rows_count) %>
+          </button>
+        <% end %>
+      </div>
     <% end %>
-
-    <div class="rowdy-validation-actions">
-      <%= link_to I18n.t("rowdy.import.validation.back_to_mapping"),
-        mapping_path,
-        class: "rowdy-btn",
-        data: { turbo_frame: "rowdy-template-steps-#{@import.schema_name}" } %>
-
-      <% if has_valid_rows? %>
-        <button type="button" class="rowdy-btn rowdy-btn--primary" disabled>
-          <%= I18n.t("rowdy.import.validation.import_valid_rows", count: @import.valid_rows_count) %>
-        </button>
-      <% end %>
-    </div>
   <% end %>
 </div>

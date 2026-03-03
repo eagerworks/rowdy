@@ -389,8 +389,36 @@
 .rowdy-validation-actions {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 0.75rem;
   margin-top: 1.5rem;
+}
+
+.rowdy-validation-actions-right {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.rowdy-inline-edit-input {
+  background: transparent;
+  border: 0.0625rem solid transparent;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.375rem;
+  font-size: 0.875rem;
+  width: 100%;
+  cursor: pointer;
+  color: inherit;
+}
+
+.rowdy-inline-edit-input:hover {
+  border-color: var(--rowdy-border-color);
+}
+
+.rowdy-inline-edit-input:focus {
+  background: var(--rowdy-bg);
+  border-color: var(--rowdy-color-primary);
+  outline: none;
+  cursor: text;
 }
 
 /* Import Result */

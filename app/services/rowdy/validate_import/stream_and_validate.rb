@@ -13,7 +13,8 @@ module Rowdy
         column_mapping = import.column_mapping || {}
         batch_size = Rowdy.configuration.import_batch_size
         broadcast_interval = Rowdy.configuration.progress_broadcast_interval
-        estimated_total = [ (import.upload.sheet_dimension.to_f / import.upload.avg_bytes_per_row).round, 1 ].max
+        avg_bytes = import.upload.avg_bytes_per_row.to_i
+        estimated_total = avg_bytes.positive? ? [ (import.upload.sheet_dimension.to_f / avg_bytes).round, 1 ].max : 1
 
         book = Creek::Book.new(ctx.input_path)
         sheet = book.sheets.first

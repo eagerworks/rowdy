@@ -45,6 +45,9 @@ en:
         back_to_mapping: "Back to Mapping"
         import_valid_rows: "Import %{count} Valid Rows"
         download_report: "Download Error Report"
+        value: "Value"
+        save_corrections: "Save corrections"
+        unsaved_warning: "You have unsaved corrections. If you navigate away, your changes will be lost. Continue?"
       result:
         placeholder: "Import functionality coming soon."
         import_button: "Import"
