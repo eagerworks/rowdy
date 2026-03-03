@@ -1,0 +1,6 @@
+# Dummy app config for rails_best_practices.
+# Mass assignment is protected via strong parameters (Rails 4+).
+# ApplicationRecord is abstract and has no attributes; exclude from this check.
+ProtectMassAssignmentCheck:
+  ignored_files:
+    - application_record\.rb
