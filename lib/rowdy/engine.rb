@@ -33,6 +33,11 @@ module Rowdy
 
     initializer :append_migrations do |app|
       unless app.root.to_s == root.to_s
+        # Force DatabaseTasks.migrations_paths to initialize from app paths NOW (before we
+        # add engine paths below). Without this, the lazy ||= init happens later and
+        # already includes our engine paths — causing db:load_config to append them a
+        # second time (it unconditionally does `migrations_paths += engine.paths`).
+        ActiveRecord::Tasks::DatabaseTasks.migrations_paths
         app.config.paths["db/migrate"].concat(config.paths["db/migrate"].existent)
       end
     end

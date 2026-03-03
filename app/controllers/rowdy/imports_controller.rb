@@ -81,7 +81,7 @@ module Rowdy
           @import.decrement!(:invalid_rows_count)
           @import.increment!(:valid_rows_count)
         else
-          import_error.update!(row_data: updated_row, column_errors: column_errors)
+          import_error.update!(row_data: updated_row, column_errors:)
         end
       end
 

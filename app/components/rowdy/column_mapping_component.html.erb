@@ -7,7 +7,7 @@
     </div>
   <% end %>
 
-  <%= form_with url: save_mapping_path, method: :patch, data: { turbo_frame: "rowdy-import-step-content-#{@import.id}" } do |f| %>
+  <%= form_with url: save_mapping_path, method: :patch do |f| %>
     <table class="rowdy-mapping-table">
       <thead>
         <tr>

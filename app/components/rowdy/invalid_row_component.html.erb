@@ -1,14 +1,14 @@
 <tr>
-  <td><%= @import_error.row_number %></td>
-  <td><%= @column %></td>
-  <td><%= @messages.join(", ") %></td>
+  <td><%= import_error.row_number %></td>
+  <td><%= column %></td>
+  <td><%= messages.join(", ") %></td>
   <td>
-    <input type="text"
-           name="<%= input_name %>"
-           value="<%= current_value %>"
-           class="rowdy-inline-edit-input"
-           data-original-value="<%= current_value %>"
-           data-controller="rowdy-inline-edit"
-           data-action="keydown->rowdy-inline-edit#revert">
+    <%= text_field_tag input_name, current_value,
+          class: "rowdy-inline-edit-input",
+          data: {
+            original_value: current_value,
+            controller: "rowdy-inline-edit",
+            action: "keydown->rowdy-inline-edit#revert"
+          } %>
   </td>
 </tr>

@@ -47,7 +47,7 @@
           <tbody>
             <% @errors.each do |import_error| %>
               <% (import_error.column_errors || {}).each do |column, messages| %>
-                <%= render Rowdy::InvalidRowComponent.new(import_error: import_error, column: column, messages: messages) %>
+                <%= render Rowdy::InvalidRowComponent.new(import_error:, column:, messages:) %>
               <% end %>
             <% end %>
           </tbody>

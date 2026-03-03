@@ -1,5 +1,7 @@
 module Rowdy
   class InvalidRowComponent < ViewComponent::Base
+    attr_reader :import_error, :column, :messages
+
     def initialize(import_error:, column:, messages:)
       @import_error = import_error
       @column = column
