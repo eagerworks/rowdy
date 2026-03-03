@@ -1,6 +1,6 @@
 module Rowdy
   class ImportsController < ApplicationController
-    before_action :set_import, only: %i[show mapping save_mapping validate validation error_report]
+    before_action :set_import, only: %i[show mapping save_mapping validate validation correct_errors error_report]
 
     def create
       upload = Upload.find(params[:upload_id])
@@ -57,8 +57,35 @@ module Rowdy
 
     def validation
       @page = (params[:page] || 1).to_i
-      @errors = @import.import_errors.order(:row_number).offset((@page - 1) * per_page).limit(per_page)
+      @errors = @import.import_errors.active.order(:row_number).offset((@page - 1) * per_page).limit(per_page)
       @total_pages = total_pages_for(@import)
+    end
+
+    def correct_errors
+      corrections = params[:corrections]&.to_unsafe_h || {}
+      schema = @import.schema
+
+      corrections.each do |error_id, new_values|
+        import_error = @import.import_errors.active.find_by(id: error_id)
+        next unless import_error
+
+        updated_row = import_error.row_data.merge(new_values)
+
+        # row_data and new_values both have string keys after JSON deserialization
+        # and HTTP params respectively. RowValidator accesses values via col.name
+        # (a Symbol from the schema DSL), so keys must be symbolized before validating.
+        column_errors = RowValidator.call(updated_row.transform_keys(&:to_sym), schema)
+
+        if column_errors.empty?
+          import_error.update!(corrected_at: Time.current, row_data: updated_row)
+          @import.decrement!(:invalid_rows_count)
+          @import.increment!(:valid_rows_count)
+        else
+          import_error.update!(row_data: updated_row, column_errors:)
+        end
+      end
+
+      redirect_to Rowdy::Engine.routes.url_helpers.validation_import_path(@import, page: params[:page])
     end
 
     def error_report
