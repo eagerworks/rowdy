@@ -14,7 +14,7 @@ module Rowdy
     end
 
     def sample_values_for(column_index)
-      @sample_rows.map { |row| row[column_index].truncate(20) }.compact.first(3)
+      @sample_rows.map { |row| row[column_index]&.truncate(20) }.compact.first(3)
     end
 
     def schema_options

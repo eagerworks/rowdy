@@ -2,6 +2,7 @@ es:
   rowdy:
     dropzone:
       label: Arrastrá archivos XLSX aquí
+      uploading: Subiendo
       or_click: o hacé click para buscar
       resume_file: Seleccionar archivo para reanudar
       resume_progress: "%{percent}% subido"
@@ -47,7 +48,7 @@ es:
         download_report: Descargar Reporte de Errores
         value: Valor
         save_corrections: Guardar correcciones
-        unsaved_warning: "Tenés correcciones sin guardar. Si navegás a otra página, perderás los cambios. ¿Continuar?"
+        unsaved_warning: Tenés correcciones sin guardar. Si navegás a otra página, perderás los cambios. ¿Continuar?
       result:
         placeholder: Funcionalidad de importación próximamente.
         import_button: Importar

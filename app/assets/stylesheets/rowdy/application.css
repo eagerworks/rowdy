@@ -11,6 +11,7 @@
 
 :root {
   --rowdy-color-primary: #3b82f6;
+  --rowdy-color-primary-hover: #2563eb;
   --rowdy-border-color: #e5e7eb;
   --rowdy-bg: white;
   --rowdy-shadow: rgba(0, 0, 0, 0.05);
@@ -25,18 +26,30 @@
   --rowdy-status-failed: #ef4444;
 }
 
+/* Upload List */
+.rowdy-upload-list-scroll {
+  border: 0.0625rem solid var(--rowdy-border-color);
+  padding: 0.75rem;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
 /* Upload Item Base Styles */
 .rowdy-upload-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border: 0.0625rem solid var(--rowdy-border-color);
   border-radius: 0.375rem;
   padding: 1rem;
   margin: 0.75rem 0;
   background: var(--rowdy-bg);
   transition: all 0.2s;
-}
 
-.rowdy-upload-item:hover {
-  box-shadow: 0 0.125rem 0.25rem var(--rowdy-shadow);
+  &:hover {
+    box-shadow: 0 0.125rem 0.25rem var(--rowdy-shadow);
+    background-color: var(--rowdy-shadow);
+  }
 }
 
 /* Upload Status Colors - Left Border */
@@ -88,6 +101,54 @@
 .rowdy-dropzone-area.dragover {
   border-color: var(--rowdy-color-primary);
   background-color: var(--rowdy-dropzone-active-bg);
+}
+
+.rowdy-dropzone-label-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.rowdy-dropzone-uploading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.rowdy-dropzone-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 0.2rem solid var(--rowdy-dropzone-border);
+  border-top-color: var(--rowdy-color-primary);
+  border-radius: 50%;
+  animation: rowdy-spin 0.8s linear infinite;
+}
+
+.rowdy-dropzone-uploading-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--rowdy-text-muted);
+}
+
+@keyframes rowdy-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rowdy-dropzone-area--uploading {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.85;
+  background-color: #f1f5f9;
+}
+
+.rowdy-file-list--hidden {
+  display: none;
 }
 
 /* Resume Banner */
@@ -192,11 +253,23 @@
   background-color: var(--rowdy-color-primary);
   color: var(--rowdy-button-text);
   border-color: var(--rowdy-color-primary);
+
+  &:hover {
+    background-color: var(--rowdy-color-primary-hover);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
-.rowdy-btn--primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.rowdy-btn--alert {
+  background-color: #f2f2c3;
+
+  &:hover {
+    background-color: #ededa0;
+  }
 }
 
 /* Schema Sections */
@@ -212,6 +285,7 @@
 
 /* Steps Indicator */
 .rowdy-step-indicator {
+  margin-top: 2rem;
   display: flex;
   gap: 1rem;
   margin-bottom: 1.5rem;

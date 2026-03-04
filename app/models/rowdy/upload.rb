@@ -66,7 +66,7 @@ module Rowdy
     end
 
     def broadcast_new_upload
-      Turbo::StreamsChannel.broadcast_append_to(
+      Turbo::StreamsChannel.broadcast_prepend_to(
         broadcast_channel,
         target: broadcast_list_target,
         html: render_component
@@ -86,7 +86,7 @@ module Rowdy
     end
 
     def broadcast_list_target
-      schema_name.present? ? "rowdy-uploads-list-#{schema_name}" : "rowdy-uploads-list"
+      schema_name.present? ? "rowdy-uploads-list-items-#{schema_name}" : "rowdy-uploads-list-items"
     end
 
     def status_changed?

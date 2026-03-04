@@ -1,5 +1,7 @@
 module Rowdy
   class DropzoneComponent < ViewComponent::Base
+    attr_reader :url, :label, :accept, :multiple, :chunked, :chunk_size, :schema_name, :html_options, :show_file_list
+
     def initialize(
       url: nil,
       label: nil,
@@ -8,6 +10,7 @@ module Rowdy
       chunked: true,
       chunk_size: nil,
       schema_name: nil,
+      show_file_list: false,
       **html_options
     )
       @url = url
@@ -15,21 +18,22 @@ module Rowdy
       @accept = accept
       @multiple = multiple
       @chunked = chunked
+      @show_file_list = show_file_list
       @chunk_size = chunk_size
       @schema_name = schema_name
       @html_options = html_options
     end
 
     def dropzone_url
-      @url || Rowdy::Engine.routes.url_helpers.uploads_path
+      url || Rowdy::Engine.routes.url_helpers.uploads_path
     end
 
     def label_text
-      @label || I18n.t("rowdy.dropzone.label")
+      label || I18n.t("rowdy.dropzone.label")
     end
 
     def chunked?
-      @chunked
+      chunked
     end
 
     def chunked_upload_url
@@ -41,7 +45,7 @@ module Rowdy
     end
 
     def chunk_size_value
-      @chunk_size || Rowdy.configuration.default_chunk_size
+      chunk_size || Rowdy.configuration.default_chunk_size
     end
 
     def pending_uploads_data

@@ -2,6 +2,7 @@ en:
   rowdy:
     dropzone:
       label: Drag XLSX files here
+      uploading: Uploading
       or_click: or click to browse
       resume_file: Select file to resume
       resume_progress: "%{percent}% uploaded"

@@ -96,22 +96,31 @@
               class: "rowdy-btn",
               data: { turbo_frame: frame_id } %>
 
-            <div class="rowdy-validation-actions-right">
-              <button type="button" class="rowdy-btn"
-                      data-action="click->rowdy-find-replace#open">
-                <%= I18n.t("rowdy.import.find_replace.button") %>
-              </button>
-              <%= f.submit I18n.t("rowdy.import.validation.save_corrections"), class: "rowdy-btn" %>
-
-              <% if has_valid_rows? %>
-                <button type="button" class="rowdy-btn rowdy-btn--primary" disabled>
-                  <%= I18n.t("rowdy.import.validation.import_valid_rows", count: import.valid_rows_count) %>
-                </button>
-              <% end %>
-            </div>
+        <% if @import.error_report.attached? %>
+          <div class="rowdy-validation-report">
+            <%= link_to I18n.t("rowdy.import.validation.download_report"),
+              error_report_path,
+              class: "rowdy-btn rowdy-btn--alert" %>
           </div>
         <% end %>
-      </div>
+
+        <div class="rowdy-validation-actions">
+          <%= link_to I18n.t("rowdy.import.validation.back_to_mapping"),
+            mapping_path,
+            class: "rowdy-btn",
+            data: { turbo_frame: "rowdy-template-steps-#{@import.schema_name}" } %>
+
+          <div class="rowdy-validation-actions-right">
+            <%= f.submit I18n.t("rowdy.import.validation.save_corrections"), class: "rowdy-btn rowdy-btn--primary" %>
+
+            <% if has_valid_rows? %>
+              <button type="button" class="rowdy-btn rowdy-btn--primary" disabled>
+                <%= I18n.t("rowdy.import.validation.import_valid_rows", count: @import.valid_rows_count) %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     <% else %>
       <div class="rowdy-validation-actions">
         <%= link_to I18n.t("rowdy.import.validation.back_to_mapping"),

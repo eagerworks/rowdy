@@ -1,20 +1,22 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["dropzone", "fileInput", "fileList", "uploadProgress", "resumeBanner", "resumeFileInput"]
+  static targets = ["dropzone", "dropzoneLabel", "dropzoneUploading", "fileInput", "fileList", "uploadProgress", "resumeBanner", "resumeFileInput"]
   static values = {
     url: String,
     chunkedUrl: String,
     workerUrl: String,
     chunkSize: { type: Number, default: 5 * 1024 * 1024 },
     pendingUploads: { type: Array, default: [] },
-    schemaName: { type: String, default: "" }
+    schemaName: { type: String, default: "" },
+    uploadingLabel: { type: String, default: "Uploading" }
   }
 
   connect() {
     this.csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
     this.activeUploads = new Map()
     this.resumingToken = null
+    this.uploading = false
 
     if (this.pendingUploadsValue.length > 0) {
       this.showResumeBanner()
@@ -32,12 +34,14 @@ export default class extends Controller {
 
   openFilePicker(e) {
     e.preventDefault()
+    if (this.uploading) return
     this.fileInputTarget.click()
   }
 
   handleDragOver(e) {
     e.preventDefault()
     e.stopPropagation()
+    if (this.uploading) return
     this.dropzoneTarget.classList.add("dragover")
   }
 
@@ -51,6 +55,7 @@ export default class extends Controller {
     e.preventDefault()
     e.stopPropagation()
     this.dropzoneTarget.classList.remove("dragover")
+    if (this.uploading) return
 
     const files = Array.from(e.dataTransfer.files)
     this.uploadFiles(files)
@@ -72,6 +77,7 @@ export default class extends Controller {
     }
 
     this.displayFileList(xlsxFiles)
+    this.setUploadingState(true)
 
     if (this.isChunkedMode) {
       xlsxFiles.forEach(file => this.uploadChunked(file))
@@ -154,11 +160,15 @@ export default class extends Controller {
         this.clearFileList()
         this.cleanupWorker(fileName)
         this.dispatch("uploaded", { detail: message.data })
+        if (this.activeUploads.size === 0) {
+          this.setUploadingState(false)
+        }
         break
 
       case "chunk_failed":
         if (entry) entry.lastProgress = message.progressPercent || 0
         this.updateFileProgress(fileName, entry?.lastProgress || 0, "failed")
+        this.setUploadingState(false)
         this.dispatch("upload-error", {
           detail: { fileName, error: message.error, uploadToken: message.uploadToken, retryable: true }
         })
@@ -167,6 +177,7 @@ export default class extends Controller {
       case "error":
         this.updateFileProgress(fileName, 0, "failed")
         this.cleanupWorker(fileName)
+        this.setUploadingState(false)
         this.dispatch("upload-error", { detail: { fileName, error: message.error } })
         break
 
@@ -245,6 +256,7 @@ export default class extends Controller {
     worker.onmessage = (event) => this.handleWorkerMessage(file.name, event.data)
 
     this.displayFileList([file])
+    this.setUploadingState(true)
     this.updateFileProgress(file.name, pendingUpload.progress, "uploading")
 
     worker.postMessage({
@@ -297,14 +309,26 @@ export default class extends Controller {
       this.hideProgress()
       this.clearFileList()
       this.fileInputTarget.value = ""
-
+      this.setUploadingState(false)
     } catch (error) {
       this.dispatch("upload-error", { detail: { error: error.message } })
       this.hideProgress()
+      this.setUploadingState(false)
     }
   }
 
   // --- UI helpers ---
+
+  setUploadingState(active) {
+    this.uploading = active
+    this.dropzoneTarget.classList.toggle("rowdy-dropzone-area--uploading", active)
+    if (this.hasDropzoneLabelTarget) {
+      this.dropzoneLabelTarget.classList.toggle("hidden", active)
+    }
+    if (this.hasDropzoneUploadingTarget) {
+      this.dropzoneUploadingTarget.classList.toggle("hidden", !active)
+    }
+  }
 
   displayFileList(files) {
     this.fileListTarget.innerHTML = files.map(file => `

@@ -1,15 +1,16 @@
 <div data-controller="rowdy-dropzone"
      data-rowdy-dropzone-url-value="<%= dropzone_url %>"
+     data-rowdy-dropzone-uploading-label-value="<%= I18n.t('rowdy.dropzone.uploading') %>"
      <% if chunked? %>
      data-rowdy-dropzone-chunked-url-value="<%= chunked_upload_url %>"
      data-rowdy-dropzone-worker-url-value="<%= worker_url %>"
      data-rowdy-dropzone-chunk-size-value="<%= chunk_size_value %>"
      data-rowdy-dropzone-pending-uploads-value="<%= pending_uploads_data %>"
      <% end %>
-     <% if @schema_name %>
-     data-rowdy-dropzone-schema-name-value="<%= @schema_name %>"
+     <% if schema_name %>
+     data-rowdy-dropzone-schema-name-value="<%= schema_name %>"
      <% end %>
-     <%= tag.attributes(@html_options) %>>
+     <%= tag.attributes(html_options) %>>
 
   <div class="rowdy-dropzone-area"
        data-rowdy-dropzone-target="dropzone"
@@ -18,24 +19,30 @@
          dragleave->rowdy-dropzone#handleDragLeave
          drop->rowdy-dropzone#handleDrop
          click->rowdy-dropzone#openFilePicker">
-    <%= label_text %>
+    <div class="rowdy-dropzone-label-wrap">
+      <span data-rowdy-dropzone-target="dropzoneLabel" data-original-label="<%= label_text %>"><%= label_text %></span>
+      <div class="rowdy-dropzone-uploading hidden" data-rowdy-dropzone-target="dropzoneUploading">
+        <span class="rowdy-dropzone-spinner" aria-hidden="true"></span>
+        <span class="rowdy-dropzone-uploading-text"><%= I18n.t('rowdy.dropzone.uploading') %></span>
+      </div>
+    </div>
   </div>
 
   <input type="file"
          data-rowdy-dropzone-target="fileInput"
          data-action="change->rowdy-dropzone#handleFileSelect"
-         accept="<%= @accept %>"
-         <%= 'multiple' if @multiple %>
+         accept="<%= accept %>"
+         <%= 'multiple' if multiple %>
          style="display: none;">
 
   <input type="file"
          data-rowdy-dropzone-target="resumeFileInput"
          data-action="change->rowdy-dropzone#handleResumeFileSelect"
-         accept="<%= @accept %>"
+         accept="<%= accept %>"
          style="display: none;">
 
   <div class="rowdy-resume-banner hidden" data-rowdy-dropzone-target="resumeBanner"></div>
 
-  <div class="rowdy-file-list" data-rowdy-dropzone-target="fileList"></div>
-  <div class="rowdy-upload-progress hidden" data-rowdy-dropzone-target="uploadProgress"></div>
+  <div class="rowdy-file-list <%= "rowdy-file-list--hidden" unless show_file_list %>" data-rowdy-dropzone-target="fileList"></div>
+  <div class="rowdy-upload-progress " data-rowdy-dropzone-target="uploadProgress"></div>
 </div>
