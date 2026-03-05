@@ -6,14 +6,14 @@ module Rowdy
       build_stubbed(:rowdy_import_error,
         row_number: 5,
         row_data: { "sku" => "BAD-VALUE" },
-        column_errors: { "sku" => [ "is required" ] })
+        column_errors: { "sku" => [ "Is required" ] })
     end
 
     subject(:rendered) do
       render_inline(described_class.new(
         import_error: import_error,
         column: "sku",
-        messages: [ "is required" ]
+        messages: [ "Is required" ]
       ))
     end
 
@@ -26,7 +26,7 @@ module Rowdy
     end
 
     it "renders the error message" do
-      expect(rendered.text).to include("is required")
+      expect(rendered.text).to include("Is required")
     end
 
     it "renders an input with the current value" do

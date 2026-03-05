@@ -51,3 +51,10 @@ es:
       result:
         placeholder: Funcionalidad de importación próximamente.
         import_button: Importar
+    column_validators:
+      required: Es requerido
+      invalid_type: "Debe ser un %{type} válido"
+      max_length: "Debe tener como máximo %{max} caracteres"
+      inclusion: "Debe ser uno de: %{values}"
+      greater_than: "Debe ser mayor que %{threshold}"
+      unique: Debe ser único

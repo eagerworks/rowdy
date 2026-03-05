@@ -42,21 +42,21 @@ module Rowdy
           it "adds error and returns nil for invalid decimal" do
             col = ColumnDefinition.new(name: :price, type: :decimal)
             result = described_class.execute(value: "not-a-number", column: col, errors: errors)
-            expect(errors).to eq([ "must be a valid decimal" ])
+            expect(errors).to eq([ "Must be a valid decimal" ])
             expect(result.coerced_value).to be_nil
           end
 
           it "adds error and returns nil for invalid integer" do
             col = ColumnDefinition.new(name: :count, type: :integer)
             result = described_class.execute(value: "abc", column: col, errors: errors)
-            expect(errors).to eq([ "must be a valid integer" ])
+            expect(errors).to eq([ "Must be a valid integer" ])
             expect(result.coerced_value).to be_nil
           end
 
           it "uses column type in error message" do
             col = ColumnDefinition.new(name: :birthday, type: :date)
             described_class.execute(value: "not-a-date", column: col, errors: errors)
-            expect(errors).to eq([ "must be a valid date" ])
+            expect(errors).to eq([ "Must be a valid date" ])
           end
         end
       end

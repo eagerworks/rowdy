@@ -11,7 +11,7 @@ module Rowdy
         next ctx unless ctx.column.required?
         next ctx unless blank?(ctx.value)
 
-        ctx.errors << "is required"
+        ctx.errors << I18n.t("rowdy.column_validators.required")
       end
 
       def self.blank?(value)

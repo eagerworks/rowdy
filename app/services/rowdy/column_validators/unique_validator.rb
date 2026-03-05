@@ -11,7 +11,7 @@ module Rowdy
         next ctx unless ctx.column.unique?
         next ctx unless ctx.unique_tracker
 
-        ctx.errors << "must be unique" unless ctx.unique_tracker.add?(ctx.column.name, ctx.value)
+        ctx.errors << I18n.t("rowdy.column_validators.unique") unless ctx.unique_tracker.add?(ctx.column.name, ctx.value)
       end
     end
   end

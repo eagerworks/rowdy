@@ -11,7 +11,7 @@ module Rowdy
         next ctx unless ctx.column.max_length.present?
         next ctx unless ctx.value.is_a?(String) && ctx.value.length > ctx.column.max_length
 
-        ctx.errors << "must be at most #{ctx.column.max_length} characters"
+        ctx.errors << I18n.t("rowdy.column_validators.max_length", max: ctx.column.max_length)
       end
     end
   end

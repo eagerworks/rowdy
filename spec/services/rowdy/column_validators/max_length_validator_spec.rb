@@ -21,7 +21,7 @@ module Rowdy
 
         it "adds error when string exceeds max_length" do
           described_class.execute(value: "this is too long", column: column, errors: errors)
-          expect(errors).to eq([ "must be at most 10 characters" ])
+          expect(errors).to eq([ "Must be at most 10 characters" ])
         end
 
         it "adds no error when value is not a string" do
@@ -32,7 +32,7 @@ module Rowdy
         it "includes max_length in error message" do
           col = ColumnDefinition.new(name: :code, type: :string, max_length: 5)
           described_class.execute(value: "abcdef", column: col, errors: errors)
-          expect(errors).to eq([ "must be at most 5 characters" ])
+          expect(errors).to eq([ "Must be at most 5 characters" ])
         end
       end
     end

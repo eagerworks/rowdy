@@ -65,3 +65,10 @@ en:
       result:
         placeholder: Import functionality coming soon.
         import_button: Import
+    column_validators:
+      required: Is required
+      invalid_type: "Must be a valid %{type}"
+      max_length: "Must be at most %{max} characters"
+      inclusion: "Must be one of: %{values}"
+      greater_than: "Must be greater than %{threshold}"
+      unique: Must be unique

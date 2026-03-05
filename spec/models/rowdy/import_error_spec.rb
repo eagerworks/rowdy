@@ -46,7 +46,7 @@ module Rowdy
 
     describe "serialization" do
       it "serializes column_errors as JSON hash" do
-        data = { "sku" => [ "is required" ], "price" => [ "must be greater than 0" ] }
+        data = { "sku" => [ "Is required" ], "price" => [ "Must be greater than 0" ] }
         error = create(:rowdy_import_error, column_errors: data)
         expect(error.reload.column_errors).to eq(data)
       end

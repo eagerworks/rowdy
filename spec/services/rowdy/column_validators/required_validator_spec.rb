@@ -13,17 +13,17 @@ module Rowdy
         context "when column is required" do
           it "adds an error when value is nil" do
             described_class.execute(value: nil, column: required_column, errors: errors)
-            expect(errors).to eq([ "is required" ])
+            expect(errors).to eq([ "Is required" ])
           end
 
           it "adds an error when value is blank string" do
             described_class.execute(value: "", column: required_column, errors: errors)
-            expect(errors).to eq([ "is required" ])
+            expect(errors).to eq([ "Is required" ])
           end
 
           it "adds an error when value is whitespace-only string" do
             described_class.execute(value: "   ", column: required_column, errors: errors)
-            expect(errors).to eq([ "is required" ])
+            expect(errors).to eq([ "Is required" ])
           end
 
           it "does not add an error when value is present" do
