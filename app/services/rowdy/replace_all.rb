@@ -54,7 +54,7 @@ module Rowdy
 
     def flush_corrected(ids)
       json_sql, *binds = JsonQueryHelpers.json_set_sql("row_data", @column, @replace_value)
-      ImportError.where(id: ids).update_all(["corrected_at = ?, #{json_sql}", Time.current, *binds])
+      ImportError.where(id: ids).update_all([ "corrected_at = ?, #{json_sql}", Time.current, *binds ])
     end
 
     def value_filter
