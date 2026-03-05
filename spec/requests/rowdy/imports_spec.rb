@@ -26,14 +26,14 @@ module Rowdy
       end
     end
 
-    describe "PATCH /rowdy/imports/:id/save_mapping" do
+    describe "PATCH /rowdy/imports/:id/mapping" do
       context "with a valid mapping" do
         it "redirects to the validation page and transitions to preparing" do
           upload = create(:rowdy_upload, :completed, :with_schema, :with_columns,
             detected_columns: %w[name sku price])
           import = create(:rowdy_import, upload: upload)
 
-          patch "/rowdy/imports/#{import.id}/save_mapping", params: {
+          patch "/rowdy/imports/#{import.id}/mapping", params: {
             column_mapping: { "name" => "name", "sku" => "sku", "price" => "price" }
           }
 
@@ -49,7 +49,7 @@ module Rowdy
             detected_columns: %w[name sku price])
           import = create(:rowdy_import, upload: upload)
 
-          patch "/rowdy/imports/#{import.id}/save_mapping", params: {
+          patch "/rowdy/imports/#{import.id}/mapping", params: {
             column_mapping: { "name" => "name" }
           }
 
@@ -58,12 +58,12 @@ module Rowdy
       end
     end
 
-    describe "POST /rowdy/imports/:id/validate" do
+    describe "POST /rowdy/imports/:id/validation" do
       it "returns 204 and triggers the validation job" do
         import = create(:rowdy_import, :with_mapping)
         allow(ValidateImportJob).to receive(:perform_now)
 
-        post "/rowdy/imports/#{import.id}/validate"
+        post "/rowdy/imports/#{import.id}/validation"
 
         expect(response).to have_http_status(:no_content)
       end

@@ -10,7 +10,7 @@ module Rowdy
     end
 
     def save_mapping_path
-      Rowdy::Engine.routes.url_helpers.save_mapping_import_path(@import)
+      Rowdy::Engine.routes.url_helpers.import_mapping_path(@import)
     end
 
     def sample_values_for(column_index)

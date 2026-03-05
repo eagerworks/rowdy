@@ -23,13 +23,7 @@ module Rowdy
     end
 
     def status
-      render json: {
-        upload_token: @upload.upload_token,
-        status: @upload.status,
-        total_chunks: @upload.total_chunks,
-        received_chunks: @upload.received_chunks,
-        upload_progress_percent: @upload.upload_progress_percent
-      }
+      render json: @upload.status_json
     end
 
     def receive_chunk
@@ -53,9 +47,8 @@ module Rowdy
       end
 
       unless @upload.all_chunks_received?
-        missing = (0...@upload.total_chunks).to_a - @upload.received_chunks
         render json: {
-          error: "Missing chunks: #{missing}",
+          error: "Missing chunks: #{@upload.missing_chunks}",
           received_chunks: @upload.received_chunks
         }, status: :unprocessable_entity
         return
@@ -63,11 +56,7 @@ module Rowdy
 
       AssembleChunks.call(@upload)
 
-      render json: {
-        upload_id: @upload.id,
-        status: @upload.reload.status,
-        message: "Upload complete, processing queued"
-      }
+      render json: @upload.completion_json
     end
   end
 end

@@ -40,6 +40,28 @@ module Rowdy
       ((received_chunks&.size.to_f / total_chunks) * 100).round
     end
 
+    def missing_chunks
+      (0...total_chunks).to_a - received_chunks
+    end
+
+    def status_json
+      {
+        upload_token: upload_token,
+        status: status,
+        total_chunks: total_chunks,
+        received_chunks: received_chunks,
+        upload_progress_percent: upload_progress_percent
+      }
+    end
+
+    def completion_json
+      {
+        upload_id: id,
+        status: reload.status,
+        message: "Upload complete, processing queued"
+      }
+    end
+
     def avg_bytes_per_row
       return nil if sample_rows.blank?
 

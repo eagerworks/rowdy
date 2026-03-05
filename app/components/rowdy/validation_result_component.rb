@@ -35,11 +35,11 @@ module Rowdy
     end
 
     def mapping_path
-      Rowdy::Engine.routes.url_helpers.mapping_import_path(@import)
+      Rowdy::Engine.routes.url_helpers.import_mapping_path(@import)
     end
 
     def validation_path(page: 1)
-      Rowdy::Engine.routes.url_helpers.validation_import_path(@import, page: page)
+      Rowdy::Engine.routes.url_helpers.import_validation_path(@import, page: page)
     end
 
     def error_report_path
@@ -47,7 +47,7 @@ module Rowdy
     end
 
     def start_validation_path
-      Rowdy::Engine.routes.url_helpers.validate_import_path(@import)
+      Rowdy::Engine.routes.url_helpers.import_validation_path(@import)
     end
 
     def correct_errors_path

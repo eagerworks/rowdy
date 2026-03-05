@@ -9,11 +9,9 @@ Rowdy::Engine.routes.draw do
   end
 
   resources :imports, only: [ :create, :show ] do
+    resource :mapping, only: [ :show, :update ], controller: "imports/mappings"
+    resource :validation, only: [ :show, :create ], controller: "imports/validations"
     member do
-      get    :mapping
-      patch  :save_mapping
-      post   :validate
-      get    :validation
       patch  :correct_errors
       patch  :replace_all
       get    :error_report

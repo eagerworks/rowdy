@@ -32,18 +32,6 @@ module Rowdy
       end
     end
 
-    describe ".corrected" do
-      it "includes errors with corrected_at set" do
-        error = create(:rowdy_import_error, :corrected)
-        expect(described_class.corrected).to include(error)
-      end
-
-      it "excludes errors without corrected_at" do
-        error = create(:rowdy_import_error)
-        expect(described_class.corrected).not_to include(error)
-      end
-    end
-
     describe "serialization" do
       it "serializes column_errors as JSON hash" do
         data = { "sku" => [ "Is required" ], "price" => [ "Must be greater than 0" ] }

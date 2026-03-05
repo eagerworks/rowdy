@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "stimulus-rails", "~> 1.3"
   spec.add_dependency "turbo-rails", "~> 2.0"
   spec.add_dependency "creek", "~> 2.6"
+  spec.add_dependency "csv"
 end
