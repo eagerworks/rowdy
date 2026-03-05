@@ -3,20 +3,16 @@
 module Rowdy
   module ColumnValidators
     class ColumnValidationPipeline
-      VALIDATORS = [
-        MaxLengthValidator, InclusionValidator, GreaterThanValidator,
-        UniqueValidator, CustomValidator
-      ].freeze
+      extend LightService::Organizer
 
       def self.call(value:, column:, errors:, unique_tracker:)
-        VALIDATORS.map do |klass|
-          klass.new(
-            value:,
-            column:,
-            errors:,
-            unique_tracker:
-          ).call
-        end
+        with(value: value, column: column, errors: errors, unique_tracker: unique_tracker).reduce(
+          MaxLengthValidator,
+          InclusionValidator,
+          GreaterThanValidator,
+          UniqueValidator,
+          CustomValidator
+        )
       end
     end
   end

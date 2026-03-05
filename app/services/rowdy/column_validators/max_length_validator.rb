@@ -2,12 +2,16 @@
 
 module Rowdy
   module ColumnValidators
-    class MaxLengthValidator < BaseValidator
-      def call
-        return unless column.max_length.present?
-        return unless value.is_a?(String) && value.length > column.max_length
+    class MaxLengthValidator
+      extend LightService::Action
 
-        errors << "must be at most #{column.max_length} characters"
+      expects :value, :column, :errors
+
+      executed do |ctx|
+        next ctx unless ctx.column.max_length.present?
+        next ctx unless ctx.value.is_a?(String) && ctx.value.length > ctx.column.max_length
+
+        ctx.errors << "must be at most #{ctx.column.max_length} characters"
       end
     end
   end

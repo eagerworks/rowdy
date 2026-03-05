@@ -3,13 +3,19 @@
 module Rowdy
   module ColumnValidators
     class TypeValidator
-      def self.call(value, column, errors)
-        unless TypeCoercer.coercible?(value, column.type)
-          errors << "must be a valid #{column.type}"
-          return nil
+      extend LightService::Action
+
+      expects :value, :column, :errors
+      promises :coerced_value
+
+      executed do |ctx|
+        unless TypeCoercer.coercible?(ctx.value, ctx.column.type)
+          ctx.errors << "must be a valid #{ctx.column.type}"
+          ctx.coerced_value = nil
+          next ctx
         end
 
-        TypeCoercer.call(value, column.type)
+        ctx.coerced_value = TypeCoercer.call(ctx.value, ctx.column.type)
       end
     end
   end

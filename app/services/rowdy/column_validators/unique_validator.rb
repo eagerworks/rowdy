@@ -2,12 +2,16 @@
 
 module Rowdy
   module ColumnValidators
-    class UniqueValidator < BaseValidator
-      def call
-        return unless column.unique?
-        return unless unique_tracker
+    class UniqueValidator
+      extend LightService::Action
 
-        errors << "must be unique" unless unique_tracker.add?(column.name, value)
+      expects :value, :column, :errors, :unique_tracker
+
+      executed do |ctx|
+        next ctx unless ctx.column.unique?
+        next ctx unless ctx.unique_tracker
+
+        ctx.errors << "must be unique" unless ctx.unique_tracker.add?(ctx.column.name, ctx.value)
       end
     end
   end

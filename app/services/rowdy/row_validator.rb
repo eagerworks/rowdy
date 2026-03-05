@@ -17,17 +17,17 @@ module Rowdy
     def self.validate_column(value, col, unique_tracker)
       errors = []
 
-      ColumnValidators::RequiredValidator.call(value, col, errors)
+      ColumnValidators::RequiredValidator.execute(value: value, column: col, errors: errors)
       return errors if errors.any?
 
       return errors if ColumnValidators::RequiredValidator.blank?(value)
 
-      coerced = ColumnValidators::TypeValidator.call(value, col, errors)
+      type_result = ColumnValidators::TypeValidator.execute(value: value, column: col, errors: errors)
       return errors if errors.any?
-      return errors unless coerced
+      return errors unless type_result.coerced_value
 
       ColumnValidators::ColumnValidationPipeline.call(
-        value: coerced,
+        value: type_result.coerced_value,
         column: col,
         errors: errors,
         unique_tracker: unique_tracker

@@ -2,12 +2,16 @@
 
 module Rowdy
   module ColumnValidators
-    class CustomValidator < BaseValidator
-      def call
-        return unless column.custom_validations.any?
+    class CustomValidator
+      extend LightService::Action
 
-        column.custom_validations.each do |validation|
-          validation.call(value, errors)
+      expects :value, :column, :errors
+
+      executed do |ctx|
+        next ctx unless ctx.column.custom_validations.any?
+
+        ctx.column.custom_validations.each do |validation|
+          validation.call(ctx.value, ctx.errors)
         end
       end
     end

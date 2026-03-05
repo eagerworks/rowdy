@@ -5,46 +5,46 @@ require "rails_helper"
 module Rowdy
   module ColumnValidators
     RSpec.describe RequiredValidator do
-      describe ".call" do
+      describe ".execute" do
         let(:errors) { [] }
         let(:required_column) { ColumnDefinition.new(name: :name, type: :string, required: true) }
         let(:optional_column) { ColumnDefinition.new(name: :nickname, type: :string, required: false) }
 
         context "when column is required" do
           it "adds an error when value is nil" do
-            described_class.call(nil, required_column, errors)
+            described_class.execute(value: nil, column: required_column, errors: errors)
             expect(errors).to eq([ "is required" ])
           end
 
           it "adds an error when value is blank string" do
-            described_class.call("", required_column, errors)
+            described_class.execute(value: "", column: required_column, errors: errors)
             expect(errors).to eq([ "is required" ])
           end
 
           it "adds an error when value is whitespace-only string" do
-            described_class.call("   ", required_column, errors)
+            described_class.execute(value: "   ", column: required_column, errors: errors)
             expect(errors).to eq([ "is required" ])
           end
 
           it "does not add an error when value is present" do
-            described_class.call("Alice", required_column, errors)
+            described_class.execute(value: "Alice", column: required_column, errors: errors)
             expect(errors).to be_empty
           end
 
           it "does not add an error when value is non-empty string with spaces" do
-            described_class.call("  hello  ", required_column, errors)
+            described_class.execute(value: "  hello  ", column: required_column, errors: errors)
             expect(errors).to be_empty
           end
         end
 
         context "when column is optional" do
           it "does not add an error when value is nil" do
-            described_class.call(nil, optional_column, errors)
+            described_class.execute(value: nil, column: optional_column, errors: errors)
             expect(errors).to be_empty
           end
 
           it "does not add an error when value is blank" do
-            described_class.call("  ", optional_column, errors)
+            described_class.execute(value: "  ", column: optional_column, errors: errors)
             expect(errors).to be_empty
           end
         end

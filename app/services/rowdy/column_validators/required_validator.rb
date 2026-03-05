@@ -3,11 +3,15 @@
 module Rowdy
   module ColumnValidators
     class RequiredValidator
-      def self.call(value, column, errors)
-        return unless column.required?
-        return unless blank?(value)
+      extend LightService::Action
 
-        errors << "is required"
+      expects :value, :column, :errors
+
+      executed do |ctx|
+        next ctx unless ctx.column.required?
+        next ctx unless blank?(ctx.value)
+
+        ctx.errors << "is required"
       end
 
       def self.blank?(value)

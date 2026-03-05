@@ -2,12 +2,16 @@
 
 module Rowdy
   module ColumnValidators
-    class GreaterThanValidator < BaseValidator
-      def call
-        return unless column.greater_than.present?
-        return unless value.is_a?(Numeric) && value <= column.greater_than
+    class GreaterThanValidator
+      extend LightService::Action
 
-        errors << "must be greater than #{column.greater_than}"
+      expects :value, :column, :errors
+
+      executed do |ctx|
+        next ctx unless ctx.column.greater_than.present?
+        next ctx unless ctx.value.is_a?(Numeric) && ctx.value <= ctx.column.greater_than
+
+        ctx.errors << "must be greater than #{ctx.column.greater_than}"
       end
     end
   end
