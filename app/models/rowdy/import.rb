@@ -24,6 +24,10 @@ module Rowdy
       SchemaRegistry.find!(schema_name)
     end
 
+    def steps_frame_id
+      "rowdy-steps-#{schema_name}"
+    end
+
     def current_step
       case status.to_sym
       when :mapping then 1
@@ -64,8 +68,8 @@ module Rowdy
       if validated? && saved_change_to_status?
         Turbo::StreamsChannel.broadcast_replace_to(
           "rowdy_import_#{id}",
-          target: "rowdy-template-steps-#{schema_name}",
-          html: "<turbo-frame id=\"rowdy-template-steps-#{schema_name}\" src=\"#{validation_import_path}\"></turbo-frame>"
+          target: steps_frame_id,
+          html: "<turbo-frame id=\"#{steps_frame_id}\" src=\"#{validation_import_path}\"></turbo-frame>"
         )
       end
     end

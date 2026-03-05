@@ -7,7 +7,7 @@ module Rowdy
     end
 
     def steps_frame_id
-      "rowdy-template-steps-#{@schema.schema_name}"
+      "rowdy-steps-#{@schema.schema_name}"
     end
   end
 end

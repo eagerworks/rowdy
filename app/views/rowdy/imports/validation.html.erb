@@ -1,10 +1,11 @@
-<turbo-frame id="rowdy-template-steps-<%= @import.schema_name %>">
+<turbo-frame id="<%= @import.steps_frame_id %>">
   <%= render Rowdy::StepsComponent.new(import: @import) do %>
     <%= render Rowdy::ValidationResultComponent.new(
       import: @import,
       errors: @errors,
       page: @page,
-      total_pages: @total_pages
+      total_pages: @total_pages,
+      errored_columns: @errored_columns
     ) %>
   <% end %>
 </turbo-frame>
