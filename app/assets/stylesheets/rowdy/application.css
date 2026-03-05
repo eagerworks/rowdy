@@ -418,13 +418,74 @@
 .rowdy-validation-summary {
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: #f9fafb;
+  border: 1px solid #d1d5db;
   border-radius: 0.375rem;
 }
 
 .rowdy-validation-total {
   font-size: 0.9375rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.rowdy-validation-detail {
+  font-size: 0.875rem;
+  color: #4b5563;
   margin: 0;
+}
+
+/* Validation error type tabs */
+.rowdy-validation-tabs {
+  margin-bottom: 1rem;
+}
+
+.rowdy-validation-tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  border-bottom: 0.125rem solid var(--rowdy-border-color);
+  margin-bottom: 1rem;
+}
+
+.rowdy-validation-tab {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background: none;
+  border: none;
+  border-bottom: 0.1875rem solid transparent;
+  margin-bottom: -0.125rem;
+  color: var(--rowdy-text-muted);
+  cursor: pointer;
+  border-radius: 0.25rem 0.25rem 0 0;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.rowdy-validation-tab:hover {
+  color: inherit;
+  background-color: #f3f4f6;
+}
+
+.rowdy-validation-tab--active {
+  color: var(--rowdy-color-primary);
+  font-weight: 600;
+  border-bottom-color: var(--rowdy-color-primary);
+}
+
+.rowdy-validation-tab-label {
+  max-width: 12rem;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.rowdy-validation-tab-panel {
+  display: none;
+}
+
+.rowdy-validation-tab-panel--active {
+  display: block;
 }
 
 .rowdy-validation-table {

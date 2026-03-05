@@ -36,7 +36,16 @@ es:
       validation:
         preparing: Preparando archivo...
         in_progress: Validando filas...
-        summary: "%{total} filas totales — %{valid} válidas, %{invalid} inválidas"
+        summary_total: "%{total} Filas Totales:"
+        summary_detail: "%{valid} válidas | %{invalid} inválidas"
+        tab_all: Todas
+        error_type_presence: Errores de Presencia
+        error_type_type: Errores de Tipo
+        error_type_length: Errores de Longitud
+        error_type_inclusion: Errores de Inclusión
+        error_type_numeric: Errores Numéricos
+        error_type_uniqueness: Errores de Unicidad
+        error_type_custom: Errores de Validación Personalizada
         row_number: Fila
         column: Columna
         error: Error

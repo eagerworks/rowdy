@@ -36,7 +36,16 @@ en:
       validation:
         preparing: Preparing file...
         in_progress: Validating rows...
-        summary: "%{total} total rows — %{valid} valid, %{invalid} invalid"
+        summary_total: "%{total} Total Rows:"
+        summary_detail: "%{valid} valid | %{invalid} invalid"
+        tab_all: All
+        error_type_presence: Presence Errors
+        error_type_type: Type Errors
+        error_type_length: Length Errors
+        error_type_inclusion: Inclusion Errors
+        error_type_numeric: Numeric Errors
+        error_type_uniqueness: Uniqueness Errors
+        error_type_custom: Custom Validation Errors
         row_number: Row
         column: Column
         error: Error
