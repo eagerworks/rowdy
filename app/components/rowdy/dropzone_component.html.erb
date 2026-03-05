@@ -20,7 +20,15 @@
          drop->rowdy-dropzone#handleDrop
          click->rowdy-dropzone#openFilePicker">
     <div class="rowdy-dropzone-label-wrap">
-      <span data-rowdy-dropzone-target="dropzoneLabel" data-original-label="<%= label_text %>"><%= label_text %></span>
+      <div data-rowdy-dropzone-target="dropzoneLabel" data-original-label="<%= label_text %>">
+        <svg class="rowdy-dropzone-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <span><%= label_text %></span>
+        <span class="rowdy-dropzone-hint"><%= I18n.t('rowdy.dropzone.hint', default: '.xlsx or .xls files') %></span>
+      </div>
       <div class="rowdy-dropzone-uploading hidden" data-rowdy-dropzone-target="dropzoneUploading">
         <span class="rowdy-dropzone-spinner" aria-hidden="true"></span>
         <span class="rowdy-dropzone-uploading-text"><%= I18n.t('rowdy.dropzone.uploading') %></span>
@@ -44,5 +52,5 @@
   <div class="rowdy-resume-banner hidden" data-rowdy-dropzone-target="resumeBanner"></div>
 
   <div class="rowdy-file-list <%= "rowdy-file-list--hidden" unless show_file_list %>" data-rowdy-dropzone-target="fileList"></div>
-  <div class="rowdy-upload-progress " data-rowdy-dropzone-target="uploadProgress"></div>
+  <div class="rowdy-upload-progress hidden" data-rowdy-dropzone-target="uploadProgress"></div>
 </div>

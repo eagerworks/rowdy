@@ -1,9 +1,12 @@
 <div id="rowdy-import-progress-<%= import.id %>" class="rowdy-validation-progress">
   <% if import.preparing? %>
+    <svg class="rowdy-dropzone-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 0.75rem;">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
     <p class="rowdy-validation-status"><%= I18n.t("rowdy.import.validation.preparing") %></p>
   <% else %>
     <p class="rowdy-validation-status"><%= I18n.t("rowdy.import.validation.in_progress") %></p>
-    <div class="rowdy-upload-progress-bar">
+    <div class="rowdy-upload-progress-bar" style="max-width: 20rem; margin: 0 auto;">
       <progress value="<%= import.progress %>" max="100"></progress>
       <span class="rowdy-upload-progress-text"><%= import.progress %>%</span>
     </div>

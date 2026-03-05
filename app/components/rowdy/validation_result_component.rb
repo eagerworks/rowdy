@@ -66,10 +66,8 @@ module Rowdy
       @page < @total_pages
     end
 
-    # Error type categories in display order. Used to group validation messages into tabs.
     ERROR_TYPE_ORDER = %i[presence type length inclusion numeric uniqueness custom].freeze
 
-    # Classifies a validation message into a category key for tab grouping.
     def self.classify_error_message(message)
       msg = message.to_s
       return :presence if msg == "is required"
@@ -81,7 +79,6 @@ module Rowdy
       :custom
     end
 
-    # Unique error type categories present on the current page, in ERROR_TYPE_ORDER.
     def error_types
       @error_types ||= begin
         categories = Set.new
@@ -94,8 +91,6 @@ module Rowdy
       end
     end
 
-    # Number of distinct rows (import_errors) that have at least one error of this type.
-    # Capped at the page size — a row is counted once regardless of how many columns are affected.
     def row_count_for_error_type(category)
       @errors.count do |import_error|
         (import_error.column_errors || {}).any? do |_, msgs|
@@ -108,8 +103,6 @@ module Rowdy
       I18n.t("rowdy.import.validation.error_type_#{category}")
     end
 
-    # For a given error type category, returns an array of hashes:
-    # { import_error:, column:, messages: [msg, ...] } with only messages that match the category.
     def entries_for_error_type(category)
       entries = []
       @errors.each do |import_error|

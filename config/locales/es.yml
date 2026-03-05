@@ -21,6 +21,9 @@ es:
       completed: Completado
       failed: Error
       uploading: Subiendo
+    chunked_upload:
+      not_uploading: La subida no está en estado de carga
+      missing_chunks: "Faltan fragmentos: %{chunks}"
     import:
       steps:
         column_mapping: Mapeo de Columnas

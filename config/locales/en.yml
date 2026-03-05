@@ -21,6 +21,9 @@ en:
       completed: Completed
       failed: Failed
       uploading: Uploading
+    chunked_upload:
+      not_uploading: Upload is not in uploading state
+      missing_chunks: "Missing chunks: %{chunks}"
     import:
       steps:
         column_mapping: Column Mapping

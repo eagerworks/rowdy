@@ -4,6 +4,9 @@
          data-rowdy-validate-url-value="<%= start_validation_path %>"></div>
     <div id="rowdy-import-progress-<%= import.id %>" class="rowdy-validation-progress">
       <% if preparing? %>
+        <svg class="rowdy-dropzone-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 0.75rem;">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
         <p class="rowdy-validation-status"><%= I18n.t("rowdy.import.validation.preparing") %></p>
       <% else %>
         <p class="rowdy-validation-status"><%= I18n.t("rowdy.import.validation.in_progress") %></p>
@@ -41,7 +44,8 @@
                       title="<%= label_for_error_type(error_type) %>"
                       data-rowdy-validation-tabs-target="tabButton"
                       data-action="click->rowdy-validation-tabs#select">
-                <span class="rowdy-validation-tab-label"><%= label_for_error_type(error_type) %></span> (<%= row_count_for_error_type(error_type) %>)
+                <span class="rowdy-validation-tab-label"><%= label_for_error_type(error_type) %></span>
+                <span style="font-size: 0.6875rem; opacity: 0.7; margin-left: 0.125rem;">(<%= row_count_for_error_type(error_type) %>)</span>
               </button>
             <% end %>
           </div>
@@ -107,7 +111,7 @@
           <div class="rowdy-validation-report">
             <%= link_to I18n.t("rowdy.import.validation.download_report"),
               error_report_path,
-              class: "rowdy-btn rowdy-btn--alert" %>
+              class: "rowdy-btn rowdy-btn--alert rowdy-btn--sm" %>
           </div>
         <% end %>
 
