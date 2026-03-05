@@ -333,7 +333,6 @@
   font-size: 0.8125rem;
   font-weight: 600;
   color: hsl(var(--rowdy-foreground));
-  letter-spacing: -0.01em;
   margin: 1.25rem 0 0.625rem 0;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -802,6 +801,18 @@
   padding: 2.5rem 1.5rem;
 }
 
+.rowdy-validation-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: hsl(var(--rowdy-muted-foreground));
+  margin: 0 auto 0.75rem;
+}
+
+.rowdy-validation-progress-bar {
+  max-width: 20rem;
+  margin: 0 auto;
+}
+
 .rowdy-validation-status {
   font-size: 0.875rem;
   font-weight: 500;
@@ -871,6 +882,12 @@
   color: hsl(var(--rowdy-foreground));
   font-weight: 600;
   border-bottom-color: hsl(var(--rowdy-primary));
+}
+
+.rowdy-validation-tab-count {
+  font-size: 0.6875rem;
+  opacity: 0.7;
+  margin-left: 0.125rem;
 }
 
 .rowdy-validation-tab-label {
@@ -1005,6 +1022,13 @@
   border: 1px solid hsl(var(--rowdy-border));
   border-radius: var(--rowdy-radius);
   background: hsl(var(--rowdy-muted) / 0.3);
+}
+
+.rowdy-import-result-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: hsl(var(--rowdy-muted-foreground));
+  margin-bottom: 0.75rem;
 }
 
 .rowdy-import-result-placeholder {

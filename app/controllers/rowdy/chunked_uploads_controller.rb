@@ -41,16 +41,8 @@ module Rowdy
     end
 
     def complete
-      unless @upload.uploading?
-        render json: { error: I18n.t("rowdy.chunked_upload.not_uploading") }, status: :conflict
-        return
-      end
-
-      unless @upload.all_chunks_received?
-        render json: {
-          error: I18n.t("rowdy.chunked_upload.missing_chunks", chunks: @upload.missing_chunks),
-          received_chunks: @upload.received_chunks
-        }, status: :unprocessable_entity
+      if (error = @upload.completion_error)
+        render(**error)
         return
       end
 

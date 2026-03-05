@@ -9,7 +9,7 @@ module Rowdy
       @errors = errors
     end
 
-    def save_mapping_path
+    def mapping_path
       Rowdy::Engine.routes.url_helpers.import_mapping_path(@import)
     end
 

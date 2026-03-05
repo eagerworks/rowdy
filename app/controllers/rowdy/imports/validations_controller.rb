@@ -7,7 +7,13 @@ module Rowdy
         @page = (params[:page] || 1).to_i
         @errors = @import.import_errors.active.order(:row_number).offset((@page - 1) * per_page).limit(per_page)
         @total_pages = total_pages_for(@import)
-        render template: "rowdy/imports/validation"
+        @errored_columns = @import.import_errors.active
+          .pluck(:column_errors)
+          .compact
+          .flat_map(&:keys)
+          .uniq
+          .sort
+        render "rowdy/imports/validation"
       end
 
       def create

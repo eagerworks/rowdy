@@ -3,7 +3,7 @@ PATH
   specs:
     rowdy (0.1.0)
       creek (~> 2.6)
-      csv
+      csv (~> 3.0)
       rails (>= 8.1.2)
       stimulus-rails (~> 1.3)
       turbo-rails (~> 2.0)

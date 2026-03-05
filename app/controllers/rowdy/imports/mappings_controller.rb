@@ -7,7 +7,7 @@ module Rowdy
         @detected_columns = @import.upload.detected_columns || []
         @sample_rows = @import.upload.sample_rows || []
         @schema_columns = @import.schema.columns
-        render template: "rowdy/imports/mapping"
+        render "rowdy/imports/mapping"
       end
 
       def update
@@ -22,7 +22,7 @@ module Rowdy
           @schema_columns = @import.schema.columns
           @column_mapping = column_mapping
           @mapping_errors = [ I18n.t("rowdy.import.missing_required_columns", columns: missing.join(", ")) ]
-          render template: "rowdy/imports/mapping", status: :unprocessable_entity
+          render "rowdy/imports/mapping", status: :unprocessable_entity
           return
         end
 

@@ -69,7 +69,7 @@ module Rowdy
     ERROR_TYPE_ORDER = %i[presence type length inclusion numeric uniqueness custom].freeze
 
     def self.classify_error_message(message)
-      msg = message.to_s
+      msg = message.to_s.downcase
       return :presence if msg == "is required"
       return :uniqueness if msg == "must be unique"
       return :type if msg.start_with?("must be a valid ")

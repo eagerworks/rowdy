@@ -8,8 +8,7 @@ export default class extends Controller {
     workerUrl: String,
     chunkSize: { type: Number, default: 5 * 1024 * 1024 },
     pendingUploads: { type: Array, default: [] },
-    schemaName: { type: String, default: "" },
-    uploadingLabel: { type: String, default: "Uploading" }
+    schemaName: { type: String, default: "" }
   }
 
   connect() {

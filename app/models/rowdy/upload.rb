@@ -41,6 +41,8 @@ module Rowdy
     end
 
     def missing_chunks
+      return [] if total_chunks.nil? || received_chunks.nil?
+
       (0...total_chunks).to_a - received_chunks
     end
 
@@ -54,11 +56,19 @@ module Rowdy
       }
     end
 
+    def completion_error
+      if !uploading?
+        { json: { error: I18n.t("rowdy.chunked_upload.not_uploading") }, status: :conflict }
+      elsif !all_chunks_received?
+        { json: { error: I18n.t("rowdy.chunked_upload.missing_chunks", chunks: missing_chunks), received_chunks: received_chunks }, status: :unprocessable_entity }
+      end
+    end
+
     def completion_json
       {
         upload_id: id,
         status: reload.status,
-        message: "Upload complete, processing queued"
+        message: I18n.t("rowdy.upload.complete")
       }
     end
 

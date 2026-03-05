@@ -4,10 +4,15 @@ es:
       label: Arrastrá archivos XLSX aquí
       uploading: Subiendo
       or_click: o hacé click para buscar
+      hint: "archivos .xlsx o .xls"
       resume_file: Seleccionar archivo para reanudar
       resume_progress: "%{percent}% subido"
       resume_dismiss: Descartar
       resume_mismatch: El archivo no coincide con la subida interrumpida
+    upload:
+      complete: Subida completa, procesamiento en cola
+    upload_list:
+      title: Subidas
     upload_item:
       start_import: Iniciar Importación
       processing: Procesando
@@ -61,6 +66,20 @@ es:
         value: Valor
         save_corrections: Guardar correcciones
         unsaved_warning: Tenés correcciones sin guardar. Si navegás a otra página, perderás los cambios. ¿Continuar?
+      find_replace:
+        button: Buscar y Reemplazar
+        title: Buscar y Reemplazar
+        column_label: Columna
+        column_placeholder: Seleccionar una columna
+        find_label: Buscar
+        find_placeholder: Valor a buscar
+        all_empty_label: Todas las celdas vacías
+        case_sensitive_label: Distinguir mayúsculas
+        exact_match_label: Coincidir celda completa
+        replace_label: Reemplazar con
+        replace_placeholder: Valor de reemplazo
+        cancel: Cancelar
+        replace_all: Reemplazar Todo
       result:
         placeholder: Funcionalidad de importación próximamente.
         import_button: Importar

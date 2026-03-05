@@ -4,10 +4,15 @@ en:
       label: Drag XLSX files here
       uploading: Uploading
       or_click: or click to browse
+      hint: ".xlsx or .xls files"
       resume_file: Select file to resume
       resume_progress: "%{percent}% uploaded"
       resume_dismiss: Dismiss
       resume_mismatch: File does not match the interrupted upload
+    upload:
+      complete: Upload complete, processing queued
+    upload_list:
+      title: Uploads
     upload_item:
       start_import: Start Import
       processing: Processing
