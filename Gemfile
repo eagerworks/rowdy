@@ -7,6 +7,10 @@ gem "puma"
 
 gem "sqlite3"
 
+gem "debug"
+gem "method_source", "~> 1.0"  # explicit so lockfile is complete (pry dependency)
+gem "pry-rails", "~> 0.3.11"
+
 gem "propshaft"
 gem "importmap-rails"
 
@@ -16,7 +20,7 @@ gem "rubocop-rails-omakase", require: false
 # Start debugger with binding.b [https://github.com/ruby/debug]
 # gem "debug", ">= 1.0.0"
 
-
+gem "csv"
 gem "redis"
 gem "sidekiq"
 gem "light-service"
