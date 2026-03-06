@@ -45,6 +45,8 @@ module Rowdy
         run "yarn add file:#{gem_path}"
 
         inject_import
+
+        run "yarn build"
       end
 
       def inject_import
