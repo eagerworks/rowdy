@@ -1,7 +1,7 @@
 <div class="rowdy-schemas">
   <div class="rowdy-schema-show-header">
     <%= link_to rowdy_back_path, class: "rowdy-back-link" do %>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <%= render "rowdy/shared/icons/chevron_left" %>
       <%= t('rowdy.schemas.back') %>
     <% end %>
     <h1 class="rowdy-schema-show-title"><%= @schema.schema_label %></h1>
