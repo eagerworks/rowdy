@@ -1,5 +1,14 @@
 en:
   rowdy:
+    schemas:
+      back: Back to schemas
+      empty: No schemas defined yet. Create one to get started.
+      columns_count:
+        one: "%{count} column"
+        other: "%{count} columns"
+      uploads_count:
+        one: "%{count} upload"
+        other: "%{count} uploads"
     schema_builder:
       create_schema: Create Schema
       creating: Creating...

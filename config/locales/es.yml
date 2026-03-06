@@ -1,5 +1,14 @@
 es:
   rowdy:
+    schemas:
+      back: Volver a esquemas
+      empty: No hay esquemas definidos todavía. Creá uno para empezar.
+      columns_count:
+        one: "%{count} columna"
+        other: "%{count} columnas"
+      uploads_count:
+        one: "%{count} subida"
+        other: "%{count} subidas"
     schema_builder:
       create_schema: Crear Esquema
       creating: Creando...

@@ -65,6 +65,28 @@
   --rowdy-transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ─── Layout ────────────────────────────────────────────────── */
+
+.rowdy-body {
+  font-family: var(--rowdy-font-sans);
+  margin: 0;
+  padding: 2.5rem 1.5rem;
+  background-color: hsl(var(--rowdy-muted));
+  color: hsl(var(--rowdy-foreground));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.rowdy-container {
+  max-width: 56rem;
+  margin: 0 auto;
+  background: hsl(var(--rowdy-card));
+  border: 1px solid hsl(var(--rowdy-border));
+  border-radius: var(--rowdy-radius-lg);
+  padding: 2rem;
+  box-shadow: var(--rowdy-shadow);
+}
+
 /* ─── Base ──────────────────────────────────────────────────── */
 
 .rowdy-schemas {
@@ -80,7 +102,133 @@
   margin-bottom: 1.25rem;
 }
 
-/* ─── Template / Schema Card ────────────────────────────────── */
+/* ─── Schema Cards Grid ────────────────────────────────────── */
+
+.rowdy-schemas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: 0.75rem;
+}
+
+.rowdy-schema-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: hsl(var(--rowdy-card));
+  border: 1px solid hsl(var(--rowdy-border));
+  border-radius: var(--rowdy-radius-lg);
+  padding: 1.25rem 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--rowdy-transition),
+              box-shadow var(--rowdy-transition),
+              background var(--rowdy-transition);
+  cursor: pointer;
+}
+
+.rowdy-schema-card:hover {
+  border-color: hsl(var(--rowdy-ring));
+  box-shadow: var(--rowdy-shadow);
+  background: hsl(var(--rowdy-ring) / 0.02);
+}
+
+.rowdy-schema-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowdy-schema-card-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: hsl(var(--rowdy-foreground));
+  letter-spacing: -0.015em;
+  margin: 0 0 0.125rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowdy-schema-card-name {
+  font-size: 0.75rem;
+  font-family: var(--rowdy-font-mono);
+  color: hsl(var(--rowdy-muted-foreground));
+}
+
+.rowdy-schema-card-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.125rem;
+  flex-shrink: 0;
+}
+
+.rowdy-schema-card-columns,
+.rowdy-schema-card-uploads {
+  font-size: 0.6875rem;
+  color: hsl(var(--rowdy-muted-foreground));
+  white-space: nowrap;
+}
+
+.rowdy-schema-card-arrow {
+  flex-shrink: 0;
+  color: hsl(var(--rowdy-muted-foreground));
+  transition: transform var(--rowdy-transition);
+}
+
+.rowdy-schema-card:hover .rowdy-schema-card-arrow {
+  transform: translateX(2px);
+  color: hsl(var(--rowdy-primary));
+}
+
+/* ─── Schemas Empty State ──────────────────────────────────── */
+
+.rowdy-schemas-empty {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: hsl(var(--rowdy-muted-foreground));
+  font-size: 0.875rem;
+}
+
+.rowdy-schemas-empty-icon {
+  color: hsl(var(--rowdy-border));
+  margin-bottom: 0.75rem;
+}
+
+.rowdy-schemas-empty p {
+  margin: 0;
+}
+
+/* ─── Schema Show Page ─────────────────────────────────────── */
+
+.rowdy-schema-show-header {
+  margin-bottom: 1.5rem;
+}
+
+.rowdy-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: hsl(var(--rowdy-muted-foreground));
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+  transition: color var(--rowdy-transition);
+}
+
+.rowdy-back-link:hover {
+  color: hsl(var(--rowdy-primary));
+}
+
+.rowdy-schema-show-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: hsl(var(--rowdy-foreground));
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+/* ─── Template (legacy / inline) ───────────────────────────── */
 
 .rowdy-template {
   background: hsl(var(--rowdy-card));

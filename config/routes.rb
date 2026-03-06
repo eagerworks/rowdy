@@ -19,4 +19,5 @@ Rowdy::Engine.routes.draw do
   end
 
   resources :schema_definitions, only: %i[index show create update destroy]
+  resources :schemas, only: [ :show ], param: :schema_name
 end
