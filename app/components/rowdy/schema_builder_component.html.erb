@@ -1,6 +1,6 @@
 <div data-controller="rowdy-schema-builder">
   <button type="button" class="rowdy-btn rowdy-btn--primary" data-action="click->rowdy-schema-builder#open">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <%= render "rowdy/shared/icons/plus" %>
     <%= t('rowdy.schema_builder.create_schema') %>
   </button>
 
@@ -9,7 +9,7 @@
       <div class="rowdy-schema-dialog-header">
         <h3 class="rowdy-schema-dialog-title"><%= t('rowdy.schema_builder.dialog_title') %></h3>
         <button type="button" class="rowdy-schema-dialog-close" data-action="click->rowdy-schema-builder#close">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <%= render "rowdy/shared/icons/close" %>
         </button>
       </div>
 
@@ -31,7 +31,7 @@
           <div class="rowdy-schema-columns-header">
             <h4 class="rowdy-schema-columns-title"><%= t('rowdy.schema_builder.columns') %></h4>
             <button type="button" class="rowdy-btn rowdy-btn--sm" data-action="click->rowdy-schema-builder#addColumn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <%= render "rowdy/shared/icons/plus" %>
               <%= t('rowdy.schema_builder.add_column') %>
             </button>
           </div>
@@ -88,7 +88,7 @@
         </div>
         <div class="rowdy-schema-field rowdy-schema-field--remove">
           <button type="button" class="rowdy-schema-remove-col-btn" data-action="click->rowdy-schema-builder#removeColumn" title="<%= t('rowdy.schema_builder.remove_column') %>">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <%= render "rowdy/shared/icons/close" %>
           </button>
         </div>
       </div>

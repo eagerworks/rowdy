@@ -17,6 +17,10 @@ module Rowdy
     end
 
     def scroll_container_id
+      schema_name ? "rowdy-uploads-scroll-#{schema_name}" : "rowdy-uploads-scroll"
+    end
+
+    def list_items_id
       schema_name ? "rowdy-uploads-list-items-#{schema_name}" : "rowdy-uploads-list-items"
     end
   end

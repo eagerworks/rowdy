@@ -12,7 +12,7 @@ module Rowdy
     def rowdy_back_path
       request.referer || main_app.root_path
     rescue NoMethodError
-      '/'
+      "/"
     end
   end
 end

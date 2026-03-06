@@ -495,9 +495,6 @@
 .rowdy-upload-list-scroll {
   max-height: 20rem;
   overflow-y: auto;
-  border: 1px solid hsl(var(--rowdy-border));
-  border-radius: var(--rowdy-radius);
-  padding: 0.375rem;
 }
 
 .rowdy-upload-list-scroll::-webkit-scrollbar {
@@ -513,34 +510,61 @@
   border-radius: 9999px;
 }
 
-/* ─── Upload Item ───────────────────────────────────────────── */
+/* ─── Upload Table ──────────────────────────────────────────── */
 
-.rowdy-upload-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 0.875rem;
-  margin: 0.25rem 0;
-  background: hsl(var(--rowdy-card));
+.rowdy-upload-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
   border: 1px solid hsl(var(--rowdy-border));
-  border-radius: var(--rowdy-radius-sm);
-  transition: background var(--rowdy-transition), box-shadow var(--rowdy-transition);
+  border-radius: var(--rowdy-radius);
+  overflow: hidden;
+  table-layout: fixed;
 }
 
-.rowdy-upload-item:hover {
-  background: hsl(var(--rowdy-accent) / 0.5);
+.rowdy-upload-table th {
+  text-align: left;
+  padding: 0.5rem 0.875rem;
+  background: hsl(var(--rowdy-muted));
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: hsl(var(--rowdy-muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid hsl(var(--rowdy-border));
 }
 
-.rowdy-upload-info {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  min-width: 0;
-  flex: 1;
+.rowdy-upload-table th:last-child {
+  width: 3.5rem;
+}
+
+.rowdy-upload-table td {
+  padding: 0.5rem 0.875rem;
+  border-bottom: 1px solid hsl(var(--rowdy-border));
+  font-size: 0.8125rem;
+  vertical-align: middle;
+}
+
+.rowdy-upload-table tr:last-child td {
+  border-bottom: none;
+}
+
+.rowdy-upload-table tbody tr {
+  transition: background var(--rowdy-transition);
+}
+
+.rowdy-upload-table tbody tr:hover {
+  background: hsl(var(--rowdy-muted) / 0.5);
+}
+
+/* ─── Upload Item (table row) ──────────────────────────────── */
+
+.rowdy-upload-filename-cell {
+  overflow: hidden;
 }
 
 .rowdy-upload-filename {
+  display: block;
   font-size: 0.8125rem;
   font-weight: 500;
   color: hsl(var(--rowdy-foreground));
@@ -549,12 +573,16 @@
   white-space: nowrap;
 }
 
+.rowdy-upload-status-cell {
+  white-space: nowrap;
+}
+
 .rowdy-upload-status {
+  display: inline-block;
   font-size: 0.6875rem;
   font-weight: 500;
   padding: 0.125rem 0.5rem;
   border-radius: 9999px;
-  flex-shrink: 0;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
@@ -577,6 +605,10 @@
 .rowdy-upload-item[data-upload-status="failed"] .rowdy-upload-status {
   background: hsl(var(--rowdy-destructive) / 0.1);
   color: hsl(var(--rowdy-destructive));
+}
+
+.rowdy-upload-action-cell {
+  text-align: center;
 }
 
 /* Upload Progress */
@@ -621,17 +653,15 @@
   font-variant-numeric: tabular-nums;
 }
 
-.rowdy-upload-actions {
-  flex-shrink: 0;
-}
-
-.rowdy-upload-error {
+.rowdy-upload-progress-bar--inline {
   margin-top: 0.375rem;
 }
 
 .rowdy-error-message {
+  display: block;
   font-size: 0.75rem;
   color: hsl(var(--rowdy-destructive));
+  margin-top: 0.25rem;
 }
 
 /* ─── Buttons ───────────────────────────────────────────────── */
@@ -710,6 +740,15 @@
 .rowdy-btn--sm {
   padding: 0.375rem 0.75rem;
   font-size: 0.75rem;
+}
+
+.rowdy-btn--icon {
+  padding: 0.375rem;
+  line-height: 1;
+}
+
+.rowdy-btn--icon svg {
+  display: block;
 }
 
 /* ─── Steps Indicator ───────────────────────────────────────── */
@@ -940,7 +979,8 @@
 
 .rowdy-mapping-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 0.5rem;
 }
 

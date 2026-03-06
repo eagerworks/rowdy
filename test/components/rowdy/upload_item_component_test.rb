@@ -89,7 +89,6 @@ module Rowdy
       upload = rowdy_uploads(:failed_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector ".rowdy-upload-error"
       assert_selector ".rowdy-error-message"
       assert_text upload.error_message
     end
@@ -157,11 +156,9 @@ module Rowdy
       upload = rowdy_uploads(:processing_upload)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_selector ".rowdy-upload-item" do
-        assert_selector ".rowdy-upload-info" do
-          assert_selector ".rowdy-upload-filename"
-          assert_selector ".rowdy-upload-status"
-        end
+      assert_selector "tr.rowdy-upload-item" do
+        assert_selector ".rowdy-upload-filename-cell .rowdy-upload-filename"
+        assert_selector ".rowdy-upload-status-cell .rowdy-upload-status"
         assert_selector ".rowdy-upload-progress-bar" do
           assert_selector "progress"
           assert_selector ".rowdy-upload-progress-text"
@@ -223,7 +220,7 @@ module Rowdy
       upload.update!(error_message: nil)
       render_inline(UploadItemComponent.new(upload: upload))
 
-      assert_no_selector ".rowdy-upload-error"
+      assert_no_selector ".rowdy-error-message"
     end
   end
 end

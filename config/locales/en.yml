@@ -52,6 +52,9 @@ en:
       complete: Upload complete, processing queued
     upload_list:
       title: Uploads
+      file_name: File Name
+      start_import: Import
+      status: Status
     upload_item:
       start_import: Start Import
       processing: Processing
@@ -80,6 +83,7 @@ en:
         template_column: Template Column
         ignore: "-- Ignore --"
         submit: Validate
+        back_to_schema: Back to Schema
       validation:
         preparing: Preparing file...
         in_progress: Validating rows...

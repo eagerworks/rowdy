@@ -52,6 +52,9 @@ es:
       complete: Subida completa, procesamiento en cola
     upload_list:
       title: Subidas
+      file_name: Nombre de Archivo
+      status: Estado
+      start_import: Importar
     upload_item:
       start_import: Iniciar Importación
       processing: Procesando
@@ -80,6 +83,7 @@ es:
         template_column: Columna del Template
         ignore: "-- Ignorar --"
         submit: Validar
+        back_to_schema: Volver al Esquema
       validation:
         preparing: Preparando archivo...
         in_progress: Validando filas...

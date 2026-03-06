@@ -7,6 +7,7 @@ module Rowdy
                      format: { with: /\A[a-z][a-z0-9_]*\z/, message: "must be lowercase snake_case" }
     validates :columns_config, presence: true
     validate :validate_columns_config
+    validate :name_not_in_static_registry
 
     before_validation :derive_label
 
@@ -24,6 +25,15 @@ module Rowdy
 
     def clear_dynamic_schema_cache
       DynamicSchemaBuilder.clear_cache
+    end
+
+    def name_not_in_static_registry
+      return if name.blank?
+
+      static_names = SchemaRegistry.static_schemas.map(&:schema_name)
+      if static_names.include?(name)
+        errors.add(:name, "is already used by a static schema")
+      end
     end
 
     def validate_columns_config

@@ -16,10 +16,10 @@ module Rowdy
       @schema_definition = SchemaDefinition.new(schema_definition_params)
 
       if @schema_definition.save
-        redirect_back_or_to '/'
+        redirect_back_or_to "/"
       else
         render turbo_stream: turbo_stream.update(
-          'schema-builder-errors',
+          "schema-builder-errors",
           html: error_messages_html
         ), status: :unprocessable_entity
       end
@@ -56,9 +56,9 @@ module Rowdy
 
       columns = if raw.is_a?(Array)
                   raw
-                else
+      else
                   raw.keys.sort_by(&:to_i).map { |k| raw[k] }
-                end
+      end
 
       columns.filter_map { |col| build_column_hash(col) }
     end
@@ -67,15 +67,15 @@ module Rowdy
       permitted = col.permit(:name, :type, :required, :unique, :max_length, :greater_than, :inclusion)
       result = {}
 
-      result['name'] = permitted[:name] if permitted[:name].present?
-      result['type'] = permitted[:type] if permitted[:type].present?
-      result['required'] = true if ActiveModel::Type::Boolean.new.cast(permitted[:required])
-      result['unique'] = true if ActiveModel::Type::Boolean.new.cast(permitted[:unique])
-      result['max_length'] = permitted[:max_length].to_i if permitted[:max_length].present?
-      result['greater_than'] = permitted[:greater_than].to_f if permitted[:greater_than].present?
+      result["name"] = permitted[:name] if permitted[:name].present?
+      result["type"] = permitted[:type] if permitted[:type].present?
+      result["required"] = true if ActiveModel::Type::Boolean.new.cast(permitted[:required])
+      result["unique"] = true if ActiveModel::Type::Boolean.new.cast(permitted[:unique])
+      result["max_length"] = permitted[:max_length].to_i if permitted[:max_length].present?
+      result["greater_than"] = permitted[:greater_than].to_f if permitted[:greater_than].present?
 
       if permitted[:inclusion].present?
-        result['inclusion'] = permitted[:inclusion].split(',').map(&:strip).reject(&:blank?)
+        result["inclusion"] = permitted[:inclusion].split(",").map(&:strip).reject(&:blank?)
       end
 
       result
@@ -84,7 +84,7 @@ module Rowdy
     def error_messages_html
       helpers.safe_join(
         @schema_definition.errors.full_messages.map do |msg|
-          helpers.content_tag(:p, msg, class: 'rowdy-schema-error-msg')
+          helpers.content_tag(:p, msg, class: "rowdy-schema-error-msg")
         end
       )
     end

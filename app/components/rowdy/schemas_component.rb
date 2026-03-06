@@ -2,6 +2,7 @@ module Rowdy
   class SchemasComponent < ViewComponent::Base
     def initialize
       @schemas = SchemaRegistry.all
+      @upload_counts = Upload.group(:schema_name).count
     end
 
     def schema_path(schema)
@@ -9,7 +10,7 @@ module Rowdy
     end
 
     def upload_count(schema)
-      Upload.where(schema_name: schema.schema_name).count
+      @upload_counts[schema.schema_name] || 0
     end
   end
 end
