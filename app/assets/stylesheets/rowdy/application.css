@@ -16,6 +16,7 @@
   --rowdy-shadow: rgba(0, 0, 0, 0.05);
   --rowdy-button-text: white;
   --rowdy-text-muted: #6b7280;
+  --rowdy-modal-overlay: rgba(0, 0, 0, 0.5);
   --rowdy-dropzone-border: #cbd5e1;
   --rowdy-dropzone-active-bg: #eff6ff;
   --rowdy-status-pending: #fbbf24;
@@ -436,4 +437,70 @@
 /* Hidden utility */
 .hidden {
   display: none !important;
+}
+
+/* Find & Replace Dialog */
+.rowdy-find-replace-dialog {
+  border: 0.0625rem solid var(--rowdy-border-color);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  background: var(--rowdy-bg);
+  box-shadow: 0 0.5rem 1.5rem var(--rowdy-shadow);
+  width: 28rem;
+  max-width: 90vw;
+}
+
+.rowdy-find-replace-dialog::backdrop {
+  background: var(--rowdy-modal-overlay);
+}
+
+.rowdy-find-replace-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 1.25rem;
+}
+
+.rowdy-find-replace-field {
+  margin-bottom: 1rem;
+}
+
+.rowdy-find-replace-field--toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rowdy-find-replace-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.rowdy-find-replace-label--inline {
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.rowdy-find-replace-input,
+.rowdy-find-replace-select {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  border: 0.0625rem solid var(--rowdy-border-color);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  background: var(--rowdy-bg);
+}
+
+.rowdy-find-replace-input:disabled {
+  background: #f3f4f6;
+  color: var(--rowdy-text-muted);
+  cursor: not-allowed;
+}
+
+.rowdy-find-replace-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }

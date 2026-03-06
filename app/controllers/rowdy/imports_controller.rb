@@ -1,6 +1,6 @@
 module Rowdy
   class ImportsController < ApplicationController
-    before_action :set_import, only: %i[show mapping save_mapping validate validation correct_errors error_report]
+    before_action :set_import, only: %i[show mapping save_mapping validate validation correct_errors error_report replace_all]
 
     def create
       upload = Upload.find(params[:upload_id])
@@ -59,6 +59,21 @@ module Rowdy
       @page = (params[:page] || 1).to_i
       @errors = @import.import_errors.active.order(:row_number).offset((@page - 1) * per_page).limit(per_page)
       @total_pages = total_pages_for(@import)
+      @errored_columns = ErroredColumnsQuery.call(@import)
+    end
+
+    def replace_all
+      params = replace_all_params
+      ReplaceAll.call(
+        import: @import,
+        column: params[:column],
+        find_value: params[:find_value].to_s,
+        replace_value: params[:replace_value].to_s,
+        all_empty: params[:all_empty] == "1",
+        case_sensitive: params[:case_sensitive] == "1",
+        exact_match: params[:exact_match] == "1"
+      )
+      redirect_to import_validation_path(@import)
     end
 
     def correct_errors
@@ -128,6 +143,10 @@ module Rowdy
       return 0 if import.invalid_rows_count.zero?
 
       (import.invalid_rows_count.to_f / per_page).ceil
+    end
+
+    def replace_all_params
+      params.permit(:column, :find_value, :replace_value, :all_empty, :case_sensitive, :exact_match)
     end
   end
 end

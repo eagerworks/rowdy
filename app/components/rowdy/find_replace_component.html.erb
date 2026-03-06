@@ -1,0 +1,66 @@
+<dialog data-rowdy-find-replace-target="dialog"
+        class="rowdy-find-replace-dialog">
+  <%= form_with url: replace_all_path, method: :patch,
+                data: { turbo_frame: frame_id } do |f| %>
+
+    <h2 class="rowdy-find-replace-title">
+      <%= I18n.t("rowdy.import.find_replace.title") %>
+    </h2>
+
+    <div class="rowdy-find-replace-field">
+      <%= label_tag :column, I18n.t("rowdy.import.find_replace.column_label"),
+                    class: "rowdy-find-replace-label" %>
+      <%= select_tag :column,
+            options_for_select(errored_columns.map { |c| [c, c] }),
+            prompt: I18n.t("rowdy.import.find_replace.column_placeholder"),
+            class: "rowdy-find-replace-select",
+            required: true %>
+    </div>
+
+    <div class="rowdy-find-replace-field">
+      <%= label_tag :find_value, I18n.t("rowdy.import.find_replace.find_label"),
+                    class: "rowdy-find-replace-label" %>
+      <%= text_field_tag :find_value, nil,
+            class: "rowdy-find-replace-input",
+            placeholder: I18n.t("rowdy.import.find_replace.find_placeholder"),
+            data: { "rowdy-find-replace-target": "findInput" } %>
+    </div>
+
+    <div class="rowdy-find-replace-field rowdy-find-replace-field--toggle">
+      <%= check_box_tag :all_empty, "1", false,
+            data: { action: "change->rowdy-find-replace#toggleAllEmpty" } %>
+      <%= label_tag :all_empty, I18n.t("rowdy.import.find_replace.all_empty_label"),
+                    class: "rowdy-find-replace-label--inline" %>
+    </div>
+
+    <div class="rowdy-find-replace-field rowdy-find-replace-field--toggle">
+      <%= check_box_tag :case_sensitive, "1", false %>
+      <%= label_tag :case_sensitive, I18n.t("rowdy.import.find_replace.case_sensitive_label"),
+                    class: "rowdy-find-replace-label--inline" %>
+    </div>
+
+    <div class="rowdy-find-replace-field rowdy-find-replace-field--toggle">
+      <%= check_box_tag :exact_match, "1", false %>
+      <%= label_tag :exact_match, I18n.t("rowdy.import.find_replace.exact_match_label"),
+                    class: "rowdy-find-replace-label--inline" %>
+    </div>
+
+    <div class="rowdy-find-replace-field">
+      <%= label_tag :replace_value, I18n.t("rowdy.import.find_replace.replace_label"),
+                    class: "rowdy-find-replace-label" %>
+      <%= text_field_tag :replace_value, nil,
+            class: "rowdy-find-replace-input",
+            placeholder: I18n.t("rowdy.import.find_replace.replace_placeholder") %>
+    </div>
+
+    <div class="rowdy-find-replace-actions">
+      <button type="button" class="rowdy-btn"
+              data-action="click->rowdy-find-replace#close">
+        <%= I18n.t("rowdy.import.find_replace.cancel") %>
+      </button>
+      <%= f.submit I18n.t("rowdy.import.find_replace.replace_all"),
+            class: "rowdy-btn rowdy-btn--primary" %>
+    </div>
+
+  <% end %>
+</dialog>

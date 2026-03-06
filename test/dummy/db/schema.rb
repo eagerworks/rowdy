@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_27_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_04_000000) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -40,13 +43,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_27_000000) do
   end
 
   create_table "rowdy_import_errors", force: :cascade do |t|
-    t.text "column_errors"
+    t.jsonb "column_errors"
     t.datetime "corrected_at"
     t.datetime "created_at", null: false
     t.integer "import_id", null: false
-    t.text "row_data"
+    t.jsonb "row_data"
     t.integer "row_number", null: false
     t.datetime "updated_at", null: false
+    t.index [ "column_errors" ], name: "index_rowdy_import_errors_on_column_errors", using: :gin
     t.index [ "import_id", "row_number" ], name: "index_rowdy_import_errors_on_import_id_and_row_number"
     t.index [ "import_id" ], name: "index_rowdy_import_errors_on_import_id"
   end

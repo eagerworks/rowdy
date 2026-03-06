@@ -1,53 +1,67 @@
 en:
   rowdy:
     dropzone:
-      label: "Drag XLSX files here"
-      or_click: "or click to browse"
-      resume_file: "Select file to resume"
+      label: Drag XLSX files here
+      or_click: or click to browse
+      resume_file: Select file to resume
       resume_progress: "%{percent}% uploaded"
-      resume_dismiss: "Dismiss"
-      resume_mismatch: "File does not match the interrupted upload"
+      resume_dismiss: Dismiss
+      resume_mismatch: File does not match the interrupted upload
     upload_item:
-      start_import: "Start Import"
-      processing: "Processing"
-      pending: "Pending"
-      completed: "Completed"
-      failed: "Failed"
-      uploading: "Uploading"
+      start_import: Start Import
+      processing: Processing
+      pending: Pending
+      completed: Completed
+      failed: Failed
+      uploading: Uploading
     status:
-      pending: "Pending"
-      processing: "Processing"
-      completed: "Completed"
-      failed: "Failed"
-      uploading: "Uploading"
+      pending: Pending
+      processing: Processing
+      completed: Completed
+      failed: Failed
+      uploading: Uploading
     import:
       steps:
-        column_mapping: "Column Mapping"
-        validation: "Validation"
-        import: "Import"
+        column_mapping: Column Mapping
+        validation: Validation
+        import: Import
       missing_required_columns: "Missing required columns: %{columns}"
       mapping:
-        uploaded_column: "Uploaded Column"
-        sample_data: "Sample Data"
-        template_column: "Template Column"
+        uploaded_column: Uploaded Column
+        sample_data: Sample Data
+        template_column: Template Column
         ignore: "-- Ignore --"
-        submit: "Validate"
+        submit: Validate
       validation:
-        preparing: "Preparing file..."
-        in_progress: "Validating rows..."
+        preparing: Preparing file...
+        in_progress: Validating rows...
         summary: "%{total} total rows — %{valid} valid, %{invalid} invalid"
-        row_number: "Row"
-        column: "Column"
-        error: "Error"
-        previous: "Previous"
-        next: "Next"
+        row_number: Row
+        column: Column
+        error: Error
+        previous: Previous
+        next: Next
         page_info: "Page %{page} of %{total}"
-        back_to_mapping: "Back to Mapping"
+        back_to_mapping: Back to Mapping
         import_valid_rows: "Import %{count} Valid Rows"
-        download_report: "Download Error Report"
-        value: "Value"
-        save_corrections: "Save corrections"
-        unsaved_warning: "You have unsaved corrections. If you navigate away, your changes will be lost. Continue?"
+        download_report: Download Error Report
+        value: Value
+        save_corrections: Save corrections
+        unsaved_warning: You have unsaved corrections. If you navigate away, your changes will be lost. Continue?
+      find_replace:
+        button: Find & Replace
+        title: Find & Replace
+        column_label: Column
+        column_placeholder: Select a column
+        find_label: Find
+        find_placeholder: Value to find
+        all_empty_label: All empty cells
+        case_sensitive_label: Case sensitive
+        exact_match_label: Exactly match entire cell
+        replace_label: Replace with
+        replace_placeholder: Replacement value
+        cancel: Cancel
+        replace_all: Replace All
       result:
-        placeholder: "Import functionality coming soon."
-        import_button: "Import"
+        placeholder: Import functionality coming soon.
+        import_button: Import

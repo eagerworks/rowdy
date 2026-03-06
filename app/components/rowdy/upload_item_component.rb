@@ -11,5 +11,9 @@ module Rowdy
     def importable?
       @upload.completed? && @upload.schema_name.present?
     end
+
+    def steps_frame_id
+      "rowdy-steps-#{@upload.schema_name}"
+    end
   end
 end

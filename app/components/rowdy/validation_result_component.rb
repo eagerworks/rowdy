@@ -1,10 +1,13 @@
 module Rowdy
   class ValidationResultComponent < ViewComponent::Base
-    def initialize(import:, errors: [], page: 1, total_pages: 0)
-      @import = import
-      @errors = errors
-      @page = page
-      @total_pages = total_pages
+    attr_accessor :import, :errors, :page, :total_pages, :errored_columns
+
+    def initialize(import:, errors: [], page: 1, total_pages: 0, errored_columns: [])
+      @import          = import
+      @errors          = errors
+      @page            = page
+      @total_pages     = total_pages
+      @errored_columns = errored_columns
     end
 
     def preparing?
@@ -49,6 +52,10 @@ module Rowdy
 
     def correct_errors_path
       Rowdy::Engine.routes.url_helpers.correct_errors_import_path(@import)
+    end
+
+    def frame_id
+      @import.steps_frame_id
     end
 
     def previous_page?

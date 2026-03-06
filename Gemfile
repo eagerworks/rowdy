@@ -5,7 +5,7 @@ gemspec
 
 gem "puma"
 
-gem "sqlite3"
+gem "pg"
 
 gem "debug"
 gem "method_source", "~> 1.0"  # explicit so lockfile is complete (pry dependency)

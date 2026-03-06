@@ -18,7 +18,7 @@
     <div class="rowdy-upload-actions">
       <%= button_to I18n.t("rowdy.upload_item.start_import"), create_import_path, method: :post,
             class: "rowdy-btn rowdy-btn--primary",
-            data: { turbo_frame: "rowdy-template-steps-#{@upload.schema_name}" } %>
+            data: { turbo_frame: steps_frame_id } %>
     </div>
   <% end %>
 
