@@ -10,7 +10,7 @@ module Rowdy
 
       executed do |ctx|
         unless TypeCoercer.coercible?(ctx.value, ctx.column.type)
-          ctx.errors << "must be a valid #{ctx.column.type}"
+          ctx.errors << I18n.t("rowdy.column_validators.invalid_type", type: ctx.column.type)
           ctx.coerced_value = nil
           next ctx
         end

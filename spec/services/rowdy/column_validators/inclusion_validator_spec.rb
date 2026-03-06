@@ -22,18 +22,18 @@ module Rowdy
 
         it "adds error when value is not in the inclusion list" do
           described_class.execute(value: "unknown", column: column, errors: errors)
-          expect(errors).to eq([ "must be one of: electronics, clothing, food, other" ])
+          expect(errors).to eq([ "Must be one of: electronics, clothing, food, other" ])
         end
 
         it "adds error for nil (to_s => '')" do
           described_class.execute(value: nil, column: column, errors: errors)
-          expect(errors).to eq([ "must be one of: electronics, clothing, food, other" ])
+          expect(errors).to eq([ "Must be one of: electronics, clothing, food, other" ])
         end
 
         it "formats inclusion list in error message" do
           col = ColumnDefinition.new(name: :status, type: :string, inclusion: %w[active inactive])
           described_class.execute(value: "pending", column: col, errors: errors)
-          expect(errors).to eq([ "must be one of: active, inactive" ])
+          expect(errors).to eq([ "Must be one of: active, inactive" ])
         end
       end
     end

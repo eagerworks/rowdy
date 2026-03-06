@@ -16,12 +16,12 @@ module Rowdy
 
         it "adds error when value equals threshold" do
           described_class.execute(value: 0, column: column, errors: errors)
-          expect(errors).to eq([ "must be greater than 0" ])
+          expect(errors).to eq([ "Must be greater than 0" ])
         end
 
         it "adds error when value is less than threshold" do
           described_class.execute(value: BigDecimal("-1.5"), column: column, errors: errors)
-          expect(errors).to eq([ "must be greater than 0" ])
+          expect(errors).to eq([ "Must be greater than 0" ])
         end
 
         it "adds no error when value is not numeric" do
@@ -32,7 +32,7 @@ module Rowdy
         it "includes threshold in error message for custom threshold" do
           col = ColumnDefinition.new(name: :age, type: :integer, greater_than: 17)
           described_class.execute(value: 15, column: col, errors: errors)
-          expect(errors).to eq([ "must be greater than 17" ])
+          expect(errors).to eq([ "Must be greater than 17" ])
         end
       end
     end

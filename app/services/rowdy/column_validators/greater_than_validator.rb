@@ -11,7 +11,7 @@ module Rowdy
         next ctx unless ctx.column.greater_than.present?
         next ctx unless ctx.value.is_a?(Numeric) && ctx.value <= ctx.column.greater_than
 
-        ctx.errors << "must be greater than #{ctx.column.greater_than}"
+        ctx.errors << I18n.t("rowdy.column_validators.greater_than", threshold: ctx.column.greater_than)
       end
     end
   end

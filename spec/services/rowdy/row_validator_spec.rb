@@ -30,13 +30,13 @@ module Rowdy
         it "returns an error when the field is nil" do
           row = build(:rowdy_validator_row, :with_blank_name).to_h
           errors = described_class.call(row, product_import_schema)
-          expect(errors["name"]).to include("is required")
+          expect(errors["name"]).to include("Is required")
         end
 
         it "returns an error when the field is blank" do
           row = build(:rowdy_validator_row, :with_blank_sku).to_h
           errors = described_class.call(row, product_import_schema)
-          expect(errors["sku"]).to include("is required")
+          expect(errors["sku"]).to include("Is required")
         end
       end
 
@@ -44,7 +44,7 @@ module Rowdy
         it "returns an error for a value with the wrong type" do
           row = build(:rowdy_validator_row, :invalid_price_type).to_h
           errors = described_class.call(row, product_import_schema)
-          expect(errors["price"]).to include("must be a valid decimal")
+          expect(errors["price"]).to include("Must be a valid decimal")
         end
       end
 
@@ -52,19 +52,19 @@ module Rowdy
         it "returns an error when string exceeds max_length" do
           row = build(:rowdy_validator_row, :name_exceeds_max_length).to_h
           errors = described_class.call(row, product_import_schema)
-          expect(errors["name"]).to include("must be at most 100 characters")
+          expect(errors["name"]).to include("Must be at most 100 characters")
         end
 
         it "returns an error when value is outside inclusion list" do
           row = build(:rowdy_validator_row, :category_outside_inclusion).to_h
           errors = described_class.call(row, product_import_schema)
-          expect(errors["category"]).to include("must be one of: electronics, clothing, food, other")
+          expect(errors["category"]).to include("Must be one of: electronics, clothing, food, other")
         end
 
         it "returns an error when numeric value is not greater than threshold" do
           row = build(:rowdy_validator_row, :price_not_greater_than_zero).to_h
           errors = described_class.call(row, product_import_schema)
-          expect(errors["price"]).to include("must be greater than 0")
+          expect(errors["price"]).to include("Must be greater than 0")
         end
       end
 
@@ -74,7 +74,7 @@ module Rowdy
           tracker.add?(:sku, "SKU1")
           row = build(:rowdy_validator_row, :duplicate_sku).to_h
           errors = described_class.call(row, product_import_schema, unique_tracker: tracker)
-          expect(errors["sku"]).to include("must be unique")
+          expect(errors["sku"]).to include("Must be unique")
         end
 
         it "returns no error for the first occurrence" do
@@ -105,7 +105,7 @@ module Rowdy
           end
           row = { code: "ABCDEF" } # too long and does not start with X
           errors = described_class.call(row, schema)
-          expect(errors["code"]).to include("must be at most 5 characters", "must start with X")
+          expect(errors["code"]).to include("Must be at most 5 characters", "must start with X")
         end
       end
     end

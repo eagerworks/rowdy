@@ -11,7 +11,7 @@ module Rowdy
         next ctx unless ctx.column.inclusion.present?
         next ctx if ctx.column.inclusion.include?(ctx.value.to_s)
 
-        ctx.errors << "must be one of: #{ctx.column.inclusion.join(', ')}"
+        ctx.errors << I18n.t("rowdy.column_validators.inclusion", values: ctx.column.inclusion.join(", "))
       end
     end
   end

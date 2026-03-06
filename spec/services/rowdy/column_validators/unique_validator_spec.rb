@@ -20,7 +20,7 @@ module Rowdy
             tracker = UniqueTracker.new
             tracker.add?(:sku, "SKU-001")
             described_class.execute(value: "SKU-001", column: column, errors: errors, unique_tracker: tracker)
-            expect(errors).to eq([ "must be unique" ])
+            expect(errors).to eq([ "Must be unique" ])
           end
 
           it "tracks by column name" do

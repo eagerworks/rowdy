@@ -107,7 +107,7 @@ module Rowdy
         it "soft-deletes the import_error by setting corrected_at" do
           import = create(:rowdy_import, :validated, invalid_rows_count: 1, valid_rows_count: 9)
           error = create(:rowdy_import_error, import: import, row_data: valid_row_data,
-            column_errors: { "sku" => [ "is required" ] })
+            column_errors: { "sku" => [ "Is required" ] })
 
           freeze_time do
             patch "/rowdy/imports/#{import.id}/correct_errors", params: {
@@ -121,7 +121,7 @@ module Rowdy
         it "decrements invalid_rows_count and increments valid_rows_count" do
           import = create(:rowdy_import, :validated, invalid_rows_count: 1, valid_rows_count: 9)
           error = create(:rowdy_import_error, import: import, row_data: valid_row_data,
-            column_errors: { "sku" => [ "is required" ] })
+            column_errors: { "sku" => [ "Is required" ] })
 
           patch "/rowdy/imports/#{import.id}/correct_errors", params: {
             corrections: { error.id.to_s => { "sku" => "ABC123" } }
@@ -149,7 +149,7 @@ module Rowdy
         it "does not set corrected_at" do
           import = create(:rowdy_import, :validated)
           error = create(:rowdy_import_error, import: import, row_data: valid_row_data,
-            column_errors: { "sku" => [ "is required" ] })
+            column_errors: { "sku" => [ "Is required" ] })
 
           patch "/rowdy/imports/#{import.id}/correct_errors", params: {
             corrections: { error.id.to_s => { "sku" => "  " } }
@@ -161,7 +161,7 @@ module Rowdy
         it "updates row_data and column_errors with the new values" do
           import = create(:rowdy_import, :validated)
           error = create(:rowdy_import_error, import: import, row_data: valid_row_data,
-            column_errors: { "sku" => [ "is required" ] })
+            column_errors: { "sku" => [ "Is required" ] })
 
           patch "/rowdy/imports/#{import.id}/correct_errors", params: {
             corrections: { error.id.to_s => { "sku" => "  " } }
