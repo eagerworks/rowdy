@@ -1,6 +1,8 @@
 module Rowdy
   class ErroredColumnsQuery
-    def self.call(import) = new(import).call
+    def self.call(import)
+      new(import).call
+    end
 
     def initialize(import)
       @import = import
@@ -8,8 +10,8 @@ module Rowdy
 
     def call
       @import.import_errors.active
-        .select(:column_errors)
-        .flat_map { |ie| (ie.column_errors || {}).keys }
+        .pluck(:column_errors)
+        .flat_map { |ie| (ie || {}).keys }
         .uniq.sort
     end
   end

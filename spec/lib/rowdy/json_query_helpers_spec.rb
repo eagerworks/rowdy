@@ -11,7 +11,14 @@ module Rowdy
     end
 
     shared_context "with unsupported adapter" do
-      before { allow(described_class).to receive(:adapter_name).and_return("SQLite") }
+      before do
+        described_class.instance_variable_set(:@adapter_name, nil)
+        allow(ActiveRecord::Base.connection).to receive(:adapter_name).and_return("SQLite3")
+      end
+
+      after do
+        described_class.instance_variable_set(:@adapter_name, nil)
+      end
     end
 
     describe ".extract" do
@@ -96,7 +103,7 @@ module Rowdy
           include_context "with PostgreSQL adapter"
 
           it "uses direct equality" do
-            expect(described_class.exact_condition("row_data", "category", "ios"))
+            expect(described_class.exact_condition("row_data", "category", "ios", true))
               .to eq([ "row_data->>'category' = ?", "ios" ])
           end
         end
@@ -105,7 +112,7 @@ module Rowdy
           include_context "with MySQL adapter"
 
           it "uses binary collation for case sensitivity" do
-            expect(described_class.exact_condition("row_data", "category", "ios"))
+            expect(described_class.exact_condition("row_data", "category", "ios", true))
               .to eq([ "JSON_UNQUOTE(JSON_EXTRACT(row_data, '$.category')) = ? COLLATE utf8mb4_bin", "ios" ])
           end
         end
@@ -116,7 +123,7 @@ module Rowdy
           include_context "with PostgreSQL adapter"
 
           it "wraps both sides in LOWER" do
-            expect(described_class.exact_condition("row_data", "category", "IOS", case_sensitive: false))
+            expect(described_class.exact_condition("row_data", "category", "IOS", false))
               .to eq([ "LOWER(row_data->>'category') = LOWER(?)", "IOS" ])
           end
         end
@@ -125,7 +132,7 @@ module Rowdy
           include_context "with MySQL adapter"
 
           it "wraps both sides in LOWER" do
-            expect(described_class.exact_condition("row_data", "category", "IOS", case_sensitive: false))
+            expect(described_class.exact_condition("row_data", "category", "IOS", false))
               .to eq([ "LOWER(JSON_UNQUOTE(JSON_EXTRACT(row_data, '$.category'))) = LOWER(?)", "IOS" ])
           end
         end
@@ -138,7 +145,7 @@ module Rowdy
           include_context "with PostgreSQL adapter"
 
           it "uses LIKE without LOWER" do
-            expect(described_class.contains_condition("row_data", "category", "io"))
+            expect(described_class.contains_condition("row_data", "category", "io", true))
               .to eq([ "row_data->>'category' LIKE ?", "%io%" ])
           end
         end
@@ -147,7 +154,7 @@ module Rowdy
           include_context "with MySQL adapter"
 
           it "uses LIKE with binary collation" do
-            expect(described_class.contains_condition("row_data", "category", "io"))
+            expect(described_class.contains_condition("row_data", "category", "io", true))
               .to eq([ "JSON_UNQUOTE(JSON_EXTRACT(row_data, '$.category')) LIKE ? COLLATE utf8mb4_bin", "%io%" ])
           end
         end
@@ -158,7 +165,7 @@ module Rowdy
           include_context "with PostgreSQL adapter"
 
           it "wraps both sides in LOWER" do
-            expect(described_class.contains_condition("row_data", "category", "IO", case_sensitive: false))
+            expect(described_class.contains_condition("row_data", "category", "IO", false))
               .to eq([ "LOWER(row_data->>'category') LIKE LOWER(?)", "%IO%" ])
           end
         end
@@ -167,7 +174,7 @@ module Rowdy
           include_context "with MySQL adapter"
 
           it "wraps both sides in LOWER" do
-            expect(described_class.contains_condition("row_data", "category", "IO", case_sensitive: false))
+            expect(described_class.contains_condition("row_data", "category", "IO", false))
               .to eq([ "LOWER(JSON_UNQUOTE(JSON_EXTRACT(row_data, '$.category'))) LIKE LOWER(?)", "%IO%" ])
           end
         end
@@ -177,12 +184,12 @@ module Rowdy
         include_context "with PostgreSQL adapter"
 
         it "escapes % to prevent wildcard injection" do
-          expect(described_class.contains_condition("row_data", "category", "50%off"))
+          expect(described_class.contains_condition("row_data", "category", "50%off", true))
             .to eq([ "row_data->>'category' LIKE ?", "%50\\%off%" ])
         end
 
         it "escapes _ to prevent single-char wildcard injection" do
-          expect(described_class.contains_condition("row_data", "category", "s_ze"))
+          expect(described_class.contains_condition("row_data", "category", "s_ze", true))
             .to eq([ "row_data->>'category' LIKE ?", "%s\\_ze%" ])
         end
       end

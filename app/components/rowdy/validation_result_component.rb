@@ -1,5 +1,7 @@
 module Rowdy
   class ValidationResultComponent < ViewComponent::Base
+    attr_accessor :import, :errors, :page, :total_pages, :errored_columns
+
     def initialize(import:, errors: [], page: 1, total_pages: 0, errored_columns: [])
       @import          = import
       @errors          = errors

@@ -1,53 +1,53 @@
 es:
   rowdy:
     dropzone:
-      label: "Arrastrá archivos XLSX aquí"
-      or_click: "o hacé click para buscar"
-      resume_file: "Seleccionar archivo para reanudar"
+      label: Arrastrá archivos XLSX aquí
+      or_click: o hacé click para buscar
+      resume_file: Seleccionar archivo para reanudar
       resume_progress: "%{percent}% subido"
-      resume_dismiss: "Descartar"
-      resume_mismatch: "El archivo no coincide con la subida interrumpida"
+      resume_dismiss: Descartar
+      resume_mismatch: El archivo no coincide con la subida interrumpida
     upload_item:
-      start_import: "Iniciar Importación"
-      processing: "Procesando"
-      pending: "Pendiente"
-      completed: "Completado"
-      failed: "Error"
-      uploading: "Subiendo"
+      start_import: Iniciar Importación
+      processing: Procesando
+      pending: Pendiente
+      completed: Completado
+      failed: Error
+      uploading: Subiendo
     status:
-      pending: "Pendiente"
-      processing: "Procesando"
-      completed: "Completado"
-      failed: "Error"
-      uploading: "Subiendo"
+      pending: Pendiente
+      processing: Procesando
+      completed: Completado
+      failed: Error
+      uploading: Subiendo
     import:
       steps:
-        column_mapping: "Mapeo de Columnas"
-        validation: "Validación"
-        import: "Importación"
+        column_mapping: Mapeo de Columnas
+        validation: Validación
+        import: Importación
       missing_required_columns: "Faltan columnas requeridas: %{columns}"
       mapping:
-        uploaded_column: "Columna Subida"
-        sample_data: "Datos de Ejemplo"
-        template_column: "Columna del Template"
+        uploaded_column: Columna Subida
+        sample_data: Datos de Ejemplo
+        template_column: Columna del Template
         ignore: "-- Ignorar --"
-        submit: "Validar"
+        submit: Validar
       validation:
-        preparing: "Preparando archivo..."
-        in_progress: "Validando filas..."
+        preparing: Preparando archivo...
+        in_progress: Validando filas...
         summary: "%{total} filas totales — %{valid} válidas, %{invalid} inválidas"
-        row_number: "Fila"
-        column: "Columna"
-        error: "Error"
-        previous: "Anterior"
-        next: "Siguiente"
+        row_number: Fila
+        column: Columna
+        error: Error
+        previous: Anterior
+        next: Siguiente
         page_info: "Página %{page} de %{total}"
-        back_to_mapping: "Volver al Mapeo"
+        back_to_mapping: Volver al Mapeo
         import_valid_rows: "Importar %{count} Filas Válidas"
-        download_report: "Descargar Reporte de Errores"
-        value: "Valor"
-        save_corrections: "Guardar correcciones"
+        download_report: Descargar Reporte de Errores
+        value: Valor
+        save_corrections: Guardar correcciones
         unsaved_warning: "Tenés correcciones sin guardar. Si navegás a otra página, perderás los cambios. ¿Continuar?"
       result:
-        placeholder: "Funcionalidad de importación próximamente."
-        import_button: "Importar"
+        placeholder: Funcionalidad de importación próximamente.
+        import_button: Importar

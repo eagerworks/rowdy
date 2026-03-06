@@ -1,5 +1,7 @@
 module Rowdy
   class FindReplaceComponent < ViewComponent::Base
+    attr_accessor :import, :errored_columns
+
     def initialize(import:, errored_columns: [])
       @import          = import
       @errored_columns = errored_columns

@@ -58,17 +58,17 @@ module Rowdy
     end
 
     def value_filter
-      if @all_empty
-        JsonQueryHelpers.empty_condition("row_data", @column)
-      elsif @case_sensitive && @exact_match
-        JsonQueryHelpers.exact_condition("row_data", @column, @find_value)
-      elsif @case_sensitive
-        JsonQueryHelpers.contains_condition("row_data", @column, @find_value)
-      elsif @exact_match
-        JsonQueryHelpers.exact_condition("row_data", @column, @find_value, case_sensitive: false)
-      else
-        JsonQueryHelpers.contains_condition("row_data", @column, @find_value, case_sensitive: false)
-      end
+      return JsonQueryHelpers.empty_condition("row_data", @column) if @all_empty
+
+      method = @exact_match ? :exact_condition : :contains_condition
+
+      JsonQueryHelpers.public_send(
+        method,
+        "row_data",
+        @column,
+        @find_value,
+        @case_sensitive
+      )
     end
   end
 end
