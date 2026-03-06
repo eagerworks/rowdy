@@ -1,5 +1,35 @@
 es:
   rowdy:
+    schema_builder:
+      create_schema: Crear Esquema
+      creating: Creando...
+      dialog_title: Crear Esquema de Importación
+      schema_name: Nombre del Esquema
+      snake_case_hint: "(snake_case)"
+      name_placeholder: ej. importacion_clientes
+      label: Etiqueta
+      optional_hint: "(opcional)"
+      label_placeholder: ej. Importación de Clientes
+      columns: Columnas
+      add_column: Agregar Columna
+      cancel: Cancelar
+      column_name: Nombre
+      column_type: Tipo
+      required: Requerido
+      unique: Único
+      max_length: Largo máximo
+      greater_than: Mayor que
+      allowed_values: Valores permitidos
+      comma_separated_hint: "(separados por coma)"
+      inclusion_placeholder: "ej. electrónica, ropa, comida"
+      remove_column: Eliminar columna
+      types:
+        string: Texto
+        integer: Entero
+        float: Flotante
+        decimal: Decimal
+        date: Fecha
+        boolean: Booleano
     dropzone:
       label: Arrastrá archivos XLSX aquí
       uploading: Subiendo

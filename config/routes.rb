@@ -17,4 +17,6 @@ Rowdy::Engine.routes.draw do
       get    :error_report
     end
   end
+
+  resources :schema_definitions, only: %i[index show create update destroy]
 end

@@ -2,7 +2,17 @@ module Rowdy
   module SchemaRegistry
     class << self
       def all
+        static_schemas + dynamic_schemas
+      end
+
+      def static_schemas
         Rowdy.configuration.schemas
+      end
+
+      def dynamic_schemas
+        DynamicSchemaBuilder.all
+      rescue ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError
+        []
       end
 
       def find(schema_name)

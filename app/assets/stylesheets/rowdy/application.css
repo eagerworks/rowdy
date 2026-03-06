@@ -74,6 +74,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.rowdy-schemas-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.25rem;
+}
+
 /* ─── Template / Schema Card ────────────────────────────────── */
 
 .rowdy-template {
@@ -1047,6 +1053,263 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ─── Schema Builder Dialog ────────────────────────────────── */
+
+.rowdy-schema-dialog {
+  border: none;
+  border-radius: var(--rowdy-radius-lg);
+  padding: 0;
+  max-width: 52rem;
+  width: calc(100vw - 2rem);
+  max-height: calc(100vh - 4rem);
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  animation: rowdy-fade-in 0.15s ease;
+}
+
+.rowdy-schema-dialog::backdrop {
+  background: rgb(0 0 0 / 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.rowdy-schema-dialog-content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 4rem);
+}
+
+.rowdy-schema-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.rowdy-schema-dialog-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: hsl(var(--rowdy-foreground));
+  margin: 0;
+}
+
+.rowdy-schema-dialog-close {
+  background: none;
+  border: none;
+  color: hsl(var(--rowdy-muted-foreground));
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--rowdy-radius-sm);
+  display: inline-flex;
+  transition: background var(--rowdy-transition), color var(--rowdy-transition);
+}
+
+.rowdy-schema-dialog-close:hover {
+  background: hsl(var(--rowdy-accent));
+  color: hsl(var(--rowdy-foreground));
+}
+
+.rowdy-schema-meta-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.rowdy-schema-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rowdy-schema-field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--rowdy-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rowdy-schema-hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: hsl(var(--rowdy-muted-foreground));
+}
+
+.rowdy-schema-input {
+  padding: 0.4375rem 0.625rem;
+  border: 1px solid hsl(var(--rowdy-input));
+  border-radius: var(--rowdy-radius-sm);
+  font-size: 0.8125rem;
+  background: hsl(var(--rowdy-background));
+  color: hsl(var(--rowdy-foreground));
+  font-family: var(--rowdy-font-sans);
+  transition: border-color var(--rowdy-transition), box-shadow var(--rowdy-transition);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rowdy-schema-input:focus {
+  outline: none;
+  border-color: hsl(var(--rowdy-ring));
+  box-shadow: 0 0 0 2px hsl(var(--rowdy-ring) / 0.2);
+}
+
+.rowdy-schema-input::placeholder {
+  color: hsl(var(--rowdy-muted-foreground) / 0.6);
+}
+
+.rowdy-schema-select {
+  padding: 0.4375rem 0.625rem;
+  border: 1px solid hsl(var(--rowdy-input));
+  border-radius: var(--rowdy-radius-sm);
+  font-size: 0.8125rem;
+  background: hsl(var(--rowdy-background));
+  color: hsl(var(--rowdy-foreground));
+  font-family: var(--rowdy-font-sans);
+  transition: border-color var(--rowdy-transition), box-shadow var(--rowdy-transition);
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rowdy-schema-select:focus {
+  outline: none;
+  border-color: hsl(var(--rowdy-ring));
+  box-shadow: 0 0 0 2px hsl(var(--rowdy-ring) / 0.2);
+}
+
+.rowdy-schema-columns-section {
+  margin-bottom: 1.5rem;
+}
+
+.rowdy-schema-columns-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.rowdy-schema-columns-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: hsl(var(--rowdy-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.rowdy-schema-column-row {
+  background: hsl(var(--rowdy-muted) / 0.4);
+  border: 1px solid hsl(var(--rowdy-border));
+  border-radius: var(--rowdy-radius);
+  padding: 0.875rem;
+  margin-bottom: 0.5rem;
+  animation: rowdy-fade-in 0.15s ease;
+}
+
+.rowdy-schema-column-fields {
+  display: grid;
+  grid-template-columns: 1fr 8rem auto auto 6rem 6rem auto;
+  gap: 0.625rem;
+  align-items: end;
+}
+
+.rowdy-schema-field--checkbox {
+  justify-content: end;
+  padding-bottom: 0.375rem;
+}
+
+.rowdy-schema-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: hsl(var(--rowdy-foreground));
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.rowdy-schema-checkbox-label input[type="checkbox"] {
+  accent-color: hsl(var(--rowdy-primary));
+  width: 0.9375rem;
+  height: 0.9375rem;
+  cursor: pointer;
+}
+
+.rowdy-schema-field--remove {
+  display: flex;
+  align-items: end;
+  padding-bottom: 0.1875rem;
+}
+
+.rowdy-schema-remove-col-btn {
+  background: none;
+  border: none;
+  color: hsl(var(--rowdy-muted-foreground));
+  cursor: pointer;
+  padding: 0.3125rem;
+  border-radius: var(--rowdy-radius-sm);
+  display: inline-flex;
+  transition: background var(--rowdy-transition), color var(--rowdy-transition);
+}
+
+.rowdy-schema-remove-col-btn:hover {
+  background: hsl(var(--rowdy-destructive) / 0.1);
+  color: hsl(var(--rowdy-destructive));
+}
+
+.rowdy-schema-remove-col-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.rowdy-schema-inclusion-group {
+  margin-top: 0.5rem;
+}
+
+.rowdy-schema-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid hsl(var(--rowdy-border));
+}
+
+.rowdy-schema-error-container {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: hsl(var(--rowdy-destructive) / 0.06);
+  border: 1px solid hsl(var(--rowdy-destructive) / 0.2);
+  border-radius: var(--rowdy-radius-sm);
+}
+
+.rowdy-schema-error-container:empty {
+  display: none;
+}
+
+.rowdy-schema-error-msg {
+  color: hsl(var(--rowdy-destructive));
+  font-size: 0.8125rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 48rem) {
+  .rowdy-schema-column-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .rowdy-schema-field--remove {
+    grid-column: -1;
+    justify-content: end;
+  }
+
+  .rowdy-schema-meta-fields {
+    grid-template-columns: 1fr;
   }
 }
 

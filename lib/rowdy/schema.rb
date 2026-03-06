@@ -30,6 +30,10 @@ module Rowdy
       def find_column(name)
         columns.find { |c| c.name == name.to_sym }
       end
+
+      def dynamic?
+        false
+      end
     end
   end
 end

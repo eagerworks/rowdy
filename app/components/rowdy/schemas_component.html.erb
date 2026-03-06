@@ -1,4 +1,8 @@
 <div class="rowdy-schemas">
+  <div class="rowdy-schemas-header">
+    <%= render Rowdy::SchemaBuilderComponent.new %>
+  </div>
+
   <% @schemas.each do |schema| %>
     <%= render Rowdy::TemplateComponent.new(schema: schema) %>
   <% end %>
