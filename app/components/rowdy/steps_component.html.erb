@@ -4,7 +4,13 @@
   <div id="rowdy-import-step-indicator-<%= @import.id %>" class="rowdy-step-indicator">
     <% steps.each do |step| %>
       <div class="rowdy-step <%= step_class(step[:step_number]) %>">
-        <span class="rowdy-step-number"><%= step[:step_number] %></span>
+        <span class="rowdy-step-number">
+          <% if step_class(step[:step_number]) == "rowdy-step--completed" %>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <% else %>
+            <%= step[:step_number] %>
+          <% end %>
+        </span>
         <span class="rowdy-step-label"><%= step_label(step[:key]) %></span>
       </div>
     <% end %>

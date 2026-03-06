@@ -2,11 +2,17 @@ es:
   rowdy:
     dropzone:
       label: Arrastrá archivos XLSX aquí
+      uploading: Subiendo
       or_click: o hacé click para buscar
+      hint: "archivos .xlsx o .xls"
       resume_file: Seleccionar archivo para reanudar
       resume_progress: "%{percent}% subido"
       resume_dismiss: Descartar
       resume_mismatch: El archivo no coincide con la subida interrumpida
+    upload:
+      complete: Subida completa, procesamiento en cola
+    upload_list:
+      title: Subidas
     upload_item:
       start_import: Iniciar Importación
       processing: Procesando
@@ -20,6 +26,9 @@ es:
       completed: Completado
       failed: Error
       uploading: Subiendo
+    chunked_upload:
+      not_uploading: La subida no está en estado de carga
+      missing_chunks: "Faltan fragmentos: %{chunks}"
     import:
       steps:
         column_mapping: Mapeo de Columnas
@@ -35,7 +44,16 @@ es:
       validation:
         preparing: Preparando archivo...
         in_progress: Validando filas...
-        summary: "%{total} filas totales — %{valid} válidas, %{invalid} inválidas"
+        summary_total: "%{total} Filas Totales:"
+        summary_detail: "%{valid} válidas | %{invalid} inválidas"
+        tab_all: Todas
+        error_type_presence: Errores de Presencia
+        error_type_type: Errores de Tipo
+        error_type_length: Errores de Longitud
+        error_type_inclusion: Errores de Inclusión
+        error_type_numeric: Errores Numéricos
+        error_type_uniqueness: Errores de Unicidad
+        error_type_custom: Errores de Validación Personalizada
         row_number: Fila
         column: Columna
         error: Error
@@ -47,7 +65,21 @@ es:
         download_report: Descargar Reporte de Errores
         value: Valor
         save_corrections: Guardar correcciones
-        unsaved_warning: "Tenés correcciones sin guardar. Si navegás a otra página, perderás los cambios. ¿Continuar?"
+        unsaved_warning: Tenés correcciones sin guardar. Si navegás a otra página, perderás los cambios. ¿Continuar?
+      find_replace:
+        button: Buscar y Reemplazar
+        title: Buscar y Reemplazar
+        column_label: Columna
+        column_placeholder: Seleccionar una columna
+        find_label: Buscar
+        find_placeholder: Valor a buscar
+        all_empty_label: Todas las celdas vacías
+        case_sensitive_label: Distinguir mayúsculas
+        exact_match_label: Coincidir celda completa
+        replace_label: Reemplazar con
+        replace_placeholder: Valor de reemplazo
+        cancel: Cancelar
+        replace_all: Reemplazar Todo
       result:
         placeholder: Funcionalidad de importación próximamente.
         import_button: Importar

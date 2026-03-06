@@ -1,7 +1,10 @@
 <%= helpers.turbo_stream_from stream_channel %>
 
 <div id="<%= list_id %>">
-  <% @uploads.each do |upload| %>
-    <%= render Rowdy::UploadItemComponent.new(upload: upload) %>
-  <% end %>
+  <h2 class="rowdy-upload-list-title"><%= I18n.t("rowdy.upload_list.title") %></h2>
+  <div id="<%= scroll_container_id %>" class="<%= "rowdy-upload-list-scroll" if scrollable %>">
+    <% uploads.each do |upload| %>
+      <%= render Rowdy::UploadItemComponent.new(upload: upload) %>
+    <% end %>
+  </div>
 </div>

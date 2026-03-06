@@ -35,11 +35,11 @@ module Rowdy
     end
 
     def mapping_path
-      Rowdy::Engine.routes.url_helpers.mapping_import_path(@import)
+      Rowdy::Engine.routes.url_helpers.import_mapping_path(@import)
     end
 
     def validation_path(page: 1)
-      Rowdy::Engine.routes.url_helpers.validation_import_path(@import, page: page)
+      Rowdy::Engine.routes.url_helpers.import_validation_path(@import, page: page)
     end
 
     def error_report_path
@@ -47,7 +47,7 @@ module Rowdy
     end
 
     def start_validation_path
-      Rowdy::Engine.routes.url_helpers.validate_import_path(@import)
+      Rowdy::Engine.routes.url_helpers.import_validation_path(@import)
     end
 
     def correct_errors_path
@@ -64,6 +64,56 @@ module Rowdy
 
     def next_page?
       @page < @total_pages
+    end
+
+    ERROR_TYPE_ORDER = %i[presence type length inclusion numeric uniqueness custom].freeze
+
+    def self.classify_error_message(message)
+      msg = message.to_s.downcase
+      return :presence if msg == "is required"
+      return :uniqueness if msg == "must be unique"
+      return :type if msg.start_with?("must be a valid ")
+      return :length if msg.start_with?("must be at most ")
+      return :inclusion if msg.start_with?("must be one of:")
+      return :numeric if msg.start_with?("must be greater than ")
+      :custom
+    end
+
+    def error_types
+      @error_types ||= begin
+        categories = Set.new
+        @errors.each do |import_error|
+          (import_error.column_errors || {}).each_value do |msgs|
+            Array(msgs).each { |msg| categories.add(self.class.classify_error_message(msg)) }
+          end
+        end
+        ERROR_TYPE_ORDER.select { |c| categories.include?(c) }
+      end
+    end
+
+    def row_count_for_error_type(category)
+      @errors.count do |import_error|
+        (import_error.column_errors || {}).any? do |_, msgs|
+          Array(msgs).any? { |msg| self.class.classify_error_message(msg) == category }
+        end
+      end
+    end
+
+    def label_for_error_type(category)
+      I18n.t("rowdy.import.validation.error_type_#{category}")
+    end
+
+    def entries_for_error_type(category)
+      entries = []
+      @errors.each do |import_error|
+        (import_error.column_errors || {}).each do |column, msgs|
+          matching = Array(msgs).select { |msg| self.class.classify_error_message(msg) == category }
+          next if matching.empty?
+
+          entries << { import_error: import_error, column: column, messages: matching }
+        end
+      end
+      entries
     end
   end
 end

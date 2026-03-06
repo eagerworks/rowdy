@@ -1,7 +1,4 @@
-<div class="rowdy-upload-item"
-     id="rowdy_upload_<%= @upload.id %>"
-     data-upload-id="<%= @upload.id %>"
-     data-upload-status="<%= @upload.status %>">
+<div class="rowdy-upload-item" id="rowdy_upload_<%= @upload.id %>" data-upload-id="<%= @upload.id %>" data-upload-status="<%= @upload.status %>">
   <div class="rowdy-upload-info">
     <span class="rowdy-upload-filename"><%= @upload.filename %></span>
     <span class="rowdy-upload-status"><%= I18n.t("rowdy.status.#{@upload.status}") %></span>
@@ -16,9 +13,7 @@
 
   <% if @upload.completed? && importable? %>
     <div class="rowdy-upload-actions">
-      <%= button_to I18n.t("rowdy.upload_item.start_import"), create_import_path, method: :post,
-            class: "rowdy-btn rowdy-btn--primary",
-            data: { turbo_frame: steps_frame_id } %>
+      <%= button_to I18n.t("rowdy.upload_item.start_import"), create_import_path, method: :post, class: "rowdy-btn rowdy-btn--primary rowdy-btn--sm", data: { turbo_frame: steps_frame_id } %>
     </div>
   <% end %>
 
