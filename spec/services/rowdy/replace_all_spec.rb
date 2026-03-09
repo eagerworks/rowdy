@@ -14,11 +14,11 @@ module Rowdy
              valid_rows_count:   9)
     end
 
-    def errored_row(category:)
-      create(:rowdy_import_error,
+    def errored_row(category:, sku: "SKU1")
+      create(:rowdy_import_row,
              import:        import,
              row_number:    2,
-             row_data:      { "name" => "T-Shirt", "sku" => "SKU1", "price" => "19.99",
+             row_data:      { "name" => "T-Shirt", "sku" => sku, "price" => "19.99",
                               "stock" => "10", "category" => category },
              column_errors: { "category" => [ "must be one of: electronics, clothing, food, other" ] })
     end
@@ -145,12 +145,63 @@ module Rowdy
             .not_to change { import.reload.invalid_rows_count }
         end
       end
+
+      context "when replacement would create a duplicate unique value" do
+        def sku_errored_row(sku:)
+          create(:rowdy_import_row,
+                 import:        import,
+                 row_number:    2,
+                 row_data:      { "name" => "T-Shirt", "sku" => sku, "price" => "19.99",
+                                  "stock" => "10", "category" => "electronics" },
+                 column_errors: { "sku" => [ "must be unique" ] })
+        end
+
+        it "does not correct the row when replace_value already exists in another active row" do
+          create(:rowdy_import_row,
+                 import:        import,
+                 row_number:    3,
+                 row_data:      { "name" => "Hoodie", "sku" => "TAKEN", "price" => "29.99",
+                                  "stock" => "5", "category" => "electronics" },
+                 column_errors: {})
+
+          error = sku_errored_row(sku: "OLD-SKU")
+
+          call(column: "sku", find_value: "OLD-SKU", replace_value: "TAKEN")
+
+          error.reload
+          expect(error.corrected_at).to be_nil
+          expect(error.column_errors["sku"]).to be_present
+        end
+
+        it "does not correct the row when replace_value already exists in a corrected row" do
+          create(:rowdy_import_row, :corrected,
+                 import:        import,
+                 row_number:    3,
+                 row_data:      { "name" => "Hoodie", "sku" => "TAKEN", "price" => "29.99",
+                                  "stock" => "5", "category" => "electronics" },
+                 column_errors: {})
+
+          error = sku_errored_row(sku: "OLD-SKU")
+
+          call(column: "sku", find_value: "OLD-SKU", replace_value: "TAKEN")
+
+          expect(error.reload.corrected_at).to be_nil
+        end
+
+        it "corrects the row when replace_value is unique across the import" do
+          error = sku_errored_row(sku: "OLD-SKU")
+
+          call(column: "sku", find_value: "OLD-SKU", replace_value: "BRAND-NEW-SKU")
+
+          expect(error.reload.corrected_at).not_to be_nil
+        end
+      end
     end
 
     describe "scope" do
       it "does not affect rows from other imports" do
         other_import = create(:rowdy_import, :validated)
-        other_error  = create(:rowdy_import_error,
+        other_error  = create(:rowdy_import_row,
                                import:        other_import,
                                row_data:      { "name" => "X", "sku" => "SKU2", "price" => "5.00",
                                                 "stock" => "1", "category" => "ios" },
@@ -160,7 +211,7 @@ module Rowdy
       end
 
       it "does not affect rows where the column has no errors" do
-        error = create(:rowdy_import_error,
+        error = create(:rowdy_import_row,
                         import:        import,
                         row_data:      { "name" => nil, "sku" => "SKU3", "price" => "5.00",
                                          "stock" => "1", "category" => "ios" },
@@ -180,7 +231,7 @@ module Rowdy
 
       it "replaces all matching rows when multiple exist" do
         error1 = errored_row(category: "ios")
-        error2 = create(:rowdy_import_error,
+        error2 = create(:rowdy_import_row,
                          import:        import,
                          row_number:    3,
                          row_data:      { "name" => "Hoodie", "sku" => "SKU4", "price" => "39.99",

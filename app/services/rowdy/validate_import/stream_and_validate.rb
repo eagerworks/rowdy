@@ -24,7 +24,7 @@ module Rowdy
         total_mapped_rows = 0
         valid_count = 0
         invalid_count = 0
-        error_buffer = []
+        row_buffer = []
 
         import.update!(status: :validating)
 
@@ -45,19 +45,20 @@ module Rowdy
             valid_count += 1
           else
             invalid_count += 1
-            error_buffer << {
-              import_id: import.id,
-              row_number: total_mapped_rows + 1,
-              row_data: mapped_row,
-              column_errors: row_errors,
-              created_at: Time.current,
-              updated_at: Time.current
-            }
+          end
 
-            if error_buffer.size >= batch_size
-              flush_errors(error_buffer)
-              error_buffer.clear
-            end
+          row_buffer << {
+            import_id:     import.id,
+            row_number:    total_mapped_rows + 1,
+            row_data:      mapped_row,
+            column_errors: row_errors.presence,
+            created_at:    Time.current,
+            updated_at:    Time.current
+          }
+
+          if row_buffer.size >= batch_size
+            flush_rows(row_buffer)
+            row_buffer.clear
           end
 
           if (total_mapped_rows % broadcast_interval).zero?
@@ -65,7 +66,7 @@ module Rowdy
           end
         end
 
-        flush_errors(error_buffer) if error_buffer.any?
+        flush_rows(row_buffer) if row_buffer.any?
         update_progress(import, total_mapped_rows, valid_count, invalid_count)
 
         book.close
@@ -87,10 +88,10 @@ module Rowdy
         mapped
       end
 
-      def self.flush_errors(buffer)
+      def self.flush_rows(buffer)
         return if buffer.empty?
 
-        ImportError.insert_all(buffer)
+        ImportRow.insert_all(buffer)
       end
 
       def self.update_progress(import, total_rows, valid_count, invalid_count, cap: nil)
@@ -105,7 +106,7 @@ module Rowdy
         )
       end
 
-      private_class_method :map_row, :flush_errors, :update_progress
+      private_class_method :map_row, :flush_rows, :update_progress
     end
   end
 end
