@@ -25,7 +25,7 @@ module Rowdy
       unique_tracker  = build_unique_tracker(schema)
 
       @import.import_rows.errored.active
-        .where(*JsonQueryHelpers.has_key_condition('column_errors', @column))
+        .where(*JsonQueryHelpers.has_key_condition("column_errors", @column))
         .where(*value_filter)
         .find_each(batch_size: 1000) do |import_row|
           updated_row   = import_row.row_data.merge(@column => @replace_value)
@@ -74,7 +74,7 @@ module Rowdy
     private
 
     def flush_corrected(ids, now)
-      json_sql, *binds = JsonQueryHelpers.json_set_sql('row_data', @column, @replace_value)
+      json_sql, *binds = JsonQueryHelpers.json_set_sql("row_data", @column, @replace_value)
       ImportRow.where(id: ids).update_all([ "corrected_at = ?, column_errors = NULL, #{json_sql}", now, *binds ])
     end
 
@@ -88,12 +88,12 @@ module Rowdy
       return tracker if unique_columns.empty?
 
       batch_subquery = @import.import_rows.errored.active
-        .where(*JsonQueryHelpers.has_key_condition('column_errors', @column))
+        .where(*JsonQueryHelpers.has_key_condition("column_errors", @column))
         .where(*value_filter)
         .select(:id)
 
       unique_columns.each do |col|
-        extract_sql = JsonQueryHelpers.extract('row_data', col.name)
+        extract_sql = JsonQueryHelpers.extract("row_data", col.name)
         @import.import_rows
           .where.not(id: batch_subquery)
           .pluck(Arel.sql(extract_sql))
@@ -105,13 +105,13 @@ module Rowdy
     end
 
     def value_filter
-      return JsonQueryHelpers.empty_condition('row_data', @column) if @all_empty
+      return JsonQueryHelpers.empty_condition("row_data", @column) if @all_empty
 
       method = @exact_match ? :exact_condition : :contains_condition
 
       JsonQueryHelpers.public_send(
         method,
-        'row_data',
+        "row_data",
         @column,
         @find_value,
         @case_sensitive

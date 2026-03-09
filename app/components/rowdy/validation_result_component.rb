@@ -70,12 +70,12 @@ module Rowdy
 
     def self.classify_error_message(message)
       msg = message.to_s.downcase
-      return :presence if msg == 'is required'
-      return :uniqueness if msg == 'must be unique'
-      return :type if msg.start_with?('must be a valid ')
-      return :length if msg.start_with?('must be at most ')
-      return :inclusion if msg.start_with?('must be one of:')
-      return :numeric if msg.start_with?('must be greater than ')
+      return :presence if msg == "is required"
+      return :uniqueness if msg == "must be unique"
+      return :type if msg.start_with?("must be a valid ")
+      return :length if msg.start_with?("must be at most ")
+      return :inclusion if msg.start_with?("must be one of:")
+      return :numeric if msg.start_with?("must be greater than ")
       :custom
     end
 

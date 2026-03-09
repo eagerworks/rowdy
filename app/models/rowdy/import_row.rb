@@ -1,6 +1,6 @@
 module Rowdy
   class ImportRow < ApplicationRecord
-    belongs_to :import, class_name: 'Rowdy::Import'
+    belongs_to :import, class_name: "Rowdy::Import"
 
     validates :row_number, presence: true
 

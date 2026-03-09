@@ -13,7 +13,7 @@ module Rowdy
           .flat_map(&:keys)
           .uniq
           .sort
-        render 'rowdy/imports/validation'
+        render "rowdy/imports/validation"
       end
 
       def create

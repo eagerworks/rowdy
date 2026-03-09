@@ -52,9 +52,9 @@ module Rowdy
       column = rp[:column]
       find_value = rp[:find_value].to_s
       replace_value = rp[:replace_value].to_s
-      match_empty = rp[:all_empty] == '1'
-      case_sensitive = rp[:case_sensitive] == '1'
-      exact = rp[:exact_match] == '1'
+      match_empty = rp[:all_empty] == "1"
+      case_sensitive = rp[:case_sensitive] == "1"
+      exact = rp[:exact_match] == "1"
       schema = @import.schema
 
       ReplaceAll.new(
@@ -76,7 +76,7 @@ module Rowdy
         return
       end
 
-      redirect_to rails_blob_path(@import.error_report, disposition: 'attachment')
+      redirect_to rails_blob_path(@import.error_report, disposition: "attachment")
     end
 
     private
