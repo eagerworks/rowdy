@@ -24,14 +24,11 @@ module Rowdy
 
       def self.duplicate_exists?(import_row, column_name, value)
         extract_sql = JsonQueryHelpers.extract("row_data", column_name)
-        sql = ActiveRecord::Base.sanitize_sql_array([
-          "SELECT EXISTS(SELECT 1 FROM rowdy_import_rows WHERE import_id = ? AND id != ? AND #{extract_sql} = ?)",
-          import_row.import_id,
-          import_row.id,
-          value
-        ])
-        result = ActiveRecord::Base.connection.select_value(sql)
-        result == true || result == "t" || result == 1
+
+        ImportRow.where(import_id: import_row.import_id)
+         .where.not(id: import_row.id)
+         .where("#{extract_sql} = ?", value)
+         .exists?
       end
       private_class_method :duplicate_exists?
     end
