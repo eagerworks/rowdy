@@ -55,7 +55,7 @@
         </div>
         <div class="rowdy-schema-field rowdy-schema-field--type">
           <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.column_type') %></label>
-          <select name="schema_definition[columns_config][__INDEX__][type]" class="rowdy-schema-select" data-action="change->rowdy-schema-builder#toggleInclusion">
+          <select name="schema_definition[columns_config][__INDEX__][type]" class="rowdy-schema-select" data-action="change->rowdy-schema-builder#toggleTypeFields">
             <option value="string"><%= t('rowdy.schema_builder.types.string') %></option>
             <option value="integer"><%= t('rowdy.schema_builder.types.integer') %></option>
             <option value="float"><%= t('rowdy.schema_builder.types.float') %></option>
@@ -78,11 +78,11 @@
             <%= t('rowdy.schema_builder.unique') %>
           </label>
         </div>
-        <div class="rowdy-schema-field rowdy-schema-field--narrow">
+        <div class="rowdy-schema-field rowdy-schema-field--narrow" data-visible-for="string">
           <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.max_length') %></label>
           <input type="number" name="schema_definition[columns_config][__INDEX__][max_length]" placeholder="—" min="1" class="rowdy-schema-input" />
         </div>
-        <div class="rowdy-schema-field rowdy-schema-field--narrow">
+        <div class="rowdy-schema-field rowdy-schema-field--narrow" data-visible-for="integer float decimal" style="display: none;">
           <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.greater_than') %></label>
           <input type="number" name="schema_definition[columns_config][__INDEX__][greater_than]" placeholder="—" step="any" class="rowdy-schema-input" />
         </div>
@@ -92,7 +92,7 @@
           </button>
         </div>
       </div>
-      <div class="rowdy-schema-inclusion-group" style="display: none;">
+      <div class="rowdy-schema-inclusion-group" data-visible-for="string integer float decimal" style="display: none;">
         <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.allowed_values') %> <span class="rowdy-schema-hint"><%= t('rowdy.schema_builder.comma_separated_hint') %></span></label>
         <input type="text" name="schema_definition[columns_config][__INDEX__][inclusion]" placeholder="<%= t('rowdy.schema_builder.inclusion_placeholder') %>" class="rowdy-schema-input" />
       </div>

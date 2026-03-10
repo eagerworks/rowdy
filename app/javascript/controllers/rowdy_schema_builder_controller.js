@@ -33,8 +33,7 @@ export default class extends Controller {
     row.dataset.columnIndex = idx
 
     const typeSelect = row.querySelector("select")
-    const inclusionGroup = row.querySelector(".rowdy-schema-inclusion-group")
-    inclusionGroup.style.display = typeSelect.value === "string" ? "" : "none"
+    this.#applyTypeVisibility(row, typeSelect.value)
 
     this.columnsContainerTarget.appendChild(clone)
     this.updateRemoveButtons()
@@ -58,12 +57,16 @@ export default class extends Controller {
     })
   }
 
-  toggleInclusion(event) {
+  toggleTypeFields(event) {
     const row = event.target.closest("[data-column-index]")
-    const type = event.target.value
-    const inclusionGroup = row.querySelector(".rowdy-schema-inclusion-group")
+    this.#applyTypeVisibility(row, event.target.value)
+  }
 
-    inclusionGroup.style.display = type === "string" ? "" : "none"
+  #applyTypeVisibility(row, type) {
+    row.querySelectorAll("[data-visible-for]").forEach(el => {
+      const allowedTypes = el.dataset.visibleFor.split(" ")
+      el.style.display = allowedTypes.includes(type) ? "" : "none"
+    })
   }
 
   resetForm() {
