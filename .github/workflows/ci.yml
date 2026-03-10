@@ -41,6 +41,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby: ["3.2", "3.3", "3.4"]
+        rails: ["rails-8-0", "rails-8-1"]
 
     services:
       postgres:
@@ -63,6 +64,9 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
 
+      - name: Install appraisal gemfile dependencies
+        run: bundle exec appraisal ${{ matrix.rails }} bundle install
+
       - name: Run tests
         env:
           RAILS_ENV: test
@@ -70,12 +74,12 @@ jobs:
           DB_USERNAME: rowdy
           DB_PASSWORD: rowdy
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-        run: bundle exec rake db:test:prepare test
+        run: bundle exec appraisal ${{ matrix.rails }} rake db:test:prepare test
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v7
         if: failure()
         with:
-          name: screenshots-ruby-${{ matrix.ruby }}
+          name: screenshots-ruby-${{ matrix.ruby }}-${{ matrix.rails }}
           path: ${{ github.workspace }}/tmp/screenshots
           if-no-files-found: ignore
