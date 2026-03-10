@@ -1,6 +1,6 @@
 module Rowdy
   class ImportsController < ApplicationController
-    before_action :set_import, only: %i[show mapping save_mapping validate validation correct_errors error_report replace_all]
+    before_action :set_import, only: %i[show correct_errors error_report replace_all]
 
     def create
       upload = Upload.find(params[:upload_id])
@@ -18,62 +18,6 @@ module Rowdy
       when 2 then redirect_to import_validation_path(@import)
       else redirect_to import_mapping_path(@import)
       end
-    end
-
-    def mapping
-      @detected_columns = @import.upload.detected_columns || []
-      @sample_rows = @import.upload.sample_rows || []
-      @schema_columns = @import.schema.columns
-    end
-
-    def save_mapping
-      column_mapping = params[:column_mapping]&.to_unsafe_h || {}
-      column_mapping = column_mapping.reject { |_, v| v.blank? }
-
-      missing = check_required_columns(column_mapping)
-
-      if missing.any?
-        @detected_columns = @import.upload.detected_columns || []
-        @sample_rows = @import.upload.sample_rows || []
-        @schema_columns = @import.schema.columns
-        @column_mapping = column_mapping
-        @mapping_errors = [ I18n.t("rowdy.import.missing_required_columns", columns: missing.join(", ")) ]
-        render :mapping, status: :unprocessable_entity
-        return
-      end
-
-      @import.update!(column_mapping: column_mapping, status: :preparing, progress: 0)
-
-      redirect_to import_validation_path(@import)
-    end
-
-    def validate
-      ValidateImport::MarkAsPreparing.call(@import.id)
-
-      ValidateImportJob.perform_later(@import.id)
-
-      head :no_content
-    end
-
-    def validation
-      @page = (params[:page] || 1).to_i
-      @errors = @import.import_errors.active.order(:row_number).offset((@page - 1) * per_page).limit(per_page)
-      @total_pages = total_pages_for(@import)
-      @errored_columns = ErroredColumnsQuery.call(@import)
-    end
-
-    def replace_all
-      params = replace_all_params
-      ReplaceAll.call(
-        import: @import,
-        column: params[:column],
-        find_value: params[:find_value].to_s,
-        replace_value: params[:replace_value].to_s,
-        all_empty: params[:all_empty] == "1",
-        case_sensitive: params[:case_sensitive] == "1",
-        exact_match: params[:exact_match] == "1"
-      )
-      redirect_to import_validation_path(@import)
     end
 
     def correct_errors
@@ -100,7 +44,37 @@ module Rowdy
         end
       end
 
-      redirect_to Rowdy::Engine.routes.url_helpers.validation_import_path(@import, page: params[:page])
+      redirect_to import_validation_path(@import, page: params[:page])
+    end
+
+    def replace_all
+      rp = replace_all_params
+      column = rp[:column]
+      find_value = rp[:find_value].to_s
+      replace_value = rp[:replace_value].to_s
+      match_empty = rp[:all_empty] == "1"
+      case_sensitive = rp[:case_sensitive] == "1"
+      exact = rp[:exact_match] == "1"
+      schema = @import.schema
+
+      @import.import_errors.active.find_each do |import_error|
+        current = import_error.row_data[column].to_s
+        next unless value_matches?(current, find_value, match_empty:, case_sensitive:, exact:)
+
+        new_value = compute_replacement(current, find_value, replace_value, match_empty:, case_sensitive:, exact:)
+        updated_row = import_error.row_data.merge(column => new_value)
+        column_errors = RowValidator.call(updated_row.transform_keys(&:to_sym), schema)
+
+        if column_errors.empty?
+          import_error.update!(corrected_at: Time.current, row_data: updated_row)
+          @import.decrement!(:invalid_rows_count)
+          @import.increment!(:valid_rows_count)
+        else
+          import_error.update!(row_data: updated_row, column_errors:)
+        end
+      end
+
+      redirect_to import_validation_path(@import)
     end
 
     def error_report
@@ -118,35 +92,36 @@ module Rowdy
       @import = Import.find(params[:id])
     end
 
-    def check_required_columns(column_mapping)
-      schema = @import.schema
-      mapped_schema_columns = column_mapping.values.map(&:to_sym)
-
-      schema.required_columns.map(&:name).reject do |col_name|
-        mapped_schema_columns.include?(col_name)
-      end
-    end
-
     def import_mapping_path(import)
-      Rowdy::Engine.routes.url_helpers.mapping_import_path(import)
+      Rowdy::Engine.routes.url_helpers.import_mapping_path(import)
     end
 
-    def import_validation_path(import)
-      Rowdy::Engine.routes.url_helpers.validation_import_path(import)
-    end
-
-    def per_page
-      50
-    end
-
-    def total_pages_for(import)
-      return 0 if import.invalid_rows_count.zero?
-
-      (import.invalid_rows_count.to_f / per_page).ceil
+    def import_validation_path(import, **opts)
+      Rowdy::Engine.routes.url_helpers.import_validation_path(import, **opts)
     end
 
     def replace_all_params
       params.permit(:column, :find_value, :replace_value, :all_empty, :case_sensitive, :exact_match)
+    end
+
+    def value_matches?(current, find_value, match_empty:, case_sensitive:, exact:)
+      return current.blank? if match_empty
+
+      if exact
+        case_sensitive ? current == find_value : current.casecmp(find_value).zero?
+      else
+        case_sensitive ? current.include?(find_value) : current.downcase.include?(find_value.downcase)
+      end
+    end
+
+    def compute_replacement(current, find_value, replace_value, match_empty:, case_sensitive:, exact:)
+      return replace_value if match_empty || exact
+
+      if case_sensitive
+        current.gsub(find_value, replace_value)
+      else
+        current.gsub(/#{Regexp.escape(find_value)}/i, replace_value)
+      end
     end
   end
 end

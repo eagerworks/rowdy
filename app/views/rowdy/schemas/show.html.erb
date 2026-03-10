@@ -1,0 +1,19 @@
+<div class="rowdy-schemas">
+  <div class="rowdy-schema-show-header">
+    <%= link_to rowdy_back_path, class: "rowdy-back-link" do %>
+      <%= render "rowdy/shared/icons/chevron_left" %>
+      <%= t('rowdy.schemas.back') %>
+    <% end %>
+    <h1 class="rowdy-schema-show-title"><%= @schema.schema_label %></h1>
+  </div>
+
+  <%= render Rowdy::DropzoneComponent.new(schema_name: @schema.schema_name) %>
+
+  <%= render Rowdy::UploadListComponent.new(
+    uploads: @uploads,
+    schema_name: @schema.schema_name,
+    scrollable: true
+  ) %>
+
+  <turbo-frame id="rowdy-steps-<%= @schema.schema_name %>"></turbo-frame>
+</div>

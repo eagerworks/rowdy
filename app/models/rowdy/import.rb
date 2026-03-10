@@ -89,7 +89,7 @@ module Rowdy
     end
 
     def validation_import_path
-      Rowdy::Engine.routes.url_helpers.validation_import_path(self)
+      Rowdy::Engine.routes.url_helpers.import_validation_path(self)
     end
   end
 end

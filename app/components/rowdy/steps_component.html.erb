@@ -4,7 +4,13 @@
   <div id="rowdy-import-step-indicator-<%= @import.id %>" class="rowdy-step-indicator">
     <% steps.each do |step| %>
       <div class="rowdy-step <%= step_class(step[:step_number]) %>">
-        <span class="rowdy-step-number"><%= step[:step_number] %></span>
+        <span class="rowdy-step-number">
+          <% if step_class(step[:step_number]) == "rowdy-step--completed" %>
+            <%= render "rowdy/shared/icons/check" %>
+          <% else %>
+            <%= step[:step_number] %>
+          <% end %>
+        </span>
         <span class="rowdy-step-label"><%= step_label(step[:key]) %></span>
       </div>
     <% end %>

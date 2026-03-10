@@ -40,6 +40,38 @@ module Rowdy
       ((received_chunks&.size.to_f / total_chunks) * 100).round
     end
 
+    def missing_chunks
+      return [] if total_chunks.nil? || received_chunks.nil?
+
+      (0...total_chunks).to_a - received_chunks
+    end
+
+    def status_json
+      {
+        upload_token: upload_token,
+        status: status,
+        total_chunks: total_chunks,
+        received_chunks: received_chunks,
+        upload_progress_percent: upload_progress_percent
+      }
+    end
+
+    def completion_error
+      if !uploading?
+        { json: { error: I18n.t("rowdy.chunked_upload.not_uploading") }, status: :conflict }
+      elsif !all_chunks_received?
+        { json: { error: I18n.t("rowdy.chunked_upload.missing_chunks", chunks: missing_chunks), received_chunks: received_chunks }, status: :unprocessable_entity }
+      end
+    end
+
+    def completion_json
+      {
+        upload_id: id,
+        status: reload.status,
+        message: I18n.t("rowdy.upload.complete")
+      }
+    end
+
     def avg_bytes_per_row
       return nil if sample_rows.blank?
 
@@ -66,7 +98,7 @@ module Rowdy
     end
 
     def broadcast_new_upload
-      Turbo::StreamsChannel.broadcast_append_to(
+      Turbo::StreamsChannel.broadcast_prepend_to(
         broadcast_channel,
         target: broadcast_list_target,
         html: render_component
@@ -86,7 +118,7 @@ module Rowdy
     end
 
     def broadcast_list_target
-      schema_name.present? ? "rowdy-uploads-list-#{schema_name}" : "rowdy-uploads-list"
+      schema_name.present? ? "rowdy-uploads-list-items-#{schema_name}" : "rowdy-uploads-list-items"
     end
 
     def status_changed?

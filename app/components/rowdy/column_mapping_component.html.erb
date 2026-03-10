@@ -7,7 +7,7 @@
     </div>
   <% end %>
 
-  <%= form_with url: save_mapping_path, method: :patch do |f| %>
+  <%= form_with url: mapping_path, method: :patch do |f| %>
     <table class="rowdy-mapping-table">
       <thead>
         <tr>
@@ -38,8 +38,8 @@
             </td>
             <td>
               <button type="button" class="rowdy-mapping-remove-btn"
-                      onclick="this.closest('tr').remove()">
-                &times;
+                      onclick="this.closest('tr').remove()"
+                      aria-label="Remove column">
               </button>
             </td>
           </tr>

@@ -7,7 +7,13 @@
          "rowdy-step--completed"
        end %>
     <div class="rowdy-step <%= klass %>">
-      <span class="rowdy-step-number"><%= step[:step_number] %></span>
+      <span class="rowdy-step-number">
+        <% if klass == "rowdy-step--completed" %>
+          <%= render "rowdy/shared/icons/check" %>
+        <% else %>
+          <%= step[:step_number] %>
+        <% end %>
+      </span>
       <span class="rowdy-step-label"><%= I18n.t("rowdy.import.steps.#{step[:key]}") %></span>
     </div>
   <% end %>

@@ -2,11 +2,17 @@ en:
   rowdy:
     dropzone:
       label: Drag XLSX files here
+      uploading: Uploading
       or_click: or click to browse
+      hint: ".xlsx or .xls files"
       resume_file: Select file to resume
       resume_progress: "%{percent}% uploaded"
       resume_dismiss: Dismiss
       resume_mismatch: File does not match the interrupted upload
+    upload:
+      complete: Upload complete, processing queued
+    upload_list:
+      title: Uploads
     upload_item:
       start_import: Start Import
       processing: Processing
@@ -20,6 +26,9 @@ en:
       completed: Completed
       failed: Failed
       uploading: Uploading
+    chunked_upload:
+      not_uploading: Upload is not in uploading state
+      missing_chunks: "Missing chunks: %{chunks}"
     import:
       steps:
         column_mapping: Column Mapping
@@ -35,7 +44,16 @@ en:
       validation:
         preparing: Preparing file...
         in_progress: Validating rows...
-        summary: "%{total} total rows — %{valid} valid, %{invalid} invalid"
+        summary_total: "%{total} Total Rows:"
+        summary_detail: "%{valid} valid | %{invalid} invalid"
+        tab_all: All
+        error_type_presence: Presence Errors
+        error_type_type: Type Errors
+        error_type_length: Length Errors
+        error_type_inclusion: Inclusion Errors
+        error_type_numeric: Numeric Errors
+        error_type_uniqueness: Uniqueness Errors
+        error_type_custom: Custom Validation Errors
         row_number: Row
         column: Column
         error: Error

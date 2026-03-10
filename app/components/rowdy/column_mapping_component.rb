@@ -9,12 +9,12 @@ module Rowdy
       @errors = errors
     end
 
-    def save_mapping_path
-      Rowdy::Engine.routes.url_helpers.save_mapping_import_path(@import)
+    def mapping_path
+      Rowdy::Engine.routes.url_helpers.import_mapping_path(@import)
     end
 
     def sample_values_for(column_index)
-      @sample_rows.map { |row| row[column_index].truncate(20) }.compact.first(3)
+      @sample_rows.map { |row| row[column_index]&.truncate(20) }.compact.first(3)
     end
 
     def schema_options
