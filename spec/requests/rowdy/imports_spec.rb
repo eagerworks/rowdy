@@ -194,6 +194,40 @@ module Rowdy
         end
       end
 
+      context "when the corrected value duplicates a unique column in another row" do
+        it "does not set corrected_at" do
+          import = create(:rowdy_import, :validated, invalid_rows_count: 1, valid_rows_count: 9)
+          create(:rowdy_import_row, import: import, row_number: 3,
+            row_data: { "name" => "Hoodie", "sku" => "TAKEN", "price" => "29.99" },
+            column_errors: nil)
+          error = create(:rowdy_import_row, import: import, row_number: 2,
+            row_data: valid_row_data,
+            column_errors: { "sku" => [ "must be unique" ] })
+
+          patch "/rowdy/imports/#{import.id}/correct_errors", params: {
+            corrections: { error.id.to_s => { "sku" => "TAKEN" } }
+          }
+
+          expect(error.reload.corrected_at).to be_nil
+        end
+
+        it "preserves the uniqueness error in column_errors" do
+          import = create(:rowdy_import, :validated, invalid_rows_count: 1, valid_rows_count: 9)
+          create(:rowdy_import_row, import: import, row_number: 3,
+            row_data: { "name" => "Hoodie", "sku" => "TAKEN", "price" => "29.99" },
+            column_errors: nil)
+          error = create(:rowdy_import_row, import: import, row_number: 2,
+            row_data: valid_row_data,
+            column_errors: { "sku" => [ "must be unique" ] })
+
+          patch "/rowdy/imports/#{import.id}/correct_errors", params: {
+            corrections: { error.id.to_s => { "sku" => "TAKEN" } }
+          }
+
+          expect(error.reload.column_errors["sku"]).to be_present
+        end
+      end
+
       context "when the error_id does not belong to the import" do
         it "ignores the correction" do
           import = create(:rowdy_import, :validated)

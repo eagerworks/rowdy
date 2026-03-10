@@ -1,6 +1,6 @@
 module Rowdy
   class ReplaceAll
-    CORRECTED_BATCH_SIZE  = 5_000
+    CORRECTED_BATCH_SIZE = 5_000
     ERRORED_BATCH_SIZE = 5_000
 
     def self.call(**kwargs) = new(**kwargs).call
@@ -50,7 +50,8 @@ module Rowdy
               row_number:    import_row.row_number,
               row_data:      updated_row,
               column_errors: column_errors,
-              created_at:    import_row.created_at
+              created_at:    import_row.created_at,
+              updated_at:    now
             }
 
             if errored_updates.size >= ERRORED_BATCH_SIZE
@@ -79,7 +80,7 @@ module Rowdy
     end
 
     def flush_errored(rows)
-      ImportRow.upsert_all(rows, unique_by: :id, update_only: %i[row_data column_errors])
+      ImportRow.upsert_all(rows, update_only: %i[row_data column_errors])
     end
 
     def build_unique_tracker(schema)
@@ -92,14 +93,15 @@ module Rowdy
         .where(*value_filter)
         .select(:id)
 
-      unique_columns.each do |col|
-        extract_sql = JsonQueryHelpers.extract("row_data", col.name)
-        @import.import_rows
-          .where.not(id: batch_subquery)
-          .pluck(Arel.sql(extract_sql))
-          .compact
-          .each { |v| tracker.add?(col.name, v) }
-      end
+      @import.import_rows
+        .where.not(id: batch_subquery)
+        .select(:id, :row_data)
+        .find_each(batch_size: 1000) do |row|
+          unique_columns.each do |col|
+            value = row.row_data[col.name.to_s]
+            tracker.add?(col.name, value) unless value.nil?
+          end
+        end
 
       tracker
     end

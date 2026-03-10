@@ -33,7 +33,7 @@ module Rowdy
         # row_data and new_values both have string keys after JSON deserialization
         # and HTTP params respectively. RowValidator accesses values via col.name
         # (a Symbol from the schema DSL), so keys must be symbolized before validating.
-        column_errors = RowValidator.call(updated_row.transform_keys(&:to_sym), schema)
+        column_errors = RowValidator.call(updated_row.transform_keys(&:to_sym), schema, import_row:)
 
         if column_errors.empty?
           import_row.update!(corrected_at: Time.current, row_data: updated_row, column_errors: nil)
