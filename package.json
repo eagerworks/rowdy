@@ -1,0 +1,9 @@
+{
+  "name": "rowdy",
+  "version": "0.1.0",
+  "description": "Rails engine for asynchronous XLSX file processing",
+  "main": "app/javascript/rowdy/index.esm.js",
+  "files": [
+    "app/javascript"
+  ]
+}

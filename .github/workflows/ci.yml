@@ -9,7 +9,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     env:
-      RUBY_VERSION: ruby-3.3.2
+      RUBY_VERSION: "3.3"
       RUBOCOP_CACHE_ROOT: tmp/rubocop
     steps:
       - name: Checkout code
@@ -37,6 +37,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.2", "3.3", "3.4"]
+        rails: ["rails-8-0", "rails-8-1"]
+
     services:
       postgres:
         image: postgres:16
@@ -52,11 +58,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Set up Ruby
+      - name: Set up Ruby ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ruby-3.3.2
+          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
+
+      - name: Install appraisal gemfile dependencies
+        run: bundle exec appraisal ${{ matrix.rails }} bundle install
 
       - name: Run tests
         env:
@@ -65,12 +74,12 @@ jobs:
           DB_USERNAME: rowdy
           DB_PASSWORD: rowdy
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-        run: bundle exec rake db:test:prepare test
+        run: bundle exec appraisal ${{ matrix.rails }} rake db:test:prepare test
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v7
         if: failure()
         with:
-          name: screenshots
+          name: screenshots-ruby-${{ matrix.ruby }}-${{ matrix.rails }}
           path: ${{ github.workspace }}/tmp/screenshots
           if-no-files-found: ignore
