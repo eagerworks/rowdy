@@ -1,5 +1,44 @@
 en:
   rowdy:
+    schemas:
+      back: Back to schemas
+      empty: No schemas defined yet. Create one to get started.
+      columns_count:
+        one: "%{count} column"
+        other: "%{count} columns"
+      uploads_count:
+        one: "%{count} upload"
+        other: "%{count} uploads"
+    schema_builder:
+      create_schema: Create Schema
+      creating: Creating...
+      dialog_title: Create Import Schema
+      schema_name: Schema Name
+      snake_case_hint: "(snake_case)"
+      name_placeholder: e.g. customer_import
+      label: Label
+      optional_hint: "(optional)"
+      label_placeholder: e.g. Customer Import
+      columns: Columns
+      add_column: Add Column
+      cancel: Cancel
+      column_name: Name
+      column_type: Type
+      required: Required
+      unique: Unique
+      max_length: Max length
+      greater_than: Greater than
+      allowed_values: Allowed values
+      comma_separated_hint: "(comma-separated)"
+      inclusion_placeholder: "e.g. electronics, clothing, food"
+      remove_column: Remove column
+      types:
+        string: String
+        integer: Integer
+        float: Float
+        decimal: Decimal
+        date: Date
+        boolean: Boolean
     dropzone:
       label: Drag XLSX files here
       uploading: Uploading
@@ -13,6 +52,9 @@ en:
       complete: Upload complete, processing queued
     upload_list:
       title: Uploads
+      file_name: File Name
+      start_import: Import
+      status: Status
     upload_item:
       start_import: Start Import
       processing: Processing
@@ -41,6 +83,7 @@ en:
         template_column: Template Column
         ignore: "-- Ignore --"
         submit: Validate
+        back_to_schema: Back to Schema
       validation:
         preparing: Preparing file...
         in_progress: Validating rows...

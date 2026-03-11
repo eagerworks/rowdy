@@ -6,6 +6,7 @@ require "rowdy/schema"
 require "rowdy/schema_registry"
 require "rowdy/migration_helpers"
 require "rowdy/json_query_helpers"
+require "rowdy/dynamic_schema_builder"
 
 module Rowdy
 end

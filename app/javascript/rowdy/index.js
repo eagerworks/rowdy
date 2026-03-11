@@ -4,6 +4,7 @@ import RowdyInlineEditController from "controllers/rowdy/rowdy_inline_edit_contr
 import RowdyDirtyFormController from "controllers/rowdy/rowdy_dirty_form_controller"
 import RowdyFindReplaceController from "controllers/rowdy/rowdy_find_replace_controller"
 import RowdyValidationTabsController from "controllers/rowdy/rowdy_validation_tabs_controller"
+import RowdySchemaBuilderController from "controllers/rowdy/rowdy_schema_builder_controller"
 
 export function install(application) {
   application.register("rowdy-dropzone", RowdyDropzoneController)
@@ -12,4 +13,5 @@ export function install(application) {
   application.register("rowdy-dirty-form", RowdyDirtyFormController)
   application.register("rowdy-find-replace", RowdyFindReplaceController)
   application.register("rowdy-validation-tabs", RowdyValidationTabsController)
+  application.register("rowdy-schema-builder", RowdySchemaBuilderController)
 }

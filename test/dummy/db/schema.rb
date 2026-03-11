@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_04_000000) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_05_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,6 +70,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_04_000000) do
     t.index [ "schema_name" ], name: "index_rowdy_imports_on_schema_name"
     t.index [ "status" ], name: "index_rowdy_imports_on_status"
     t.index [ "upload_id" ], name: "index_rowdy_imports_on_upload_id"
+  end
+
+  create_table "rowdy_schema_definitions", force: :cascade do |t|
+    t.text "columns_config", null: false
+    t.datetime "created_at", null: false
+    t.string "label"
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index [ "name" ], name: "index_rowdy_schema_definitions_on_name", unique: true
   end
 
   create_table "rowdy_uploads", force: :cascade do |t|

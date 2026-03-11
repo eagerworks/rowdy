@@ -1,25 +1,26 @@
-<div class="rowdy-upload-item" id="rowdy_upload_<%= @upload.id %>" data-upload-id="<%= @upload.id %>" data-upload-status="<%= @upload.status %>">
-  <div class="rowdy-upload-info">
+<tr class="rowdy-upload-item" id="rowdy_upload_<%= @upload.id %>" data-upload-id="<%= @upload.id %>" data-upload-status="<%= @upload.status %>">
+  <td class="rowdy-upload-filename-cell">
     <span class="rowdy-upload-filename"><%= @upload.filename %></span>
+  </td>
+
+  <td class="rowdy-upload-status-cell">
     <span class="rowdy-upload-status"><%= I18n.t("rowdy.status.#{@upload.status}") %></span>
-  </div>
-
-  <% if @upload.processing? %>
-    <div class="rowdy-upload-progress-bar">
-      <progress value="<%= @upload.progress %>" max="100"></progress>
-      <span class="rowdy-upload-progress-text"><%= @upload.progress %>%</span>
-    </div>
-  <% end %>
-
-  <% if @upload.completed? && importable? %>
-    <div class="rowdy-upload-actions">
-      <%= button_to I18n.t("rowdy.upload_item.start_import"), create_import_path, method: :post, class: "rowdy-btn rowdy-btn--primary rowdy-btn--sm", data: { turbo_frame: steps_frame_id } %>
-    </div>
-  <% end %>
-
-  <% if @upload.failed? %>
-    <div class="rowdy-upload-error">
+    <% if @upload.processing? %>
+      <div class="rowdy-upload-progress-bar rowdy-upload-progress-bar--inline">
+        <progress value="<%= @upload.progress %>" max="100"></progress>
+        <span class="rowdy-upload-progress-text"><%= @upload.progress %>%</span>
+      </div>
+    <% end %>
+    <% if @upload.failed? %>
       <span class="rowdy-error-message"><%= @upload.error_message %></span>
-    </div>
-  <% end %>
-</div>
+    <% end %>
+  </td>
+
+  <td class="rowdy-upload-action-cell">
+    <% if @upload.completed? && importable? %>
+      <%= button_to create_import_path, method: :post, class: "rowdy-btn rowdy-btn--secondary rowdy-btn--icon", data: { turbo_frame: "rowdy-steps-#{@upload.schema_name}" }, aria: { label: I18n.t("rowdy.upload_item.start_import") } do %>
+        <%= render "rowdy/shared/icons/arrow_right" %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

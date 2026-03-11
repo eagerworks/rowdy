@@ -8,10 +8,11 @@
   <%= yield :head %>
 
   <%= stylesheet_link_tag    "rowdy/application", media: "all" %>
+  <%= javascript_importmap_tags %>
 </head>
-<body>
-
-<%= yield %>
-
+<body class="rowdy-body">
+  <div class="rowdy-container">
+    <%= yield %>
+  </div>
 </body>
 </html>

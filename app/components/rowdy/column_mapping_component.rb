@@ -13,6 +13,10 @@ module Rowdy
       Rowdy::Engine.routes.url_helpers.import_mapping_path(@import)
     end
 
+    def schema_path
+      Rowdy::Engine.routes.url_helpers.schema_path(schema_name: @import.schema_name)
+    end
+
     def sample_values_for(column_index)
       @sample_rows.map { |row| row[column_index]&.truncate(20) }.compact.first(3)
     end
