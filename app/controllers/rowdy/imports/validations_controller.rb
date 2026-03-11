@@ -11,7 +11,7 @@ module Rowdy
 
         @error_types_with_counts = ids_by_column
           .sort_by { |col, _| col }
-          .map { |col, ids| [col, ids.size] }
+          .map { |col, ids| [ col, ids.size ] }
 
         active_column = @error_types_with_counts[@tab]&.first
         active_ids    = ids_by_column[active_column] || []

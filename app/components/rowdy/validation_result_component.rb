@@ -85,7 +85,7 @@ module Rowdy
         (import_error.column_errors || {}).filter_map do |column, msgs|
           next unless Array(msgs).include?(message)
 
-          { import_error: import_error, column: column, messages: [message] }
+          { import_error: import_error, column: column, messages: [ message ] }
         end
       end
     end
