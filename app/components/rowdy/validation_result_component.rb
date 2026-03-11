@@ -1,13 +1,15 @@
 module Rowdy
   class ValidationResultComponent < ViewComponent::Base
-    attr_accessor :import, :errors, :page, :total_pages, :errored_columns
+    attr_accessor :import, :errors, :page, :total_pages, :errored_columns, :tab, :error_types_with_counts
 
-    def initialize(import:, errors: [], page: 1, total_pages: 0, errored_columns: [])
-      @import          = import
-      @errors          = errors
-      @page            = page
-      @total_pages     = total_pages
-      @errored_columns = errored_columns
+    def initialize(import:, errors: [], page: 1, total_pages: 0, errored_columns: [], tab: 0, error_types_with_counts: [])
+      @import                   = import
+      @errors                   = errors
+      @page                     = page
+      @total_pages              = total_pages
+      @errored_columns          = errored_columns
+      @tab                      = tab
+      @error_types_with_counts  = error_types_with_counts
     end
 
     def preparing?
@@ -38,8 +40,8 @@ module Rowdy
       Rowdy::Engine.routes.url_helpers.import_mapping_path(@import)
     end
 
-    def validation_path(page: 1)
-      Rowdy::Engine.routes.url_helpers.import_validation_path(@import, page: page)
+    def validation_path(page: 1, tab: @tab)
+      Rowdy::Engine.routes.url_helpers.import_validation_path(@import, page: page, tab: tab)
     end
 
     def error_report_path
@@ -66,54 +68,26 @@ module Rowdy
       @page < @total_pages
     end
 
-    ERROR_TYPE_ORDER = %i[presence type length inclusion numeric uniqueness custom].freeze
-
-    def self.classify_error_message(message)
-      msg = message.to_s.downcase
-      return :presence if msg == "is required"
-      return :uniqueness if msg == "must be unique"
-      return :type if msg.start_with?("must be a valid ")
-      return :length if msg.start_with?("must be at most ")
-      return :inclusion if msg.start_with?("must be one of:")
-      return :numeric if msg.start_with?("must be greater than ")
-      :custom
-    end
-
     def error_types
-      @error_types ||= begin
-        categories = Set.new
-        @errors.each do |import_error|
-          (import_error.column_errors || {}).each_value do |msgs|
-            Array(msgs).each { |msg| categories.add(self.class.classify_error_message(msg)) }
-          end
-        end
-        ERROR_TYPE_ORDER.select { |c| categories.include?(c) }
-      end
+      @error_types_with_counts.map(&:first)
     end
 
-    def row_count_for_error_type(category)
-      @errors.count do |import_error|
-        (import_error.column_errors || {}).any? do |_, msgs|
-          Array(msgs).any? { |msg| self.class.classify_error_message(msg) == category }
-        end
-      end
+    def row_count_for_error_type(column)
+      @error_types_with_counts.find { |col, _| col == column }&.last || 0
     end
 
-    def label_for_error_type(category)
-      I18n.t("rowdy.import.validation.error_type_#{category}")
+    def label_for_error_type(column)
+      column.to_s
     end
 
-    def entries_for_error_type(category)
-      entries = []
-      @errors.each do |import_error|
-        (import_error.column_errors || {}).each do |column, msgs|
-          matching = Array(msgs).select { |msg| self.class.classify_error_message(msg) == category }
-          next if matching.empty?
+    def entries_for_error_type(message)
+      @errors.flat_map do |import_error|
+        (import_error.column_errors || {}).filter_map do |column, msgs|
+          next unless Array(msgs).include?(message)
 
-          entries << { import_error: import_error, column: column, messages: matching }
+          { import_error: import_error, column: column, messages: [message] }
         end
       end
-      entries
     end
   end
 end

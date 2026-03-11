@@ -1,15 +1,22 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["tabButton", "tabPanel"]
+  static targets = ["tabButton", "tabPanel", "pageLink"]
+  static values  = { initialTab: { type: Number, default: 0 } }
 
   connect() {
-    this.showTab(0)
+    this.showTab(this.initialTabValue)
   }
 
   select(event) {
     const index = this.tabButtonTargets.indexOf(event.currentTarget)
-    if (index !== -1) this.showTab(index)
+    if (index === -1) return
+    this.showTab(index)
+    this.pageLinkTargets.forEach(link => {
+      const url = new URL(link.href)
+      url.searchParams.set("tab", index)
+      link.href = url
+    })
   }
 
   showTab(index) {

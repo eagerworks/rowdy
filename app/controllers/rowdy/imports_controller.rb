@@ -44,7 +44,7 @@ module Rowdy
         end
       end
 
-      redirect_to import_validation_path(@import, page: params[:page])
+      redirect_to import_validation_path(@import, page: params[:page], tab: params[:tab])
     end
 
     def replace_all

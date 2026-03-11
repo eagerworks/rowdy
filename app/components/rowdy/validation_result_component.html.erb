@@ -36,28 +36,29 @@
               data: { controller: "rowdy-dirty-form", turbo_frame: frame_id },
               html: { id: "rowdy-corrections-form-#{import.id}" } do |f| %>
           <%= hidden_field_tag :page, page %>
+          <%= hidden_field_tag :tab, tab %>
 
-          <div class="rowdy-validation-tabs" data-controller="rowdy-validation-tabs">
+          <div class="rowdy-validation-tabs">
             <div class="rowdy-validation-tabs-nav" role="tablist">
-              <% error_types.each do |error_type| %>
-                <button type="button"
-                        class="rowdy-validation-tab"
-                        role="tab"
-                        aria-selected="false"
-                        title="<%= label_for_error_type(error_type) %>"
-                        data-rowdy-validation-tabs-target="tabButton"
-                        data-action="click->rowdy-validation-tabs#select">
+              <% error_types.each_with_index do |error_type, i| %>
+                <%= link_to validation_path(page: 1, tab: i),
+                      class: "rowdy-validation-tab #{'rowdy-validation-tab--active' if i == tab}",
+                      role: "tab",
+                      aria: { selected: i == tab },
+                      title: label_for_error_type(error_type),
+                      data: {
+                        turbo_frame: frame_id,
+                        action: "click->rowdy-dirty-form#confirmNavigation"
+                      } do %>
                   <span class="rowdy-validation-tab-label"><%= label_for_error_type(error_type) %></span>
                   <span class="rowdy-validation-tab-count">(<%= row_count_for_error_type(error_type) %>)</span>
-                </button>
+                <% end %>
               <% end %>
             </div>
 
-            <% error_types.each do |error_type| %>
-              <div class="rowdy-validation-tab-panel"
-                   role="tabpanel"
-                   hidden
-                   data-rowdy-validation-tabs-target="tabPanel">
+            <% active_type = error_types[tab] %>
+            <% if active_type %>
+              <div class="rowdy-validation-tab-panel rowdy-validation-tab-panel--active" role="tabpanel">
                 <table class="rowdy-validation-table">
                   <thead>
                     <tr>
@@ -68,7 +69,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <% entries_for_error_type(error_type).each do |entry| %>
+                    <% entries_for_error_type(active_type).each do |entry| %>
                       <%= render Rowdy::InvalidRowComponent.new(
                         import_error: entry[:import_error],
                         column: entry[:column],
@@ -88,7 +89,8 @@
                 class: "rowdy-btn",
                 data: {
                   turbo_frame: frame_id,
-                  action: "click->rowdy-dirty-form#confirmNavigation"
+                  action: "click->rowdy-dirty-form#confirmNavigation",
+                  "rowdy-validation-tabs-target": "pageLink"
                 } %>
             <% end %>
 
@@ -102,7 +104,8 @@
                 class: "rowdy-btn",
                 data: {
                   turbo_frame: frame_id,
-                  action: "click->rowdy-dirty-form#confirmNavigation"
+                  action: "click->rowdy-dirty-form#confirmNavigation",
+                  "rowdy-validation-tabs-target": "pageLink"
                 } %>
             <% end %>
           </div>
