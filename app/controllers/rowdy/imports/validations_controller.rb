@@ -13,7 +13,7 @@ module Rowdy
         active_count = @error_types_with_counts[@current_tab]&.last || 0
 
         @errors = active_error \
-          ? ErrorsForMessageQuery.call(@import, active_error, page: @page, per_page: per_page)
+          ? ErrorsForMessageQuery.call(@import, active_error, page: @page, per_page:)
           : @import.import_errors.none
 
         @total_pages = (active_count.to_f / per_page).ceil
