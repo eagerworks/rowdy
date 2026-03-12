@@ -8,7 +8,7 @@ module Rowdy
       @page                     = page
       @total_pages              = total_pages
       @tabs                     = tabs
-      @current_tab                      = current_tab
+      @current_tab              = current_tab
       @error_types_with_counts  = error_types_with_counts
     end
 
