@@ -8,7 +8,7 @@ gem "puma"
 gem "pg"
 
 gem "debug"
-gem "method_source", "~> 1.0"  # explicit so lockfile is complete (pry dependency)
+gem "method_source", "~> 1.1"  # explicit so lockfile is complete (pry dependency)
 gem "pry-rails", "~> 0.3.11"
 
 gem "propshaft"
