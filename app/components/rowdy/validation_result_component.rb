@@ -1,14 +1,14 @@
 module Rowdy
   class ValidationResultComponent < ViewComponent::Base
-    attr_accessor :import, :errors, :page, :total_pages, :errored_columns, :tab, :error_types_with_counts
+    attr_accessor :import, :errors, :page, :total_pages, :tabs, :current_tab, :error_types_with_counts
 
-    def initialize(import:, errors: [], page: 1, total_pages: 0, errored_columns: [], tab: 0, error_types_with_counts: [])
+    def initialize(import:, errors: [], page: 1, total_pages: 0, tabs: [], current_tab: 0, error_types_with_counts: [])
       @import                   = import
       @errors                   = errors
       @page                     = page
       @total_pages              = total_pages
-      @errored_columns          = errored_columns
-      @tab                      = tab
+      @tabs                     = tabs
+      @current_tab                      = current_tab
       @error_types_with_counts  = error_types_with_counts
     end
 
@@ -40,8 +40,8 @@ module Rowdy
       Rowdy::Engine.routes.url_helpers.import_mapping_path(@import)
     end
 
-    def validation_path(page: 1, tab: @tab)
-      Rowdy::Engine.routes.url_helpers.import_validation_path(@import, page: page, tab: tab)
+    def validation_path(page: 1, current_tab: @current_tab)
+      Rowdy::Engine.routes.url_helpers.import_validation_path(@import, page: page, current_tab: current_tab)
     end
 
     def error_report_path

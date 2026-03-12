@@ -1,10 +1,10 @@
 module Rowdy
   class FindReplaceComponent < ViewComponent::Base
-    attr_accessor :import, :errored_columns
+    attr_accessor :import, :tabs
 
-    def initialize(import:, errored_columns: [])
+    def initialize(import:, tabs: [])
       @import          = import
-      @errored_columns = errored_columns
+      @tabs = tabs
     end
 
     def replace_all_path

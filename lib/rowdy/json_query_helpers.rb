@@ -50,6 +50,19 @@ module Rowdy
       end
     end
 
+    # WHERE condition: value exists as an element in any array within a JSON object.
+    # Useful when the JSON structure is { "col" => ["err1", "err2"], ... } and you
+    # want to find rows where a specific string appears in any of those arrays.
+    # Returns a [sql, *binds] array suitable for .where(*condition).
+    def self.any_array_value_condition(column, value)
+      if postgresql?
+        escaped = ActiveRecord::Base.sanitize_sql_like(value)
+        [ "#{column}::text LIKE ?", "%\"#{escaped}\"%" ]
+      elsif mysql?
+        [ "JSON_SEARCH(#{column}, 'one', ?) IS NOT NULL", value ]
+      end
+    end
+
     # SET clause for update_all: sets one JSON field to a scalar value.
     # Returns a [sql_fragment, *binds] array.
     # Usage: sql, *binds = json_set_sql("row_data", "category", "other")

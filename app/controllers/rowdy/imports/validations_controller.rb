@@ -4,26 +4,20 @@ module Rowdy
       before_action :set_import
 
       def show
-        @page = (params[:page] || 1).to_i
-        @tab  = (params[:tab]  || 0).to_i
+        @page        = (params[:page] || 1).to_i
+        @current_tab = (params[:current_tab] || 0).to_i
 
-        ids_by_column = classified_ids_by_column
+        @error_types_with_counts = ErrorMessageCountsQuery.call(@import)
 
-        @error_types_with_counts = ids_by_column
-          .sort_by { |col, _| col }
-          .map { |col, ids| [ col, ids.size ] }
+        active_error = @error_types_with_counts[@current_tab]&.first
+        active_count = @error_types_with_counts[@current_tab]&.last || 0
 
-        active_column = @error_types_with_counts[@tab]&.first
-        active_ids    = ids_by_column[active_column] || []
+        @errors = active_error \
+          ? ErrorsForMessageQuery.call(@import, active_error, page: @page, per_page: per_page)
+          : @import.import_errors.none
 
-        @errors = @import.import_errors.active
-          .where(id: active_ids)
-          .order(:row_number)
-          .offset((@page - 1) * per_page)
-          .limit(per_page)
-
-        @total_pages     = (active_ids.size.to_f / per_page).ceil
-        @errored_columns = @error_types_with_counts.map(&:first)
+        @total_pages = (active_count.to_f / per_page).ceil
+        @tabs        = @error_types_with_counts.map(&:first)
 
         render "rowdy/imports/validation"
       end
@@ -42,16 +36,6 @@ module Rowdy
 
       def per_page
         50
-      end
-
-      def classified_ids_by_column
-        result = Hash.new { |h, k| h[k] = [] }
-        @import.import_errors.active.pluck(:id, :column_errors).each do |id, errors|
-          messages = Set.new
-          (errors || {}).each_value { |msgs| Array(msgs).each { |msg| messages.add(msg) } }
-          messages.each { |msg| result[msg] << id }
-        end
-        result
       end
     end
   end
