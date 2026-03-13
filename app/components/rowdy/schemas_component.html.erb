@@ -1,34 +1,36 @@
-<div class="rowdy-schemas">
-  <div class="rowdy-schemas-header">
-    <%= render Rowdy::SchemaBuilderComponent.new %>
-  </div>
+<div class="rowdy-container">
+  <div class="rowdy-schemas">
+    <div class="rowdy-schemas-header">
+      <%= render Rowdy::SchemaBuilderComponent.new %>
+    </div>
 
-  <% if @schemas.empty? %>
-    <div class="rowdy-schemas-empty">
-      <%= render "rowdy/shared/icons/empty_file" %>
-      <p><%= t('rowdy.schemas.empty') %></p>
-    </div>
-  <% else %>
-    <div class="rowdy-schemas-grid">
-      <% @schemas.each do |schema| %>
-        <%= link_to schema_path(schema), class: "rowdy-schema-card" do %>
-          <div class="rowdy-schema-card-body">
-            <h3 class="rowdy-schema-card-title"><%= schema.schema_label %></h3>
-            <span class="rowdy-schema-card-name"><%= schema.schema_name %></span>
-          </div>
-          <div class="rowdy-schema-card-meta">
-            <span class="rowdy-schema-card-columns">
-              <%= t('rowdy.schemas.columns_count', count: schema.columns.size) %>
-            </span>
-            <span class="rowdy-schema-card-uploads">
-              <%= t('rowdy.schemas.uploads_count', count: upload_count(schema)) %>
-            </span>
-          </div>
-          <div class="rowdy-schema-card-arrow">
-            <%= render "rowdy/shared/icons/chevron_right" %>
-          </div>
+    <% if @schemas.empty? %>
+      <div class="rowdy-schemas-empty">
+        <%= render "rowdy/shared/icons/empty_file" %>
+        <p><%= t('rowdy.schemas.empty') %></p>
+      </div>
+    <% else %>
+      <div class="rowdy-schemas-grid">
+        <% @schemas.each do |schema| %>
+          <%= link_to schema_path(schema), class: "rowdy-schema-card" do %>
+            <div class="rowdy-schema-card-body">
+              <h3 class="rowdy-schema-card-title"><%= schema.schema_label %></h3>
+              <span class="rowdy-schema-card-name"><%= schema.schema_name %></span>
+            </div>
+            <div class="rowdy-schema-card-meta">
+              <span class="rowdy-schema-card-columns">
+                <%= t('rowdy.schemas.columns_count', count: schema.columns.size) %>
+              </span>
+              <span class="rowdy-schema-card-uploads">
+                <%= t('rowdy.schemas.uploads_count', count: upload_count(schema)) %>
+              </span>
+            </div>
+            <div class="rowdy-schema-card-arrow">
+              <%= render "rowdy/shared/icons/chevron_right" %>
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
-    </div>
-  <% end %>
+      </div>
+    <% end %>
+  </div>
 </div>
