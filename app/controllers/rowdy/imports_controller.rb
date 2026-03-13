@@ -90,7 +90,7 @@ module Rowdy
 
       ReplaceAll.new(
         import: @import,
-        column: column,
+        column:,
         find_value:,
         replace_value:,
         all_empty: match_empty,

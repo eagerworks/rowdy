@@ -110,7 +110,7 @@ module Rowdy
           matching = Array(msgs).select { |msg| self.class.classify_error_message(msg) == category }
           next if matching.empty?
 
-          entries << { import_row: import_row, column: column, messages: matching }
+          entries << { import_row:, column:, messages: matching }
         end
       end
       entries

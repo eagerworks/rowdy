@@ -32,7 +32,7 @@ module Rowdy
           column_errors = RowValidator.call(
             updated_row.transform_keys(&:to_sym),
             schema,
-            unique_tracker: unique_tracker
+            unique_tracker:
           )
 
           if column_errors.empty?

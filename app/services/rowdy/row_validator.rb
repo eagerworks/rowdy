@@ -29,9 +29,9 @@ module Rowdy
       ColumnValidators::ColumnValidationPipeline.call(
         value: type_result.coerced_value,
         column: col,
-        errors: errors,
-        unique_tracker: unique_tracker,
-        import_row: import_row
+        errors:,
+        unique_tracker:,
+        import_row:
       )
 
       errors

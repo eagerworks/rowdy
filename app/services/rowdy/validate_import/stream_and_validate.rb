@@ -39,7 +39,7 @@ module Rowdy
 
           mapped_row = map_row(headers, raw_values, column_mapping)
           transformed_row = RowTransformer.call(mapped_row, schema)
-          row_errors = RowValidator.call(transformed_row, schema, unique_tracker: unique_tracker)
+          row_errors = RowValidator.call(transformed_row, schema, unique_tracker:)
 
           if row_errors.empty?
             valid_count += 1
@@ -51,9 +51,7 @@ module Rowdy
             import_id:     import.id,
             row_number:    total_mapped_rows + 1,
             row_data:      mapped_row,
-            column_errors: row_errors.presence,
-            created_at:    Time.current,
-            updated_at:    Time.current
+            column_errors: row_errors.presence
           }
 
           if row_buffer.size >= batch_size

@@ -12,7 +12,7 @@ module Rowdy
         context 'when unique_tracker is present' do
           it 'adds no error when value is new' do
             tracker = UniqueTracker.new
-            described_class.execute(value: 'SKU-001', column: column, errors: errors,
+            described_class.execute(value: 'SKU-001', column:, errors:,
                                     unique_tracker: tracker, import_row: nil)
             expect(errors).to be_empty
           end
@@ -20,7 +20,7 @@ module Rowdy
           it 'adds error when value was already seen' do
             tracker = UniqueTracker.new
             tracker.add?(:sku, 'SKU-001')
-            described_class.execute(value: 'SKU-001', column: column, errors: errors,
+            described_class.execute(value: 'SKU-001', column:, errors:,
                                     unique_tracker: tracker, import_row: nil)
             expect(errors).to eq([ 'Must be unique' ])
           end
@@ -28,7 +28,7 @@ module Rowdy
           it 'tracks by column name' do
             tracker = UniqueTracker.new
             tracker.add?(:name, 'Duplicate')
-            described_class.execute(value: 'Duplicate', column: column, errors: errors,
+            described_class.execute(value: 'Duplicate', column:, errors:,
                                     unique_tracker: tracker, import_row: nil)
             expect(errors).to be_empty
           end
@@ -36,7 +36,7 @@ module Rowdy
 
         context 'when unique_tracker is nil and import_row is nil' do
           it 'skips validation and adds no error' do
-            described_class.execute(value: 'SKU-001', column: column, errors: errors,
+            described_class.execute(value: 'SKU-001', column:, errors:,
                                     unique_tracker: nil, import_row: nil)
             expect(errors).to be_empty
           end
@@ -50,8 +50,8 @@ module Rowdy
           end
 
           it 'adds no error when value does not exist in any other row' do
-            described_class.execute(value: 'SKU-NEW', column: column, errors: errors,
-                                    unique_tracker: nil, import_row: import_row)
+            described_class.execute(value: 'SKU-NEW', column:, errors:,
+                                    unique_tracker: nil, import_row:)
             expect(errors).to be_empty
           end
 
@@ -62,8 +62,8 @@ module Rowdy
                    row_data:      { 'sku' => 'SKU-DUP', 'name' => 'Hoodie' },
                    column_errors: nil)
 
-            described_class.execute(value: 'SKU-DUP', column: column, errors: errors,
-                                    unique_tracker: nil, import_row: import_row)
+            described_class.execute(value: 'SKU-DUP', column:, errors:,
+                                    unique_tracker: nil, import_row:)
             expect(errors).to include(I18n.t('rowdy.column_validators.unique'))
           end
 
@@ -73,14 +73,14 @@ module Rowdy
                    row_number:    3,
                    row_data:      { 'sku' => 'SKU-DUP', 'name' => 'Hoodie' })
 
-            described_class.execute(value: 'SKU-DUP', column: column, errors: errors,
-                                    unique_tracker: nil, import_row: import_row)
+            described_class.execute(value: 'SKU-DUP', column:, errors:,
+                                    unique_tracker: nil, import_row:)
             expect(errors).to include(I18n.t('rowdy.column_validators.unique'))
           end
 
           it 'does not flag the row as a duplicate of itself' do
-            described_class.execute(value: 'SKU-SELF', column: column, errors: errors,
-                                    unique_tracker: nil, import_row: import_row)
+            described_class.execute(value: 'SKU-SELF', column:, errors:,
+                                    unique_tracker: nil, import_row:)
             expect(errors).to be_empty
           end
 
@@ -92,8 +92,8 @@ module Rowdy
                    row_data:      { 'sku' => 'SKU-DUP', 'name' => 'Hoodie' },
                    column_errors: nil)
 
-            described_class.execute(value: 'SKU-DUP', column: column, errors: errors,
-                                    unique_tracker: nil, import_row: import_row)
+            described_class.execute(value: 'SKU-DUP', column:, errors:,
+                                    unique_tracker: nil, import_row:)
             expect(errors).to be_empty
           end
         end

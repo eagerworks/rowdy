@@ -11,7 +11,7 @@ module Rowdy
 
     subject(:rendered) do
       render_inline(described_class.new(
-        import_row: import_row,
+        import_row:,
         column: 'sku',
         messages: [ 'Is required' ]
       ))
