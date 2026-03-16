@@ -18,7 +18,7 @@ module Rowdy
         CSV.open(tempfile.path, "wb") do |csv|
           csv << [ "Row", "Column", "Error", "Value" ]
 
-          import.import_errors.find_each(batch_size: 1000) do |error|
+          import.import_rows.errored.find_each(batch_size: 1000) do |error|
             row_data = error.row_data || {}
             (error.column_errors || {}).each do |column, messages|
               messages.each do |message|

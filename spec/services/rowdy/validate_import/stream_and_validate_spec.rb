@@ -81,7 +81,7 @@ module Rowdy
       end
 
       context "when some rows are invalid" do
-        it "counts invalid rows and creates ImportErrors" do
+        it "counts invalid rows and persists all rows" do
           xlsx = create_test_xlsx(
             headers: %w[name sku price stock category],
             rows: [
@@ -96,14 +96,15 @@ module Rowdy
           import.reload
           expect(import.valid_rows_count).to eq(1)
           expect(import.invalid_rows_count).to eq(1)
-          expect(import.import_errors.count).to eq(1)
+          expect(import.import_rows.count).to eq(2)
+          expect(import.import_rows.errored.count).to eq(1)
         ensure
           xlsx&.close!
         end
       end
 
       context "row numbering" do
-        it "records the correct row_number on the import_error (1-based, skipping header)" do
+        it "records the correct row_number on the errored import_row (1-based, skipping header)" do
           xlsx = create_test_xlsx(
             headers: %w[name sku price stock category],
             rows: [
@@ -115,8 +116,8 @@ module Rowdy
 
           described_class.execute(build_context(import: import, xlsx: xlsx))
 
-          error = import.import_errors.first
-          expect(error.row_number).to eq(3)
+          errored = import.import_rows.errored.first
+          expect(errored.row_number).to eq(3)
         ensure
           xlsx&.close!
         end

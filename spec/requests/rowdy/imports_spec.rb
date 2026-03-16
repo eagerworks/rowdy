@@ -80,7 +80,7 @@ module Rowdy
 
       it "paginates import_errors" do
         import = create(:rowdy_import, :validated, invalid_rows_count: 2)
-        create_list(:rowdy_import_error, 2, import: import)
+        create_list(:rowdy_import_row, 2, import: import)
 
         get "/rowdy/imports/#{import.id}/validation", params: { page: 1 }
 
@@ -89,7 +89,7 @@ module Rowdy
 
       it "excludes corrected errors from the response" do
         import = create(:rowdy_import, :validated, invalid_rows_count: 1)
-        create(:rowdy_import_error, :corrected, import: import,
+        create(:rowdy_import_row, :corrected, import: import,
           row_data: { "name" => "T-Shirt", "sku" => "CORRECTED_VALUE" })
 
         get "/rowdy/imports/#{import.id}/validation"
@@ -106,7 +106,7 @@ module Rowdy
       context "when the corrected value passes validation" do
         it "soft-deletes the import_error by setting corrected_at" do
           import = create(:rowdy_import, :validated, invalid_rows_count: 1, valid_rows_count: 9)
-          error = create(:rowdy_import_error, import: import, row_data: valid_row_data,
+          error = create(:rowdy_import_row, import: import, row_data: valid_row_data,
             column_errors: { "sku" => [ "Is required" ] })
 
           freeze_time do
@@ -120,7 +120,7 @@ module Rowdy
 
         it "decrements invalid_rows_count and increments valid_rows_count" do
           import = create(:rowdy_import, :validated, invalid_rows_count: 1, valid_rows_count: 9)
-          error = create(:rowdy_import_error, import: import, row_data: valid_row_data,
+          error = create(:rowdy_import_row, import: import, row_data: valid_row_data,
             column_errors: { "sku" => [ "Is required" ] })
 
           patch "/rowdy/imports/#{import.id}/correct_errors", params: {
@@ -134,7 +134,7 @@ module Rowdy
 
         it "redirects to the validation page preserving the page param" do
           import = create(:rowdy_import, :validated, invalid_rows_count: 1, valid_rows_count: 9)
-          error = create(:rowdy_import_error, import: import, row_data: valid_row_data)
+          error = create(:rowdy_import_row, import: import, row_data: valid_row_data)
 
           patch "/rowdy/imports/#{import.id}/correct_errors", params: {
             page: 2,
@@ -148,7 +148,7 @@ module Rowdy
       context "when the corrected value still fails validation" do
         it "does not set corrected_at" do
           import = create(:rowdy_import, :validated)
-          error = create(:rowdy_import_error, import: import, row_data: valid_row_data,
+          error = create(:rowdy_import_row, import: import, row_data: valid_row_data,
             column_errors: { "sku" => [ "Is required" ] })
 
           patch "/rowdy/imports/#{import.id}/correct_errors", params: {
@@ -160,7 +160,7 @@ module Rowdy
 
         it "updates row_data and column_errors with the new values" do
           import = create(:rowdy_import, :validated)
-          error = create(:rowdy_import_error, import: import, row_data: valid_row_data,
+          error = create(:rowdy_import_row, import: import, row_data: valid_row_data,
             column_errors: { "sku" => [ "Is required" ] })
 
           patch "/rowdy/imports/#{import.id}/correct_errors", params: {
@@ -174,7 +174,7 @@ module Rowdy
 
         it "redirects to the validation page" do
           import = create(:rowdy_import, :validated)
-          error = create(:rowdy_import_error, import: import, row_data: valid_row_data)
+          error = create(:rowdy_import_row, import: import, row_data: valid_row_data)
 
           patch "/rowdy/imports/#{import.id}/correct_errors", params: {
             corrections: { error.id.to_s => { "sku" => "  " } }
@@ -194,11 +194,45 @@ module Rowdy
         end
       end
 
+      context "when the corrected value duplicates a unique column in another row" do
+        it "does not set corrected_at" do
+          import = create(:rowdy_import, :validated, invalid_rows_count: 1, valid_rows_count: 9)
+          create(:rowdy_import_row, import: import, row_number: 3,
+            row_data: { "name" => "Hoodie", "sku" => "TAKEN", "price" => "29.99" },
+            column_errors: nil)
+          error = create(:rowdy_import_row, import: import, row_number: 2,
+            row_data: valid_row_data,
+            column_errors: { "sku" => [ "must be unique" ] })
+
+          patch "/rowdy/imports/#{import.id}/correct_errors", params: {
+            corrections: { error.id.to_s => { "sku" => "TAKEN" } }
+          }
+
+          expect(error.reload.corrected_at).to be_nil
+        end
+
+        it "preserves the uniqueness error in column_errors" do
+          import = create(:rowdy_import, :validated, invalid_rows_count: 1, valid_rows_count: 9)
+          create(:rowdy_import_row, import: import, row_number: 3,
+            row_data: { "name" => "Hoodie", "sku" => "TAKEN", "price" => "29.99" },
+            column_errors: nil)
+          error = create(:rowdy_import_row, import: import, row_number: 2,
+            row_data: valid_row_data,
+            column_errors: { "sku" => [ "must be unique" ] })
+
+          patch "/rowdy/imports/#{import.id}/correct_errors", params: {
+            corrections: { error.id.to_s => { "sku" => "TAKEN" } }
+          }
+
+          expect(error.reload.column_errors["sku"]).to be_present
+        end
+      end
+
       context "when the error_id does not belong to the import" do
         it "ignores the correction" do
           import = create(:rowdy_import, :validated)
           other_import = create(:rowdy_import, :validated)
-          other_error = create(:rowdy_import_error, import: other_import)
+          other_error = create(:rowdy_import_row, import: other_import)
 
           patch "/rowdy/imports/#{import.id}/correct_errors", params: {
             corrections: { other_error.id.to_s => { "sku" => "ABC123" } }

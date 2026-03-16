@@ -10,7 +10,7 @@ module Rowdy
     end
 
     def call
-      @import.import_errors.active
+      @import.import_rows.active
         .where(*JsonQueryHelpers.any_array_value_condition(:column_errors, @message))
         .order(:row_number)
         .offset((@page - 1) * @per_page)

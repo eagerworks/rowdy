@@ -14,7 +14,7 @@ module Rowdy
 
         @errors = active_error \
           ? ErrorsForMessageQuery.call(@import, active_error, page: @page, per_page:)
-          : @import.import_errors.none
+          : @import.import_rows.none
 
         @total_pages = (active_count.to_f / per_page).ceil
         @tabs        = @error_types_with_counts.map(&:first)

@@ -6,13 +6,31 @@ module Rowdy
       extend LightService::Action
 
       expects :value, :column, :errors, :unique_tracker
+      expects :import_row
 
       executed do |ctx|
         next ctx unless ctx.column.unique?
-        next ctx unless ctx.unique_tracker
 
-        ctx.errors << I18n.t("rowdy.column_validators.unique") unless ctx.unique_tracker.add?(ctx.column.name, ctx.value)
+        duplicate =
+          if ctx.unique_tracker
+            !ctx.unique_tracker.add?(ctx.column.name, ctx.value)
+          else
+            next ctx unless ctx.import_row
+            duplicate_exists?(ctx.import_row, ctx.column.name, ctx.value.to_s)
+          end
+
+        ctx.errors << I18n.t("rowdy.column_validators.unique") if duplicate
       end
+
+      def self.duplicate_exists?(import_row, column_name, value)
+        extract_sql = JsonQueryHelpers.extract("row_data", column_name)
+
+        ImportRow.where(import_id: import_row.import_id)
+         .where.not(id: import_row.id)
+         .where("#{extract_sql} = ?", value)
+         .exists?
+      end
+      private_class_method :duplicate_exists?
     end
   end
 end

@@ -67,10 +67,10 @@ module Rowdy
         expect(create(:rowdy_import).upload).to be_a(Rowdy::Upload)
       end
 
-      it "destroys import_errors on delete" do
+      it "destroys import_rows on delete" do
         import = create(:rowdy_import)
-        create(:rowdy_import_error, import: import)
-        expect { import.destroy }.to change(Rowdy::ImportError, :count).by(-1)
+        create(:rowdy_import_row, import: import)
+        expect { import.destroy }.to change(Rowdy::ImportRow, :count).by(-1)
       end
     end
 

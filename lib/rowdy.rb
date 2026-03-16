@@ -1,3 +1,4 @@
+require "light-service"
 require "rowdy/version"
 require "rowdy/engine"
 require "rowdy/configuration"

@@ -71,7 +71,7 @@
                   <tbody>
                     <% entries_for_error_type(active_type).each do |entry| %>
                       <%= render Rowdy::InvalidRowComponent.new(
-                        import_error: entry[:import_error],
+                        import_row: entry[:import_error],
                         column: entry[:column],
                         messages: entry[:messages]
                       ) %>
