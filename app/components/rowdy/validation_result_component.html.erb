@@ -70,7 +70,7 @@
                   <tbody>
                     <% entries_for_error_type(error_type).each do |entry| %>
                       <%= render Rowdy::InvalidRowComponent.new(
-                        import_error: entry[:import_error],
+                        import_row: entry[:import_row],
                         column: entry[:column],
                         messages: entry[:messages]
                       ) %>

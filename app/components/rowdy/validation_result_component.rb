@@ -82,8 +82,8 @@ module Rowdy
     def error_types
       @error_types ||= begin
         categories = Set.new
-        @errors.each do |import_error|
-          (import_error.column_errors || {}).each_value do |msgs|
+        @errors.each do |import_row|
+          (import_row.column_errors || {}).each_value do |msgs|
             Array(msgs).each { |msg| categories.add(self.class.classify_error_message(msg)) }
           end
         end
@@ -92,8 +92,8 @@ module Rowdy
     end
 
     def row_count_for_error_type(category)
-      @errors.count do |import_error|
-        (import_error.column_errors || {}).any? do |_, msgs|
+      @errors.count do |import_row|
+        (import_row.column_errors || {}).any? do |_, msgs|
           Array(msgs).any? { |msg| self.class.classify_error_message(msg) == category }
         end
       end
@@ -105,12 +105,12 @@ module Rowdy
 
     def entries_for_error_type(category)
       entries = []
-      @errors.each do |import_error|
-        (import_error.column_errors || {}).each do |column, msgs|
+      @errors.each do |import_row|
+        (import_row.column_errors || {}).each do |column, msgs|
           matching = Array(msgs).select { |msg| self.class.classify_error_message(msg) == category }
           next if matching.empty?
 
-          entries << { import_error: import_error, column: column, messages: matching }
+          entries << { import_row:, column:, messages: matching }
         end
       end
       entries

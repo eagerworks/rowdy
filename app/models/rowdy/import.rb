@@ -1,7 +1,7 @@
 module Rowdy
   class Import < ApplicationRecord
     belongs_to :upload, class_name: "Rowdy::Upload"
-    has_many :import_errors, class_name: "Rowdy::ImportError", dependent: :delete_all
+    has_many :import_rows, class_name: "Rowdy::ImportRow", dependent: :delete_all
     has_one_attached :error_report
 
     serialize :column_mapping, coder: JSON

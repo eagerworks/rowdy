@@ -1,19 +1,19 @@
 module Rowdy
   class InvalidRowComponent < ViewComponent::Base
-    attr_reader :import_error, :column, :messages
+    attr_reader :import_row, :column, :messages
 
-    def initialize(import_error:, column:, messages:)
-      @import_error = import_error
+    def initialize(import_row:, column:, messages:)
+      @import_row = import_row
       @column = column
       @messages = messages
     end
 
     def current_value
-      @import_error.row_data[@column].to_s
+      @import_row.row_data[@column].to_s
     end
 
     def input_name
-      "corrections[#{@import_error.id}][#{@column}]"
+      "corrections[#{@import_row.id}][#{@column}]"
     end
   end
 end

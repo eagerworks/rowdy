@@ -9,7 +9,7 @@ module Rowdy
     end
 
     def call
-      @import.import_errors.active
+      @import.import_rows.errored.active
         .pluck(:column_errors)
         .flat_map { |ie| (ie || {}).keys }
         .uniq.sort

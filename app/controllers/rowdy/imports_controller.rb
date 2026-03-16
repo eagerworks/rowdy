@@ -22,26 +22,57 @@ module Rowdy
 
     def correct_errors
       corrections = params[:corrections]&.to_unsafe_h || {}
-      schema = @import.schema
+      schema      = @import.schema
+      now         = Time.current
+      updates     = []
+      corrected_count = 0
 
       corrections.each do |error_id, new_values|
-        import_error = @import.import_errors.active.find_by(id: error_id)
-        next unless import_error
+        import_row = @import.import_rows.errored.active.find_by(id: error_id)
+        next unless import_row
 
-        updated_row = import_error.row_data.merge(new_values)
-
-        # row_data and new_values both have string keys after JSON deserialization
-        # and HTTP params respectively. RowValidator accesses values via col.name
-        # (a Symbol from the schema DSL), so keys must be symbolized before validating.
-        column_errors = RowValidator.call(updated_row.transform_keys(&:to_sym), schema)
+        updated_row   = import_row.row_data.merge(new_values)
+        column_errors = RowValidator.call(updated_row.transform_keys(&:to_sym), schema, import_row:)
 
         if column_errors.empty?
-          import_error.update!(corrected_at: Time.current, row_data: updated_row)
-          @import.decrement!(:invalid_rows_count)
-          @import.increment!(:valid_rows_count)
+          corrected_count += 1
+          updates << {
+            id:            import_row.id,
+            import_id:     import_row.import_id,
+            row_number:    import_row.row_number,
+            row_data:      updated_row,
+            column_errors: nil,
+            corrected_at:  now,
+            created_at:    import_row.created_at,
+            updated_at:    now
+          }
         else
-          import_error.update!(row_data: updated_row, column_errors:)
+          updates << {
+            id:            import_row.id,
+            import_id:     import_row.import_id,
+            row_number:    import_row.row_number,
+            row_data:      updated_row,
+            column_errors: column_errors,
+            corrected_at:  nil,
+            created_at:    import_row.created_at,
+            updated_at:    now
+          }
         end
+      end
+
+      if updates.any?
+        ImportRow.upsert_all(
+          updates,
+          unique_by: :id,
+          update_only: %i[corrected_at row_data column_errors]
+        )
+      end
+
+      if corrected_count > 0
+        @import.update_columns(
+          invalid_rows_count: @import.invalid_rows_count - corrected_count,
+          valid_rows_count:   @import.valid_rows_count   + corrected_count
+        )
       end
 
       redirect_to import_validation_path(@import, page: params[:page])
@@ -57,22 +88,15 @@ module Rowdy
       exact = rp[:exact_match] == "1"
       schema = @import.schema
 
-      @import.import_errors.active.find_each do |import_error|
-        current = import_error.row_data[column].to_s
-        next unless value_matches?(current, find_value, match_empty:, case_sensitive:, exact:)
-
-        new_value = compute_replacement(current, find_value, replace_value, match_empty:, case_sensitive:, exact:)
-        updated_row = import_error.row_data.merge(column => new_value)
-        column_errors = RowValidator.call(updated_row.transform_keys(&:to_sym), schema)
-
-        if column_errors.empty?
-          import_error.update!(corrected_at: Time.current, row_data: updated_row)
-          @import.decrement!(:invalid_rows_count)
-          @import.increment!(:valid_rows_count)
-        else
-          import_error.update!(row_data: updated_row, column_errors:)
-        end
-      end
+      ReplaceAll.new(
+        import: @import,
+        column:,
+        find_value:,
+        replace_value:,
+        all_empty: match_empty,
+        case_sensitive:,
+        exact_match: exact
+      ).call
 
       redirect_to import_validation_path(@import)
     end
