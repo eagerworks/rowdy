@@ -1,8 +1,11 @@
 require "rails/generators"
+require_relative "messages"
 
 module Rowdy
   module Generators
     class InstallGenerator < Rails::Generators::Base
+      include Messages
+
       desc "Installs Rowdy into the host application."
 
       source_root File.expand_path("templates", __dir__)
@@ -20,15 +23,14 @@ module Rowdy
         layout_path = File.join(destination_root, layout)
 
         unless File.exist?(layout_path)
-          say_status :warning, "Could not find #{layout}. Add this manually to your layout's <head>:", :yellow
-          say '  <%= stylesheet_link_tag "rowdy/application", "data-turbo-track": "reload" %>'
+          stylesheet_file_does_not_exist_warning(layout)
           return
         end
 
         content = File.read(layout_path)
 
         if content.include?("rowdy/application")
-          say_status :stylesheet, "Rowdy stylesheet already present in #{layout} — skipping.", :green
+          stylesheet_already_exists_message(layout)
           return
         end
 
@@ -38,18 +40,14 @@ module Rowdy
       end
 
       def check_queues
-        say ""
-        say_status :queues, "Make sure your background job adapter processes these Rowdy queues:", :green
-        say "  rowdy_imports"
-        say "  rowdy_processing"
-        say ""
+        check_queues_message
       end
 
       def check_action_cable
         cable_yml = File.join(destination_root, "config/cable.yml")
 
         unless File.exist?(cable_yml)
-          say_status :warning, "config/cable.yml not found. Make sure Action Cable is configured with a cross-process adapter (solid_cable or redis).", :yellow
+          action_cable_file_does_not_exist_warning
           return
         end
 
@@ -57,31 +55,16 @@ module Rowdy
         development_section = content[/development:.*?(?=\n\w|\z)/m]
 
         if development_section&.include?("adapter: async")
-          say ""
-          say_status :warning, "Action Cable is using the 'async' adapter in development.", :yellow
-          say "  The async adapter only works within the same process and will not deliver", :yellow
-          say "  Rowdy broadcasts from Sidekiq workers to the browser.", :yellow
-          say "  Switch to solid_cable or redis in config/cable.yml:", :yellow
-          say ""
-          say "  development:"
-          say "    adapter: solid_cable"
-          say "    connects_to:"
-          say "      database:"
-          say "        writing: primary"
-          say "    polling_interval: 0.1.seconds"
-          say "    message_retention: 1.day"
-          say ""
+          action_cable_async_adapter_warning
         else
-          say_status :cable, "Action Cable adapter looks good.", :green
+          action_cable_success
         end
       end
 
       def copy_migrations
         rails_command "active_storage:install"
         rails_command "rowdy:install:migrations"
-        say ""
-        say "Run migrations:", :green
-        say "  rails db:migrate"
+        migrations_message
       end
 
       def install
@@ -90,7 +73,7 @@ module Rowdy
         elsif jsbundling?
           install_jsbundling
         else
-          say_status :warning, "Could not detect JS setup (importmap or jsbundling). See README for manual installation.", :yellow
+          js_setup_warning
         end
       end
 
@@ -109,15 +92,14 @@ module Rowdy
           .find { File.exist?(File.join(destination_root, _1)) }
 
         unless js_entrypoint
-          say_status :warning, "Could not find application.js. Add this manually:", :yellow
-          print_manual_instructions
+          js_entrypoint_warning
           return
         end
 
         content = File.read(File.join(destination_root, js_entrypoint))
 
         if content.include?('from "rowdy"')
-          say_status :importmap, "Rowdy already installed in #{js_entrypoint} — skipping.", :green
+          importmap_already_setup_message(js_entrypoint)
           return
         end
 
@@ -127,15 +109,15 @@ module Rowdy
         imports << "install(application)"
 
         append_to_file js_entrypoint, "\n#{imports.join("\n")}\n"
-        say_status :insert, js_entrypoint, :green
+        js_success(js_entrypoint)
       end
 
       def install_jsbundling
-        say_status :jsbundling, "Adding Rowdy as a local npm package...", :green
+        jsbundling_init_message
 
         gem_path = `bundle show rowdy`.strip
         if gem_path.empty?
-          say_status :error, "Could not find Rowdy gem path. Is it in your Gemfile?", :red
+          jsbundling_rowdy_gem_missing_error
           return
         end
 
@@ -152,21 +134,13 @@ module Rowdy
               import { install as installRowdy } from "rowdy"
               installRowdy(application)
             JS
-            say_status :insert, js_entrypoint, :green
+            js_success(js_entrypoint)
           end
         else
-          say_status :warning, "Could not find application.js. Add this manually:", :yellow
-          print_manual_instructions
+          js_entrypoint_warning
         end
 
         run "yarn build"
-      end
-
-      def print_manual_instructions
-        say ""
-        say '  import { application } from "controllers/application"'
-        say '  import { install } from "rowdy"'
-        say "  install(application)"
       end
     end
   end

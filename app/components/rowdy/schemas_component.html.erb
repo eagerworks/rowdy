@@ -7,7 +7,7 @@
     <% if @schemas.empty? %>
       <div class="rowdy-schemas-empty">
         <%= render "rowdy/shared/icons/empty_file" %>
-        <p><%= t('rowdy.schemas.empty') %></p>
+        <p><%= t("rowdy.schemas.empty") %></p>
       </div>
     <% else %>
       <div class="rowdy-schemas-grid">
@@ -19,10 +19,10 @@
             </div>
             <div class="rowdy-schema-card-meta">
               <span class="rowdy-schema-card-columns">
-                <%= t('rowdy.schemas.columns_count', count: schema.columns.size) %>
+                <%= t("rowdy.schemas.columns_count", count: schema.columns.size) %>
               </span>
               <span class="rowdy-schema-card-uploads">
-                <%= t('rowdy.schemas.uploads_count', count: upload_count(schema)) %>
+                <%= t("rowdy.schemas.uploads_count", count: upload_count(schema)) %>
               </span>
             </div>
             <div class="rowdy-schema-card-arrow">

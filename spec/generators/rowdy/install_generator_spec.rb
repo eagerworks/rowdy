@@ -29,12 +29,12 @@ RSpec.describe Rowdy::Generators::InstallGenerator do
   describe "#install" do
     context "with importmap" do
       before do
-        create "config/importmap.rb"
+        create "config/importmap.rb", "app/javascript/application.js"
         generator.install
       end
 
       it "prints an importmap status message" do
-        expect(generator).to have_received(:say_status).with(:importmap, anything, :green)
+        expect(generator).to have_received(:say_status).with(:insert, anything, :green)
       end
 
       it "does not run yarn" do
