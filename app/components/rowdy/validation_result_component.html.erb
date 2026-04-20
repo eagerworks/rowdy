@@ -112,7 +112,8 @@
             <div class="rowdy-validation-report">
               <%= link_to I18n.t("rowdy.import.validation.download_report"),
                 error_report_path,
-                class: "rowdy-btn rowdy-btn--alert rowdy-btn--sm" %>
+                class: "rowdy-btn rowdy-btn--alert rowdy-btn--sm",
+                data: { turbo: false } %>
             </div>
           <% end %>
 

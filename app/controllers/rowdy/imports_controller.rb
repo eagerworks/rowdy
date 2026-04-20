@@ -107,7 +107,7 @@ module Rowdy
         return
       end
 
-      redirect_to rails_blob_path(@import.error_report, disposition: "attachment")
+      redirect_to main_app.rails_blob_path(@import.error_report, disposition: "attachment")
     end
 
     private
