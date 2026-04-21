@@ -1,13 +1,23 @@
-<div data-controller="rowdy-schema-builder">
-  <button type="button" class="rowdy-btn rowdy-btn--primary" data-action="click->rowdy-schema-builder#open">
-    <%= render "rowdy/shared/icons/plus" %>
-    <%= t('rowdy.schema_builder.create_schema') %>
-  </button>
+<div data-controller="rowdy-schema-builder"
+     data-rowdy-schema-builder-edit-value="<%= edit_mode? %>"
+     data-rowdy-schema-builder-initial-index-value="<%= initial_column_index %>">
+
+  <% if edit_mode? %>
+    <button type="button" class="rowdy-btn" data-action="click->rowdy-schema-builder#open">
+      <%= render "rowdy/shared/icons/pencil" %>
+      <%= t('rowdy.schema_builder.edit_schema') %>
+    </button>
+  <% else %>
+    <button type="button" class="rowdy-btn rowdy-btn--primary" data-action="click->rowdy-schema-builder#open">
+      <%= render "rowdy/shared/icons/plus" %>
+      <%= t('rowdy.schema_builder.create_schema') %>
+    </button>
+  <% end %>
 
   <dialog class="rowdy-schema-dialog" data-rowdy-schema-builder-target="dialog" data-action="click->rowdy-schema-builder#closeOnBackdrop">
     <div class="rowdy-schema-dialog-content">
       <div class="rowdy-schema-dialog-header">
-        <h3 class="rowdy-schema-dialog-title"><%= t('rowdy.schema_builder.dialog_title') %></h3>
+        <h3 class="rowdy-schema-dialog-title"><%= edit_mode? ? t('rowdy.schema_builder.edit_dialog_title') : t('rowdy.schema_builder.dialog_title') %></h3>
         <button type="button" class="rowdy-schema-dialog-close" data-action="click->rowdy-schema-builder#close">
           <%= render "rowdy/shared/icons/close" %>
         </button>
@@ -15,15 +25,15 @@
 
       <div id="schema-builder-errors" class="rowdy-schema-error-container" data-rowdy-schema-builder-target="errorContainer"></div>
 
-      <%= form_with url: endpoint_url, scope: :schema_definition, data: { rowdy_schema_builder_target: "form" } do |f| %>
+      <%= form_with url: endpoint_url, method: http_method, scope: :schema_definition, data: { rowdy_schema_builder_target: "form" } do |f| %>
         <div class="rowdy-schema-meta-fields">
           <div class="rowdy-schema-field">
             <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.schema_name') %> <span class="rowdy-schema-hint"><%= t('rowdy.schema_builder.snake_case_hint') %></span></label>
-            <%= f.text_field :name, class: "rowdy-schema-input", placeholder: t('rowdy.schema_builder.name_placeholder'), required: true %>
+            <%= f.text_field :name, value: (@schema_definition.name if edit_mode?), class: "rowdy-schema-input", placeholder: t('rowdy.schema_builder.name_placeholder'), required: true %>
           </div>
           <div class="rowdy-schema-field">
             <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.label') %> <span class="rowdy-schema-hint"><%= t('rowdy.schema_builder.optional_hint') %></span></label>
-            <%= f.text_field :label, class: "rowdy-schema-input", placeholder: t('rowdy.schema_builder.label_placeholder') %>
+            <%= f.text_field :label, value: (@schema_definition.label if edit_mode?), class: "rowdy-schema-input", placeholder: t('rowdy.schema_builder.label_placeholder') %>
           </div>
         </div>
 
@@ -35,12 +45,66 @@
               <%= t('rowdy.schema_builder.add_column') %>
             </button>
           </div>
-          <div data-rowdy-schema-builder-target="columnsContainer"></div>
+          <div data-rowdy-schema-builder-target="columnsContainer">
+            <% existing_columns.each_with_index do |col, idx| %>
+              <div class="rowdy-schema-column-row" data-column-index="<%= idx %>">
+                <div class="rowdy-schema-column-fields">
+                  <div class="rowdy-schema-field rowdy-schema-field--name">
+                    <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.column_name') %></label>
+                    <input type="text" name="schema_definition[columns_config][<%= idx %>][name]" value="<%= col['name'] %>" placeholder="column_name" class="rowdy-schema-input" />
+                  </div>
+                  <div class="rowdy-schema-field rowdy-schema-field--type">
+                    <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.column_type') %></label>
+                    <select name="schema_definition[columns_config][<%= idx %>][type]" class="rowdy-schema-select" data-action="change->rowdy-schema-builder#toggleTypeFields">
+                      <% %w[string integer float decimal date boolean].each do |type| %>
+                        <option value="<%= type %>"<%= ' selected' if col['type'] == type %>><%= t("rowdy.schema_builder.types.#{type}") %></option>
+                      <% end %>
+                    </select>
+                  </div>
+                  <div class="rowdy-schema-field rowdy-schema-field--checkbox">
+                    <label class="rowdy-schema-checkbox-label">
+                      <input type="hidden" name="schema_definition[columns_config][<%= idx %>][required]" value="0" />
+                      <input type="checkbox" name="schema_definition[columns_config][<%= idx %>][required]" value="1"<%= ' checked' if col['required'] %> />
+                      <%= t('rowdy.schema_builder.required') %>
+                    </label>
+                  </div>
+                  <div class="rowdy-schema-field rowdy-schema-field--checkbox">
+                    <label class="rowdy-schema-checkbox-label">
+                      <input type="hidden" name="schema_definition[columns_config][<%= idx %>][unique]" value="0" />
+                      <input type="checkbox" name="schema_definition[columns_config][<%= idx %>][unique]" value="1"<%= ' checked' if col['unique'] %> />
+                      <%= t('rowdy.schema_builder.unique') %>
+                    </label>
+                  </div>
+                  <div class="rowdy-schema-field rowdy-schema-field--narrow" data-visible-for="string" style="<%= field_style(col, 'string') %>">
+                    <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.max_length') %></label>
+                    <input type="number" name="schema_definition[columns_config][<%= idx %>][max_length]" value="<%= col['max_length'] %>" placeholder="—" min="1" class="rowdy-schema-input" />
+                  </div>
+                  <div class="rowdy-schema-field rowdy-schema-field--narrow" data-visible-for="integer float decimal" style="<%= field_style(col, 'integer', 'float', 'decimal') %>">
+                    <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.greater_than') %></label>
+                    <input type="number" name="schema_definition[columns_config][<%= idx %>][greater_than]" value="<%= col['greater_than'] %>" placeholder="—" step="any" class="rowdy-schema-input" />
+                  </div>
+                  <div class="rowdy-schema-field rowdy-schema-field--remove">
+                    <button type="button" class="rowdy-schema-remove-col-btn" data-action="click->rowdy-schema-builder#removeColumn" title="<%= t('rowdy.schema_builder.remove_column') %>">
+                      <%= render "rowdy/shared/icons/close" %>
+                    </button>
+                  </div>
+                </div>
+                <div class="rowdy-schema-inclusion-group" data-visible-for="string integer float decimal" style="<%= field_style(col, 'string', 'integer', 'float', 'decimal') %>">
+                  <label class="rowdy-schema-field-label"><%= t('rowdy.schema_builder.allowed_values') %> <span class="rowdy-schema-hint"><%= t('rowdy.schema_builder.comma_separated_hint') %></span></label>
+                  <input type="text" name="schema_definition[columns_config][<%= idx %>][inclusion]" value="<%= inclusion_string(col) %>" placeholder="<%= t('rowdy.schema_builder.inclusion_placeholder') %>" class="rowdy-schema-input" />
+                </div>
+              </div>
+            <% end %>
+          </div>
         </div>
 
         <div class="rowdy-schema-dialog-actions">
           <button type="button" class="rowdy-btn" data-action="click->rowdy-schema-builder#close"><%= t('rowdy.schema_builder.cancel') %></button>
-          <%= f.submit t('rowdy.schema_builder.create_schema'), class: "rowdy-btn rowdy-btn--primary", data: { turbo_submits_with: t('rowdy.schema_builder.creating') } %>
+          <% if edit_mode? %>
+            <%= f.submit t('rowdy.schema_builder.save_schema'), class: "rowdy-btn rowdy-btn--primary", data: { turbo_submits_with: t('rowdy.schema_builder.saving') } %>
+          <% else %>
+            <%= f.submit t('rowdy.schema_builder.create_schema'), class: "rowdy-btn rowdy-btn--primary", data: { turbo_submits_with: t('rowdy.schema_builder.creating') } %>
+          <% end %>
         </div>
       <% end %>
     </div>
