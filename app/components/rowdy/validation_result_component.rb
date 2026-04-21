@@ -48,6 +48,10 @@ module Rowdy
       Rowdy::Engine.routes.url_helpers.error_report_import_path(@import)
     end
 
+    def valid_rows_report_path
+      Rowdy::Engine.routes.url_helpers.valid_rows_report_import_path(@import)
+    end
+
     def start_validation_path
       Rowdy::Engine.routes.url_helpers.import_validation_path(@import)
     end

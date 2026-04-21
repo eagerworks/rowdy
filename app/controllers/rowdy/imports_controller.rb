@@ -1,6 +1,6 @@
 module Rowdy
   class ImportsController < ApplicationController
-    before_action :set_import, only: %i[show correct_errors error_report replace_all]
+    before_action :set_import, only: %i[show correct_errors error_report valid_rows_report replace_all]
 
     def create
       upload = Upload.find(params[:upload_id])
@@ -99,6 +99,17 @@ module Rowdy
       ).call
 
       redirect_to import_validation_path(@import)
+    end
+
+    def valid_rows_report
+      tempfile = GenerateValidRowsReport.new(@import).call
+      send_data File.read(tempfile.path),
+        filename: "valid_rows_#{@import.id}.csv",
+        type: "text/csv",
+        disposition: "attachment"
+    ensure
+      tempfile&.close
+      tempfile&.unlink
     end
 
     def error_report

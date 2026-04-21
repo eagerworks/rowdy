@@ -15,6 +15,7 @@ Rowdy::Engine.routes.draw do
       patch  :correct_errors
       patch  :replace_all
       get    :error_report
+      get    :valid_rows_report
     end
   end
 
