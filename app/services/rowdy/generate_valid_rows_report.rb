@@ -40,7 +40,7 @@ module Rowdy
     end
 
     def build_csv_row(row)
-      columns.map { |col| row.row_data[mapping.fetch(col, col)] }
+      columns.map { |col| row.row_data[col] }
     end
   end
 end

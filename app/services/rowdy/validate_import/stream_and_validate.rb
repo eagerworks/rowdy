@@ -40,8 +40,8 @@ module Rowdy
           total_mapped_rows += 1
 
           mapped_row = map_row(headers, raw_values, column_mapping)
-          transformed_row = RowTransformer.call(mapped_row, schema)
-          row_errors = RowValidator.call(transformed_row, schema, unique_tracker:)
+          transformed_row = RowTransformer.call(mapped_row, schema, column_mapping: column_mapping)
+          row_errors = RowValidator.call(transformed_row, schema, unique_tracker:, column_mapping: column_mapping)
 
           if row_errors.empty?
             valid_count += 1
@@ -75,23 +75,8 @@ module Rowdy
         ctx.fail!("Validation failed: #{e.message}")
       end
 
-      def self.map_row(headers, values, column_mapping)
-        mapped = {}
-
-        column_mapping.each do |uploaded_col, schema_col|
-          col_index = headers.index(uploaded_col)
-          next if col_index.nil?
-
-          mapped[schema_col.to_sym] = values[col_index]
-        end
-
-        headers.each_with_index do |col, idx|
-          next if column_mapping.key?(col)
-
-          mapped[col] = values[idx]
-        end
-
-        mapped
+      def self.map_row(headers, values, _column_mapping)
+        headers.each_with_index.to_h { |col, idx| [ col, values[idx] ] }
       end
 
       def self.flush_rows(buffer)

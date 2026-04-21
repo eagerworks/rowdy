@@ -32,7 +32,7 @@ module Rowdy
         next unless import_row
 
         updated_row   = import_row.row_data.merge(new_values)
-        column_errors = RowValidator.call(updated_row.transform_keys(&:to_sym), schema, import_row:)
+        column_errors = RowValidator.call(updated_row, schema, import_row:, column_mapping: @import.column_mapping)
 
         if column_errors.empty?
           corrected_count += 1
