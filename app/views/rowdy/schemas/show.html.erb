@@ -4,7 +4,12 @@
       <%= render "rowdy/shared/icons/chevron_left" %>
       <%= t('rowdy.schemas.back') %>
     <% end %>
-    <h1 class="rowdy-schema-show-title"><%= @schema.schema_label %></h1>
+    <div class="rowdy-schema-show-title-row">
+      <h1 class="rowdy-schema-show-title"><%= @schema.schema_label %></h1>
+      <% if @schema.dynamic? %>
+        <%= render Rowdy::SchemaBuilderComponent.new(schema_definition: @schema_definition) %>
+      <% end %>
+    </div>
   </div>
 
   <%= render Rowdy::DropzoneComponent.new(schema_name: @schema.schema_name) %>

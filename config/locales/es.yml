@@ -12,7 +12,11 @@ es:
     schema_builder:
       create_schema: Crear Esquema
       creating: Creando...
+      edit_schema: Editar Esquema
+      save_schema: Guardar Esquema
+      saving: Guardando...
       dialog_title: Crear Esquema de Importación
+      edit_dialog_title: Editar Esquema de Importación
       schema_name: Nombre del Esquema
       snake_case_hint: "(snake_case)"
       name_placeholder: ej. importacion_clientes

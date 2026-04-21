@@ -220,6 +220,12 @@
   color: hsl(var(--rowdy-primary));
 }
 
+.rowdy-schema-show-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .rowdy-schema-show-title {
   font-size: 1.25rem;
   font-weight: 600;

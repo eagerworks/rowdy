@@ -2,13 +2,28 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["dialog", "form", "columnsContainer", "columnTemplate", "errorContainer"]
+  static values = {
+    edit: { type: Boolean, default: false },
+    initialIndex: { type: Number, default: 0 }
+  }
 
   columnIndex = 0
 
+  connect() {
+    this.columnIndex = this.initialIndexValue
+    if (this.editValue) {
+      this.updateRemoveButtons()
+    }
+  }
+
   open() {
-    this.resetForm()
-    this.addColumn()
-    this.dialogTarget.showModal()
+    if (this.editValue) {
+      this.dialogTarget.showModal()
+    } else {
+      this.resetForm()
+      this.addColumn()
+      this.dialogTarget.showModal()
+    }
   }
 
   close() {

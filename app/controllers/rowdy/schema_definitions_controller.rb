@@ -27,9 +27,12 @@ module Rowdy
 
     def update
       if @schema_definition.update(schema_definition_params)
-        render json: serialize(@schema_definition)
+        redirect_back_or_to "/"
       else
-        render json: { errors: @schema_definition.errors.full_messages }, status: :unprocessable_entity
+        render turbo_stream: turbo_stream.update(
+          "schema-builder-errors",
+          html: error_messages_html
+        ), status: :unprocessable_entity
       end
     end
 
