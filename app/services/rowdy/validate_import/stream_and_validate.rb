@@ -34,8 +34,10 @@ module Rowdy
             next
           end
 
-          total_mapped_rows += 1
           raw_values = row.values
+          next if raw_values.all? { |v| v.nil? || v.to_s.strip.empty? }
+
+          total_mapped_rows += 1
 
           mapped_row = map_row(headers, raw_values, column_mapping)
           transformed_row = RowTransformer.call(mapped_row, schema)
@@ -81,6 +83,12 @@ module Rowdy
           next if col_index.nil?
 
           mapped[schema_col.to_sym] = values[col_index]
+        end
+
+        headers.each_with_index do |col, idx|
+          next if column_mapping.key?(col)
+
+          mapped[col] = values[idx]
         end
 
         mapped

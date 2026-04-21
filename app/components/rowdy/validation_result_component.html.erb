@@ -132,9 +132,10 @@
               <%= f.submit I18n.t("rowdy.import.validation.save_corrections"), class: "rowdy-btn rowdy-btn--primary" %>
 
               <% if has_valid_rows? %>
-                <button type="button" class="rowdy-btn rowdy-btn--primary" disabled>
-                  <%= I18n.t("rowdy.import.validation.import_valid_rows", count: @import.valid_rows_count) %>
-                </button>
+                <%= link_to I18n.t("rowdy.import.validation.import_valid_rows", count: @import.valid_rows_count),
+                  valid_rows_report_path,
+                  class: "rowdy-btn rowdy-btn--primary",
+                  data: { turbo: false } %>
               <% end %>
             </div>
           </div>
@@ -148,9 +149,10 @@
           data: { turbo_frame: frame_id } %>
 
         <% if has_valid_rows? %>
-          <button type="button" class="rowdy-btn rowdy-btn--primary" disabled>
-            <%= I18n.t("rowdy.import.validation.import_valid_rows", count: import.valid_rows_count) %>
-          </button>
+          <%= link_to I18n.t("rowdy.import.validation.import_valid_rows", count: @import.valid_rows_count),
+            valid_rows_report_path,
+            class: "rowdy-btn rowdy-btn--primary",
+            data: { turbo: false } %>
         <% end %>
       </div>
     <% end %>
