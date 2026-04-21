@@ -3,6 +3,7 @@ module Rowdy
     def show
       @schema = SchemaRegistry.find!(params[:schema_name])
       @uploads = Upload.where(schema_name: @schema.schema_name).order(created_at: :desc)
+      # redirect_to import_validation_path(@uploads.first.imports.first)
     end
 
     private

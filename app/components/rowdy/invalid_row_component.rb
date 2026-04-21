@@ -4,6 +4,7 @@ module Rowdy
 
     def initialize(import_row:, column:, messages:)
       @import_row = import_row
+      puts "import_row: #{@import_row.inspect}"
       @column = column
       @messages = messages
     end
