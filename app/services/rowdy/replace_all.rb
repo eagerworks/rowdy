@@ -30,9 +30,10 @@ module Rowdy
         .find_each(batch_size: 1000) do |import_row|
           updated_row   = import_row.row_data.merge(@column => @replace_value)
           column_errors = RowValidator.call(
-            updated_row.transform_keys(&:to_sym),
+            updated_row,
             schema,
-            unique_tracker:
+            unique_tracker:,
+            column_mapping: @import.column_mapping
           )
 
           if column_errors.empty?
@@ -93,13 +94,18 @@ module Rowdy
         .where(*value_filter)
         .select(:id)
 
+      column_mapping = @import.column_mapping || {}
+      schema_to_sheets = column_mapping.group_by { |_, v| v }.transform_values { |pairs| pairs.map(&:first) }
+
       @import.import_rows
         .where.not(id: batch_subquery)
         .select(:id, :row_data)
         .find_each(batch_size: 1000) do |row|
           unique_columns.each do |col|
-            value = row.row_data[col.name.to_s]
-            tracker.add?(col.name, value) unless value.nil?
+            (schema_to_sheets[col.name.to_s] || []).each do |sheet_col|
+              value = row.row_data[sheet_col]
+              tracker.add?(col.name, value) unless value.nil?
+            end
           end
         end
 
