@@ -47,18 +47,5 @@ module Rowdy
     def chunk_size_value
       chunk_size || Rowdy.configuration.default_chunk_size
     end
-
-    def pending_uploads_data
-      return [].to_json unless chunked?
-
-      Rowdy::Upload.uploading.map do |upload|
-        {
-          token: upload.upload_token,
-          filename: upload.filename,
-          size: upload.size,
-          progress: upload.upload_progress_percent
-        }
-      end.to_json
-    end
   end
 end
