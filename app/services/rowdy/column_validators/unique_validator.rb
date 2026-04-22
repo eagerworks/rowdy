@@ -6,7 +6,7 @@ module Rowdy
       extend LightService::Action
 
       expects :value, :column, :errors, :unique_tracker
-      expects :import_row
+      expects :import_row, :sheet_column
 
       executed do |ctx|
         next ctx unless ctx.column.unique?
@@ -16,7 +16,7 @@ module Rowdy
             !ctx.unique_tracker.add?(ctx.column.name, ctx.value)
           else
             next ctx unless ctx.import_row
-            duplicate_exists?(ctx.import_row, ctx.column.name, ctx.value.to_s)
+            duplicate_exists?(ctx.import_row, ctx.sheet_column || ctx.column.name, ctx.value.to_s)
           end
 
         ctx.errors << I18n.t("rowdy.column_validators.unique") if duplicate
@@ -27,6 +27,7 @@ module Rowdy
 
         ImportRow.where(import_id: import_row.import_id)
          .where.not(id: import_row.id)
+         .where(corrected_at: nil)
          .where("#{extract_sql} = ?", value)
          .exists?
       end
