@@ -8,6 +8,10 @@ module Rowdy
       Rowdy::Engine.routes.url_helpers.imports_path(upload_id: @upload.id)
     end
 
+    def view_imports_path
+      Rowdy::Engine.routes.url_helpers.imports_path(upload_id: @upload.id)
+    end
+
     def importable?
       @upload.completed? && @upload.schema_name.present?
     end

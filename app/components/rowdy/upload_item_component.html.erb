@@ -18,9 +18,14 @@
 
   <td class="rowdy-upload-action-cell">
     <% if @upload.completed? && importable? %>
-      <%= button_to create_import_path, method: :post, class: "rowdy-btn rowdy-btn--secondary rowdy-btn--icon", data: { turbo_frame: "rowdy-steps-#{@upload.schema_name}" }, aria: { label: I18n.t("rowdy.upload_item.start_import") } do %>
-        <%= render "rowdy/shared/icons/arrow_right" %>
-      <% end %>
+      <div class="rowdy-upload-action-group">
+        <%= link_to view_imports_path, class: "rowdy-btn rowdy-btn--secondary rowdy-btn--icon", aria: { label: I18n.t("rowdy.upload_item.view_imports") } do %>
+          <%= render "rowdy/shared/icons/list" %>
+        <% end %>
+        <%= button_to create_import_path, method: :post, class: "rowdy-btn rowdy-btn--secondary rowdy-btn--icon", data: { turbo_frame: "rowdy-steps-#{@upload.schema_name}" }, aria: { label: I18n.t("rowdy.upload_item.start_import") } do %>
+          <%= render "rowdy/shared/icons/arrow_right" %>
+        <% end %>
+      </div>
     <% end %>
   </td>
 </tr>

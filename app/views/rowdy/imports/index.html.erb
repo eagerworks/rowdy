@@ -1,0 +1,40 @@
+<div>
+  <div class="rowdy-schema-show-header">
+    <%= link_to upload_schema_path(@upload), class: "rowdy-back-link" do %>
+      <%= render "rowdy/shared/icons/chevron_left" %>
+      <%= I18n.t("rowdy.imports_list.back") %>
+    <% end %>
+    <div class="rowdy-schema-show-title-row">
+      <h1 class="rowdy-schema-show-title"><%= I18n.t("rowdy.imports_list.title", filename: @upload.filename) %></h1>
+    </div>
+  </div>
+
+  <% if @imports.empty? %>
+    <div class="rowdy-schemas-empty">
+      <p><%= I18n.t("rowdy.imports_list.empty") %></p>
+    </div>
+  <% else %>
+    <table class="rowdy-upload-table">
+      <thead>
+        <tr>
+          <th><%= I18n.t("rowdy.imports_list.created_at") %></th>
+          <th><%= I18n.t("rowdy.imports_list.status") %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @imports.each do |import| %>
+          <tr>
+            <td><%= import.created_at.strftime("%b %-d, %Y %H:%M") %></td>
+            <td><%= I18n.t("rowdy.imports_list.statuses.#{import.status}") %></td>
+            <td class="rowdy-upload-action-cell">
+              <%= link_to import_show_path(import), class: "rowdy-btn rowdy-btn--secondary rowdy-btn--icon", aria: { label: I18n.t("rowdy.imports_list.continue") } do %>
+                <%= render "rowdy/shared/icons/arrow_right" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

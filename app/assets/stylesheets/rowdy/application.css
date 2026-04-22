@@ -539,6 +539,12 @@
   text-align: center;
 }
 
+.rowdy-upload-action-group {
+  display: inline-flex;
+  gap: 0.375rem;
+  align-items: center;
+}
+
 /* Upload Progress */
 .rowdy-upload-progress-bar {
   flex: 1;
