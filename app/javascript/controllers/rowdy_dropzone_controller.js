@@ -1,25 +1,19 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["dropzone", "dropzoneLabel", "dropzoneUploading", "fileInput", "fileList", "uploadProgress", "resumeBanner", "resumeFileInput"]
+  static targets = ["dropzone", "dropzoneLabel", "dropzoneUploading", "fileInput", "fileList", "uploadProgress"]
   static values = {
     url: String,
     chunkedUrl: String,
     workerUrl: String,
     chunkSize: { type: Number, default: 5 * 1024 * 1024 },
-    pendingUploads: { type: Array, default: [] },
     schemaName: { type: String, default: "" }
   }
 
   connect() {
     this.csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
     this.activeUploads = new Map()
-    this.resumingToken = null
     this.uploading = false
-
-    if (this.pendingUploadsValue.length > 0) {
-      this.showResumeBanner()
-    }
   }
 
   disconnect() {
@@ -191,96 +185,6 @@ export default class extends Controller {
     if (entry) {
       entry.worker.terminate()
       this.activeUploads.delete(fileName)
-    }
-  }
-
-  // --- Resume interrupted uploads ---
-
-  showResumeBanner() {
-    const items = this.pendingUploadsValue.map(upload => `
-      <div class="rowdy-resume-item" data-upload-token="${upload.token}" data-upload-size="${upload.size}">
-        <div class="rowdy-resume-info">
-          <span class="rowdy-resume-filename">${upload.filename}</span>
-          <span class="rowdy-resume-progress">${upload.progress}% uploaded</span>
-        </div>
-        <div class="rowdy-resume-actions">
-          <button type="button" class="rowdy-resume-btn"
-                  data-upload-token="${upload.token}"
-                  data-action="rowdy-dropzone#startResume">
-            Select file to resume
-          </button>
-          <button type="button" class="rowdy-resume-dismiss-btn"
-                  data-upload-token="${upload.token}"
-                  data-action="rowdy-dropzone#dismissResume">
-            Dismiss
-          </button>
-        </div>
-      </div>
-    `).join("")
-
-    this.resumeBannerTarget.innerHTML = items
-    this.resumeBannerTarget.classList.remove("hidden")
-  }
-
-  startResume(event) {
-    this.resumingToken = event.currentTarget.dataset.uploadToken
-    this.resumeFileInputTarget.click()
-  }
-
-  handleResumeFileSelect(event) {
-    const file = event.target.files[0]
-    if (!file) return
-
-    event.target.value = ""
-
-    const pendingUpload = this.pendingUploadsValue.find(u => u.token === this.resumingToken)
-    if (!pendingUpload) return
-
-    if (file.size !== pendingUpload.size) {
-      this.dispatch("validation-error", {
-        detail: { message: "File does not match the interrupted upload" }
-      })
-      this.resumingToken = null
-      return
-    }
-
-    this.hideResumeBannerItem(this.resumingToken)
-
-    const uploadToken = this.resumingToken
-    this.resumingToken = null
-
-    const worker = new Worker(this.workerUrlValue)
-    this.activeUploads.set(file.name, { worker, file, uploadToken, lastProgress: pendingUpload.progress })
-
-    worker.onmessage = (event) => this.handleWorkerMessage(file.name, event.data)
-
-    this.displayFileList([file])
-    this.setUploadingState(true)
-    this.updateFileProgress(file.name, pendingUpload.progress, "uploading")
-
-    worker.postMessage({
-      command: "resume",
-      payload: {
-        file,
-        chunkedUrl: this.chunkedUrlValue,
-        uploadToken,
-        csrfToken: this.csrfToken,
-        chunkSize: this.chunkSizeValue
-      }
-    })
-  }
-
-  dismissResume(event) {
-    const token = event.currentTarget.dataset.uploadToken
-    this.hideResumeBannerItem(token)
-  }
-
-  hideResumeBannerItem(token) {
-    const item = this.resumeBannerTarget.querySelector(`[data-upload-token="${token}"]`)
-    if (item) item.remove()
-
-    if (this.resumeBannerTarget.children.length === 0) {
-      this.resumeBannerTarget.classList.add("hidden")
     }
   }
 

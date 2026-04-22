@@ -4,7 +4,6 @@
      data-rowdy-dropzone-chunked-url-value="<%= chunked_upload_url %>"
      data-rowdy-dropzone-worker-url-value="<%= worker_url %>"
      data-rowdy-dropzone-chunk-size-value="<%= chunk_size_value %>"
-     data-rowdy-dropzone-pending-uploads-value="<%= pending_uploads_data %>"
      <% end %>
      <% if schema_name %>
      data-rowdy-dropzone-schema-name-value="<%= schema_name %>"
@@ -37,14 +36,6 @@
          accept="<%= accept %>"
          <%= 'multiple' if multiple %>
          style="display: none;">
-
-  <input type="file"
-         data-rowdy-dropzone-target="resumeFileInput"
-         data-action="change->rowdy-dropzone#handleResumeFileSelect"
-         accept="<%= accept %>"
-         style="display: none;">
-
-  <div class="rowdy-resume-banner hidden" data-rowdy-dropzone-target="resumeBanner"></div>
 
   <div class="rowdy-file-list <%= "rowdy-file-list--hidden" unless show_file_list %>" data-rowdy-dropzone-target="fileList"></div>
   <div class="rowdy-upload-progress hidden" data-rowdy-dropzone-target="uploadProgress"></div>
