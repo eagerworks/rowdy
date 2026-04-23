@@ -463,7 +463,7 @@
 }
 
 .rowdy-upload-table th:last-child {
-  width: 3.5rem;
+  width: 6rem;
 }
 
 .rowdy-upload-table td {
@@ -537,6 +537,10 @@
 
 .rowdy-upload-action-cell {
   text-align: center;
+}
+
+.rowdy-table-import-header {
+  text-align: center !important;
 }
 
 .rowdy-upload-action-group {

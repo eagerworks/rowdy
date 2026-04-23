@@ -1,11 +1,12 @@
 module Rowdy
   class UploadListComponent < ViewComponent::Base
-    attr_reader :uploads, :schema_name, :scrollable
+    attr_reader :uploads, :schema_name, :show_list_icon, :scrollable
 
-    def initialize(uploads: [], schema_name: nil, scrollable: false)
+    def initialize(uploads: [], schema_name: nil, scrollable: false, show_list_icon: false)
       @uploads = uploads
       @schema_name = schema_name
       @scrollable = scrollable
+      @show_list_icon = show_list_icon
     end
 
     def stream_channel

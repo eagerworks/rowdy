@@ -8,12 +8,12 @@
         <tr>
           <th><%= I18n.t("rowdy.upload_list.file_name") %></th>
           <th><%= I18n.t("rowdy.upload_list.status") %></th>
-          <th><%= I18n.t("rowdy.upload_list.start_import") %></th>
+          <th class="rowdy-table-import-header"><%= I18n.t("rowdy.upload_list.start_import") %></th>
         </tr>
       </thead>
       <tbody id="<%= list_items_id %>">
         <% uploads.each do |upload| %>
-          <%= render Rowdy::UploadItemComponent.new(upload: upload) %>
+          <%= render Rowdy::UploadItemComponent.new(upload: upload, show_list_icon:) %>
         <% end %>
       </tbody>
     </table>

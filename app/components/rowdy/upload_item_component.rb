@@ -1,7 +1,8 @@
 module Rowdy
   class UploadItemComponent < ViewComponent::Base
-    def initialize(upload:)
+    def initialize(upload:, show_list_icon: false)
       @upload = upload
+      @show_list_icon = show_list_icon
     end
 
     def create_import_path
