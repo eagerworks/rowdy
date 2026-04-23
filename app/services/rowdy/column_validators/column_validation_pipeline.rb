@@ -5,8 +5,8 @@ module Rowdy
     class ColumnValidationPipeline
       extend LightService::Organizer
 
-      def self.call(value:, column:, errors:, unique_tracker:, import_row: nil)
-        with(value:, column:, errors:, unique_tracker:, import_row:).reduce(
+      def self.call(value:, column:, errors:, unique_tracker:, import_row: nil, sheet_column: nil)
+        with(value:, column:, errors:, unique_tracker:, import_row:, sheet_column:).reduce(
           MaxLengthValidator,
           InclusionValidator,
           GreaterThanValidator,

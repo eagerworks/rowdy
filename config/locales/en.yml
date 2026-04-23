@@ -59,8 +59,24 @@ en:
       file_name: File Name
       start_import: Import
       status: Status
+    imports_list:
+      back: Back to Schema
+      title: "Imports for %{filename}"
+      empty: No imports found for this upload.
+      created_at: Created
+      status: Status
+      continue: Continue
+      statuses:
+        mapping: Column Mapping
+        preparing: Preparing
+        validating: Validating
+        validated: Validated
+        importing: Importing
+        imported: Imported
+        failed: Failed
     upload_item:
       start_import: Start Import
+      view_imports: View Imports
       processing: Processing
       pending: Pending
       completed: Completed

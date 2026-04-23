@@ -2,6 +2,13 @@ module Rowdy
   class ImportsController < ApplicationController
     before_action :set_import, only: %i[show correct_errors error_report valid_rows_report replace_all]
 
+    helper_method :import_show_path, :upload_schema_path
+
+    def index
+      @upload = Upload.find(params[:upload_id])
+      @imports = @upload.imports.order(created_at: :desc)
+    end
+
     def create
       upload = Upload.find(params[:upload_id])
       import = upload.imports.create!(
@@ -125,6 +132,14 @@ module Rowdy
 
     def set_import
       @import = Import.find(params[:id])
+    end
+
+    def upload_schema_path(upload)
+      Rowdy::Engine.routes.url_helpers.schema_path(upload.schema_name)
+    end
+
+    def import_show_path(import)
+      Rowdy::Engine.routes.url_helpers.import_path(import)
     end
 
     def import_mapping_path(import)

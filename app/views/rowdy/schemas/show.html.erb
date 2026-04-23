@@ -17,7 +17,8 @@
   <%= render Rowdy::UploadListComponent.new(
     uploads: @uploads,
     schema_name: @schema.schema_name,
-    scrollable: true
+    scrollable: true,
+    show_list_icon: true
   ) %>
 
   <turbo-frame id="rowdy-steps-<%= @schema.schema_name %>"></turbo-frame>

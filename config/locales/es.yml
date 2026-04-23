@@ -59,8 +59,24 @@ es:
       file_name: Nombre de Archivo
       status: Estado
       start_import: Importar
+    imports_list:
+      back: Volver al Esquema
+      title: "Importaciones para %{filename}"
+      empty: No se encontraron importaciones para esta subida.
+      created_at: Creado
+      status: Estado
+      continue: Continuar
+      statuses:
+        mapping: Mapeo de Columnas
+        preparing: Preparando
+        validating: Validando
+        validated: Validado
+        importing: Importando
+        imported: Importado
+        failed: Error
     upload_item:
       start_import: Iniciar Importación
+      view_imports: Ver Importaciones
       processing: Procesando
       pending: Pendiente
       completed: Completado

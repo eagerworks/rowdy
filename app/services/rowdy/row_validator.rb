@@ -10,12 +10,12 @@ module Rowdy
         sheet_cols = schema_to_sheets[col.name.to_s]
 
         if sheet_cols.blank?
-          col_errors = validate_column(nil, col, unique_tracker, import_row)
+          col_errors = validate_column(nil, col, unique_tracker, import_row, nil)
           errors[col.name.to_s] = col_errors if col_errors.any?
         else
           sheet_cols.each do |sheet_col|
             value = row[sheet_col]
-            col_errors = validate_column(value, col, unique_tracker, import_row)
+            col_errors = validate_column(value, col, unique_tracker, import_row, sheet_col)
             errors[sheet_col] = col_errors if col_errors.any?
           end
         end
@@ -24,7 +24,7 @@ module Rowdy
       errors
     end
 
-    def self.validate_column(value, col, unique_tracker, import_row)
+    def self.validate_column(value, col, unique_tracker, import_row, sheet_col)
       errors = []
 
       ColumnValidators::RequiredValidator.execute(value: value, column: col, errors: errors)
@@ -41,7 +41,8 @@ module Rowdy
         column: col,
         errors:,
         unique_tracker:,
-        import_row:
+        import_row:,
+        sheet_column: sheet_col
       )
 
       errors

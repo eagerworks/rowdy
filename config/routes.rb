@@ -8,7 +8,7 @@ Rowdy::Engine.routes.draw do
     post   "/:token/complete", to: "chunked_uploads#complete",       as: :chunked_upload_complete
   end
 
-  resources :imports, only: [ :create, :show ] do
+  resources :imports, only: [ :index, :create, :show ] do
     resource :mapping, only: [ :show, :update ], controller: "imports/mappings"
     resource :validation, only: [ :show, :create ], controller: "imports/validations"
     member do
