@@ -1,12 +1,15 @@
 module Rowdy
   class ColumnMappingComponent < ViewComponent::Base
-    def initialize(import:, detected_columns:, sample_rows:, schema_columns:, mapping: nil, errors: [])
+    attr_accessor :import, :detected_columns, :sample_rows, :schema_columns, :frame_id, :mapping, :errors
+
+    def initialize(import:, detected_columns:, sample_rows:, schema_columns:, frame_id:, mapping: nil, errors: [])
       @import = import
       @detected_columns = detected_columns
       @sample_rows = sample_rows
       @schema_columns = schema_columns
       @mapping = mapping || import.column_mapping || {}
       @errors = errors
+      @frame_id = frame_id
     end
 
     def mapping_path
@@ -14,7 +17,7 @@ module Rowdy
     end
 
     def schema_path
-      Rowdy::Engine.routes.url_helpers.schema_path(schema_name: @import.schema_name)
+      Rowdy::Engine.routes.url_helpers.schema_path(schema_name: @import.schema_name, frame_id: turbo_frame_id)
     end
 
     def sample_values_for(column_index)
@@ -25,6 +28,10 @@ module Rowdy
       @schema_columns.map do |col|
         [ column_option_label(col), col.name.to_s ]
       end
+    end
+
+    def turbo_frame_id
+      frame_id || @import.steps_frame_id
     end
 
     def selected_mapping_for(uploaded_column)

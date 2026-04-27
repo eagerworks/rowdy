@@ -48,7 +48,7 @@
     </table>
 
     <div class="rowdy-mapping-actions">
-      <%= link_to I18n.t("rowdy.import.mapping.back_to_schema"), schema_path, class: "rowdy-btn", data: { turbo_frame: "_top" } %>
+      <%= link_to I18n.t("rowdy.import.mapping.back_to_schema"), schema_path, class: "rowdy-btn", data: { turbo_frame: turbo_frame_id } %>
       <%= f.submit I18n.t("rowdy.import.mapping.submit"), class: "rowdy-btn rowdy-btn--primary" %>
     </div>
   <% end %>

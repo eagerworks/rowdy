@@ -920,6 +920,9 @@
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid hsl(var(--rowdy-border));
 }
 
 /* ─── Validation Result ─────────────────────────────────────── */

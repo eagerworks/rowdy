@@ -7,6 +7,7 @@ module Rowdy
     def index
       @upload = Upload.find(params[:upload_id])
       @imports = @upload.imports.order(created_at: :desc)
+      @list_frame = params[:list_frame].presence || "rowdy-container"
     end
 
     def create
@@ -21,9 +22,9 @@ module Rowdy
 
     def show
       case @import.current_step
-      when 1 then redirect_to import_mapping_path(@import)
-      when 2 then redirect_to import_validation_path(@import)
-      else redirect_to import_mapping_path(@import)
+      when 1 then redirect_to import_mapping_path(@import, frame_id: params[:frame_id])
+      when 2 then redirect_to import_validation_path(@import, frame_id: params[:frame_id])
+      else redirect_to import_mapping_path(@import, frame_id: params[:frame_id])
       end
     end
 
@@ -39,7 +40,7 @@ module Rowdy
         next unless import_row
 
         updated_row   = import_row.row_data.merge(new_values)
-        column_errors = RowValidator.call(updated_row, schema, import_row:, column_mapping: @import.column_mapping)
+        column_errors = RowValidator.call(updated_row, schema, import_row:, column_mapping: @import.column_mapping, corrections:)
 
         if column_errors.empty?
           corrected_count += 1
@@ -82,7 +83,7 @@ module Rowdy
         )
       end
 
-      redirect_to import_validation_path(@import, page: params[:page], current_tab: params[:current_tab])
+      redirect_to import_validation_path(@import, page: params[:page], current_tab: params[:current_tab], frame_id: params[:frame_id])
     end
 
     def replace_all
@@ -138,12 +139,12 @@ module Rowdy
       Rowdy::Engine.routes.url_helpers.schema_path(upload.schema_name)
     end
 
-    def import_show_path(import)
-      Rowdy::Engine.routes.url_helpers.import_path(import)
+    def import_show_path(import, **opts)
+      Rowdy::Engine.routes.url_helpers.import_path(import, **opts)
     end
 
-    def import_mapping_path(import)
-      Rowdy::Engine.routes.url_helpers.import_mapping_path(import)
+    def import_mapping_path(import, **opts)
+      Rowdy::Engine.routes.url_helpers.import_mapping_path(import, **opts)
     end
 
     def import_validation_path(import, **opts)
