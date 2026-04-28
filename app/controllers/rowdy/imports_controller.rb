@@ -7,6 +7,8 @@ module Rowdy
     def index
       @upload = Upload.find(params[:upload_id])
       @imports = @upload.imports.order(created_at: :desc)
+      @imports = params[:hide_imported] ? @imports.not_imported : @imports
+
       @list_frame = params[:list_frame].presence || "rowdy-container"
     end
 

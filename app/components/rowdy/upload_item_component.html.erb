@@ -20,7 +20,7 @@
     <% if @upload.completed? && importable? %>
       <div class="rowdy-upload-action-group">
         <% if @show_list_icon %>
-          <%= link_to view_imports_path, class: "rowdy-btn rowdy-btn--secondary rowdy-btn--icon", data: { turbo_frame: list_turbo_frame }, aria: { label: I18n.t("rowdy.upload_item.view_imports") } do %>
+          <%= link_to view_imports_path(hide_imported:), class: "rowdy-btn rowdy-btn--secondary rowdy-btn--icon", data: { turbo_frame: list_turbo_frame }, aria: { label: I18n.t("rowdy.upload_item.view_imports") } do %>
             <%= render "rowdy/shared/icons/list" %>
           <% end %>
         <% end %>

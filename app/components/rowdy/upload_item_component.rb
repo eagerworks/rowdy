@@ -1,20 +1,23 @@
 module Rowdy
   class UploadItemComponent < ViewComponent::Base
-    def initialize(upload:, show_list_icon: false, list_frame: nil, create_frame: nil)
+    attr_accessor :upload, :show_list_icon, :list_turbo_frame, :create_turbo_frame, :hide_imported
+
+    def initialize(upload:, show_list_icon: false, list_frame: nil, create_frame: nil, hide_imported: false)
       @upload = upload
       @show_list_icon = show_list_icon
       @list_turbo_frame = list_frame
       @create_turbo_frame = create_frame
+      @hide_imported = hide_imported
     end
 
     def create_import_path
       Rowdy::Engine.routes.url_helpers.imports_path(upload_id: @upload.id)
     end
 
-    def view_imports_path
+    def view_imports_path(**opts)
       url_params = { upload_id: @upload.id }
       url_params[:list_frame] = @list_turbo_frame if @list_turbo_frame.present? && @list_turbo_frame != "_top"
-      Rowdy::Engine.routes.url_helpers.imports_path(**url_params)
+      Rowdy::Engine.routes.url_helpers.imports_path(**url_params.merge(opts))
     end
 
     def importable?
