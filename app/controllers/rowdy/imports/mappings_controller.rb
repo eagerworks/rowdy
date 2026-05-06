@@ -7,6 +7,7 @@ module Rowdy
         @detected_columns = @import.upload.detected_columns || []
         @sample_rows = @import.upload.sample_rows || []
         @schema_columns = @import.schema.columns
+        @frame_id = params[:frame_id] || @import.steps_frame_id
         render "rowdy/imports/mapping"
       end
 

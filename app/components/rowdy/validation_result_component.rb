@@ -1,8 +1,8 @@
 module Rowdy
   class ValidationResultComponent < ViewComponent::Base
-    attr_accessor :import, :errors, :page, :total_pages, :tabs, :current_tab, :error_types_with_counts
+    attr_accessor :import, :errors, :page, :total_pages, :tabs, :current_tab, :error_types_with_counts, :frame_id
 
-    def initialize(import:, errors: [], page: 1, total_pages: 0, tabs: [], current_tab: 0, error_types_with_counts: [])
+    def initialize(import:, errors: [], page: 1, total_pages: 0, tabs: [], current_tab: 0, error_types_with_counts: [], frame_id:)
       @import                   = import
       @errors                   = errors
       @page                     = page
@@ -10,6 +10,7 @@ module Rowdy
       @tabs                     = tabs
       @current_tab              = current_tab
       @error_types_with_counts  = error_types_with_counts
+      @frame_id                 = frame_id
     end
 
     def preparing?
@@ -37,11 +38,11 @@ module Rowdy
     end
 
     def mapping_path
-      Rowdy::Engine.routes.url_helpers.import_mapping_path(@import)
+      Rowdy::Engine.routes.url_helpers.import_mapping_path(@import, frame_id: turbo_frame_id)
     end
 
     def validation_path(page: 1, current_tab: @current_tab)
-      Rowdy::Engine.routes.url_helpers.import_validation_path(@import, page: page, current_tab: current_tab)
+      Rowdy::Engine.routes.url_helpers.import_validation_path(@import, page: page, current_tab: current_tab, frame_id: turbo_frame_id)
     end
 
     def error_report_path
@@ -60,8 +61,8 @@ module Rowdy
       Rowdy::Engine.routes.url_helpers.correct_errors_import_path(@import)
     end
 
-    def frame_id
-      @import.steps_frame_id
+    def turbo_frame_id
+      frame_id || @import.steps_frame_id
     end
 
     def previous_page?
@@ -82,6 +83,19 @@ module Rowdy
 
     def label_for_error_type(column)
       column.to_s
+    end
+
+    def custom_action?
+      Rowdy.configuration.action_label.present? && Rowdy.configuration.action_href.present?
+    end
+
+    def custom_action_label
+      Rowdy.configuration.action_label
+    end
+
+    def custom_action_href
+      href = Rowdy.configuration.action_href
+      href.respond_to?(:call) ? href.call(@import) : href
     end
 
     def entries_for_error_type(message)

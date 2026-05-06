@@ -33,10 +33,11 @@
         <%= render Rowdy::FindReplaceComponent.new(import:, tabs:) %>
 
         <%= form_with url: correct_errors_path, method: :patch,
-              data: { controller: "rowdy-dirty-form", turbo_frame: frame_id },
+              data: { controller: "rowdy-dirty-form", turbo_frame: turbo_frame_id, rowdy_dirty_form_confirm_value: I18n.t("rowdy.import.validation.unsaved_warning") },
               html: { id: "rowdy-corrections-form-#{import.id}" } do |f| %>
           <%= hidden_field_tag :page, page %>
           <%= hidden_field_tag :current_tab, current_tab %>
+          <%= hidden_field_tag :frame_id, turbo_frame_id %>
 
           <div class="rowdy-validation-tabs">
             <div class="rowdy-validation-tabs-nav" role="tablist">
@@ -47,7 +48,7 @@
                       aria: { selected: i == current_tab },
                       title: label_for_error_type(error_type),
                       data: {
-                        turbo_frame: frame_id,
+                        turbo_frame: turbo_frame_id,
                         action: "click->rowdy-dirty-form#confirmNavigation"
                       } do %>
                   <span class="rowdy-validation-tab-label"><%= label_for_error_type(error_type) %></span>
@@ -88,7 +89,7 @@
                 validation_path(page: page - 1),
                 class: "rowdy-btn",
                 data: {
-                  turbo_frame: frame_id,
+                  turbo_frame: turbo_frame_id,
                   action: "click->rowdy-dirty-form#confirmNavigation"
                 } %>
             <% end %>
@@ -102,7 +103,7 @@
                 validation_path(page: page + 1),
                 class: "rowdy-btn",
                 data: {
-                  turbo_frame: frame_id,
+                  turbo_frame: turbo_frame_id,
                   action: "click->rowdy-dirty-form#confirmNavigation"
                 } %>
             <% end %>
@@ -121,7 +122,7 @@
             <%= link_to I18n.t("rowdy.import.validation.back_to_mapping"),
               mapping_path,
               class: "rowdy-btn",
-              data: { turbo_frame: frame_id } %>
+              data: { turbo_frame: turbo_frame_id } %>
 
             <div class="rowdy-validation-actions-right">
               <button type="button" class="rowdy-btn"
@@ -146,9 +147,13 @@
         <%= link_to I18n.t("rowdy.import.validation.back_to_mapping"),
           mapping_path,
           class: "rowdy-btn",
-          data: { turbo_frame: frame_id } %>
+          data: { turbo_frame: turbo_frame_id } %>
 
         <% if has_valid_rows? %>
+          <% if custom_action? %>
+            <%= link_to custom_action_label, custom_action_href, class: "rowdy-btn rowdy-btn--primary" %>
+          <% end %>
+
           <%= link_to I18n.t("rowdy.import.validation.import_valid_rows", count: @import.valid_rows_count),
             valid_rows_report_path,
             class: "rowdy-btn rowdy-btn--primary",

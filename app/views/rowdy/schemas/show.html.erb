@@ -1,25 +1,28 @@
-<div class="rowdy-schemas">
-  <div class="rowdy-schema-show-header">
-    <%= link_to rowdy_back_path, class: "rowdy-back-link" do %>
-      <%= render "rowdy/shared/icons/chevron_left" %>
-      <%= t('rowdy.schemas.back') %>
-    <% end %>
-    <div class="rowdy-schema-show-title-row">
-      <h1 class="rowdy-schema-show-title"><%= @schema.schema_label %></h1>
-      <% if @schema.dynamic? %>
-        <%= render Rowdy::SchemaBuilderComponent.new(schema_definition: @schema_definition) %>
-      <% end %>
+<turbo-frame id="rowdy-container">
+  <div class="rowdy-schemas">
+    <div class="rowdy-schema-show-header">
+      <div class="rowdy-schema-show-title-row">
+        <%= link_to main_app.root_path, class: "rowdy-btn mt-4", data: { turbo: false } do %>
+          <%= render "rowdy/shared/icons/chevron_left" %>
+          <%= I18n.t("rowdy.imports_list.back") %>
+        <% end %>
+
+        <% if @schema.dynamic? %>
+          <%= render Rowdy::SchemaBuilderComponent.new(schema_definition: @schema_definition) %>
+        <% end %>
+      </div>
     </div>
+
+    <%= render Rowdy::DropzoneComponent.new(schema_name: @schema.schema_name) %>
+
+    <%= render Rowdy::UploadListComponent.new(
+      uploads: @uploads,
+      schema_name: @schema.schema_name,
+      scrollable: true,
+      show_list_icon: true,
+      list_frame: "rowdy-container"
+    ) %>
+
+    <turbo-frame id="rowdy-steps-<%= @schema.schema_name %>"></turbo-frame>
   </div>
-
-  <%= render Rowdy::DropzoneComponent.new(schema_name: @schema.schema_name) %>
-
-  <%= render Rowdy::UploadListComponent.new(
-    uploads: @uploads,
-    schema_name: @schema.schema_name,
-    scrollable: true,
-    show_list_icon: true
-  ) %>
-
-  <turbo-frame id="rowdy-steps-<%= @schema.schema_name %>"></turbo-frame>
-</div>
+</turbo-frame>

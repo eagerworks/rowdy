@@ -18,6 +18,7 @@ module Rowdy
 
         @total_pages = (active_count.to_f / per_page).ceil
         @tabs        = @error_types_with_counts.map(&:first)
+        @frame_id    = params[:frame_id] || @import.steps_frame_id
 
         render "rowdy/imports/validation"
       end

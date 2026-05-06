@@ -13,7 +13,7 @@
       </thead>
       <tbody id="<%= list_items_id %>">
         <% uploads.each do |upload| %>
-          <%= render Rowdy::UploadItemComponent.new(upload: upload, show_list_icon:) %>
+          <%= render Rowdy::UploadItemComponent.new(upload: upload, show_list_icon:, list_frame:, create_frame:, hide_imported:) %>
         <% end %>
       </tbody>
     </table>

@@ -2,7 +2,7 @@
 
 module Rowdy
   class RowValidator
-    def self.call(row, schema, unique_tracker: nil, import_row: nil, column_mapping: {})
+    def self.call(row, schema, unique_tracker: nil, import_row: nil, column_mapping: {}, corrections: {})
       errors = {}
       schema_to_sheets = column_mapping.group_by { |_, v| v }.transform_values { |pairs| pairs.map(&:first) }
 
@@ -10,12 +10,12 @@ module Rowdy
         sheet_cols = schema_to_sheets[col.name.to_s]
 
         if sheet_cols.blank?
-          col_errors = validate_column(nil, col, unique_tracker, import_row, nil)
+          col_errors = validate_column(nil, col, unique_tracker, import_row, nil, corrections)
           errors[col.name.to_s] = col_errors if col_errors.any?
         else
           sheet_cols.each do |sheet_col|
             value = row[sheet_col]
-            col_errors = validate_column(value, col, unique_tracker, import_row, sheet_col)
+            col_errors = validate_column(value, col, unique_tracker, import_row, sheet_col, corrections)
             errors[sheet_col] = col_errors if col_errors.any?
           end
         end
@@ -24,7 +24,7 @@ module Rowdy
       errors
     end
 
-    def self.validate_column(value, col, unique_tracker, import_row, sheet_col)
+    def self.validate_column(value, col, unique_tracker, import_row, sheet_col, corrections)
       errors = []
 
       ColumnValidators::RequiredValidator.execute(value: value, column: col, errors: errors)
@@ -42,7 +42,8 @@ module Rowdy
         errors:,
         unique_tracker:,
         import_row:,
-        sheet_column: sheet_col
+        sheet_column: sheet_col,
+        corrections:
       )
 
       errors
