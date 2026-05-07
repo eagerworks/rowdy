@@ -68,7 +68,7 @@ module Rowdy
       if validated? && saved_change_to_status?
         Turbo::StreamsChannel.broadcast_replace_to(
           "rowdy_import_#{id}",
-          target: steps_frame_id,
+          target: "rowdy-import-#{id}",
           html: "<turbo-frame id=\"#{steps_frame_id}\" src=\"#{validation_import_path}\"></turbo-frame>"
         )
       end

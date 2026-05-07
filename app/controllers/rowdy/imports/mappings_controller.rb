@@ -28,8 +28,9 @@ module Rowdy
         end
 
         @import.update!(column_mapping: column_mapping, status: :preparing, progress: 0)
+        @frame_id = params[:turbo_frame_id]
 
-        redirect_to import_validation_path(@import)
+        redirect_to import_validation_path(@import, frame_id: @frame_id)
       end
 
       private
@@ -47,8 +48,8 @@ module Rowdy
         end
       end
 
-      def import_validation_path(import)
-        Rowdy::Engine.routes.url_helpers.import_validation_path(import)
+      def import_validation_path(import, **opts)
+        Rowdy::Engine.routes.url_helpers.import_validation_path(import, **opts)
       end
     end
   end
