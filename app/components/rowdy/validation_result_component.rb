@@ -98,6 +98,10 @@ module Rowdy
       href.respond_to?(:call) ? href.call(@import) : href
     end
 
+    def custom_action_data
+      Rowdy.configuration.action_data || {}
+    end
+
     def entries_for_error_type(message)
       @errors.flat_map do |import_error|
         (import_error.column_errors || {}).filter_map do |column, msgs|

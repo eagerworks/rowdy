@@ -3,7 +3,7 @@ module Rowdy
     attr_accessor :processor, :default_chunk_size, :chunks_storage_path,
                   :max_file_size, :orphan_cleanup_hours,
                   :schemas, :import_batch_size, :progress_broadcast_interval,
-                  :import_queue, :action_label, :action_href
+                  :import_queue, :action_label, :action_href, :action_data
 
     def initialize
       @processor = default_processor
@@ -17,6 +17,7 @@ module Rowdy
       @import_queue = "rowdy_imports"
       @action_label = nil
       @action_href = nil
+      @action_data = {}
     end
 
     def default_processor

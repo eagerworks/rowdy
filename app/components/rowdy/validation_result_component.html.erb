@@ -1,4 +1,5 @@
 <div class="rowdy-validation-result">
+  <div id="rowdy-import-<%= import.id %>"></div>
   <% if in_progress? %>
     <div data-controller="rowdy-validate"
          data-rowdy-validate-url-value="<%= start_validation_path %>"></div>
@@ -151,7 +152,7 @@
 
         <% if has_valid_rows? %>
           <% if custom_action? %>
-            <%= link_to custom_action_label, custom_action_href, class: "rowdy-btn rowdy-btn--primary" %>
+            <%= link_to custom_action_label, custom_action_href, class: "rowdy-btn rowdy-btn--primary", data: custom_action_data %>
           <% end %>
 
           <%= link_to I18n.t("rowdy.import.validation.import_valid_rows", count: @import.valid_rows_count),
