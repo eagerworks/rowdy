@@ -2,6 +2,7 @@
         class="rowdy-find-replace-dialog">
   <%= form_with url: replace_all_path, method: :patch,
                 data: { turbo_frame: frame_id } do |f| %>
+    <%= hidden_field_tag :frame_id, frame_id %>
 
     <h2 class="rowdy-find-replace-title">
       <%= I18n.t("rowdy.import.find_replace.title") %>
@@ -11,7 +12,7 @@
       <%= label_tag :column, I18n.t("rowdy.import.find_replace.column_label"),
                     class: "rowdy-find-replace-label" %>
       <%= select_tag :column,
-            options_for_select(tabs.map { |c| [c, c] }),
+            options_for_select(columns.map { |c| [c, c] }),
             prompt: I18n.t("rowdy.import.find_replace.column_placeholder"),
             class: "rowdy-find-replace-select",
             required: true %>

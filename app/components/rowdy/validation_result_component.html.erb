@@ -31,7 +31,7 @@
 
     <% if has_errors? %>
       <div data-controller="rowdy-find-replace">
-        <%= render Rowdy::FindReplaceComponent.new(import:, tabs:) %>
+        <%= render Rowdy::FindReplaceComponent.new(import:, frame_id: turbo_frame_id) %>
 
         <%= form_with url: correct_errors_path, method: :patch,
               data: { controller: "rowdy-dirty-form", turbo_frame: turbo_frame_id, rowdy_dirty_form_confirm_value: I18n.t("rowdy.import.validation.unsaved_warning") },

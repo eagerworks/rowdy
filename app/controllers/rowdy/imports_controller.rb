@@ -108,7 +108,7 @@ module Rowdy
         exact_match: exact
       ).call
 
-      redirect_to import_validation_path(@import)
+      redirect_to import_validation_path(@import, frame_id: params[:frame_id])
     end
 
     def valid_rows_report
